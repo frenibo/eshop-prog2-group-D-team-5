@@ -64,6 +64,13 @@ public class Artikel {
 		 * Ab hier Accessor-Methoden
 		 */
 		
+		public boolean isVerfuegbar() {
+			if(this.verfuegbarkeit > 0) {
+				return true;
+			}
+			else return false;
+		}
+		
 		public int getNummer() {
 			return nummer;
 		}
