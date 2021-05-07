@@ -2,14 +2,14 @@ package eshop.local.ui;
 
 public class Menue {
 	
-	int menueLevel;
+	private int menueLevel;
 	
 	public Menue() {
-		this.menueLevel = 1;
+		setMenueLevel(1);
 	}
 	
 	public Menue(int menueLevel) {
-		this.menueLevel = menueLevel;
+		setMenueLevel(menueLevel);
 	}
 	
 	public int getMenueLevel() {
@@ -18,6 +18,7 @@ public class Menue {
 	
 	public void setMenueLevel(int menueLevel) {
 		this.menueLevel = menueLevel;
+		
 	}
 
 	public void gibMenueAus() {
@@ -31,7 +32,7 @@ public class Menue {
 	public void menueAuswahl(int menueLevel) {
 		
 		switch(menueLevel) {
-		
+		//Standard- und Initial-Menü
 		case 1:
 			System.out.print("Befehle: \n  (a) Alle Artikel anzeigen");
 			System.out.print("         \n  (d) Artikel löschen");
@@ -45,9 +46,15 @@ public class Menue {
 			System.out.print("> "); // Prompt
 			System.out.flush(); // ohne NL ausgeben
 			break;
+			
+		case 2:
+			System.out.print("Artikel wie angezeigt abspeichern oder rückgängig machen?\n");
+			System.out.print("(s) speichern\n");
+			System.out.print("(r) rückgängig machen\n");
+			break;
 		}
 			
 		
-		}
+	}
 		
 }

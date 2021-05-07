@@ -1,7 +1,5 @@
 package eshop.local.valueobjects;
 
-
-
 public class User {
 
 	private String sitzungsNr;

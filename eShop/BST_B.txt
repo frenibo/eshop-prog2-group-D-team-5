@@ -8,3 +8,13 @@ test
 0
 0.0
 
+Klopapier
+4
+0
+0.0
+
+Kaugummi
+2
+0
+0.0
+
