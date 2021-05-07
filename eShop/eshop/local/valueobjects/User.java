@@ -1,37 +1,31 @@
 package eshop.local.valueobjects;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
-public class Kunde {
+
+public class User {
 
 	private String sitzungsNr;
 	
-	private int kundenNr;
+	private int userNr;
 
 	private String name;
 	private String strasse = "";
 	private String plz = "";
 	private String wohnort = "";
 	
-	public Kunde() {
-		this.sitzungsNr = neueSitzungsNr();
+	public User(String sitzungsNr) {
+		this.sitzungsNr = sitzungsNr;
 		
 	}
 
-    public Kunde(int nr, String name) {
-		kundenNr = nr;
+    public User(String sitzungsNr, int nr, String name) {
+    	this.sitzungsNr = sitzungsNr;
+		userNr = nr;
 		this.name = name;
-		this.sitzungsNr = neueSitzungsNr();
 	}
     
     
-	public String neueSitzungsNr() {
-		Date objDate = new Date();
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddhhmmss");
-		String sessionID = formatter.format(objDate);
-		return sessionID;
-	}
+	
     
 	// Methoden zum Setzen und Lesen der Kunden-Eigenschaften,
 	// z.B. getStrasse() und setStrasse()
@@ -68,8 +62,8 @@ public class Kunde {
 		this.wohnort = wohnort;
 	}
 
-	public int getKundenNr() {
-		return kundenNr;
+	public int getUserNr() {
+		return userNr;
 	}
 	
 	public void setSitzungsNr(String sitzungsNr) {

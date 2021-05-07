@@ -1,5 +1,10 @@
 Zahnbürste
-01
+1
 1001
-3.50
+3.5
 Putzt gut.
+test
+3
+0
+0.0
+

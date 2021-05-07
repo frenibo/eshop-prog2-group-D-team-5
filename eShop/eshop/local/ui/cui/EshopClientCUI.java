@@ -4,10 +4,12 @@ import java.io.BufferedReader;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import eshop.local.domain.Bestand;
-import eshop.local.valueobjects.Kunde;
+import eshop.local.valueobjects.User;
 import eshop.local.domain.exceptions.ArtikelExistiertBereitsException;
 import eshop.local.valueobjects.Artikel;
 
@@ -15,7 +17,8 @@ public class EshopClientCUI {
 	
 	private Bestand bst;
 	private BufferedReader in;
-	private Kunde kunde;
+	private String sitzungsNr = neueSitzungsNr();
+	private User user;
 	
 	public EshopClientCUI(String datei) throws IOException {
 		// die Bst-Verwaltung erledigt die Aufgaben, 
@@ -26,7 +29,7 @@ public class EshopClientCUI {
 		in = new BufferedReader(new InputStreamReader(System.in));
 		
 		// Jede "Sitzung", ob angemeldet oder nicht, erzeugt ein Kunden-Objekt. Zuerst aber nur mit "sitzungsNr" und wenigen Rechten.
-		kunde = new Kunde();
+		user = new User(sitzungsNr);
 	}
 	
 	public static void main(String[] args) {
@@ -45,10 +48,13 @@ public void run() {
 		
 	// Variable für Eingaben von der Konsole
 	String input = ""; 
+	
+	// Nummer des Menüs, in dem sich der User befindet.
+	String menueNr = "1";
 
 	// Hauptschleife der Benutzungsschnittstelle
 	do {
-		gibMenueAus();
+		gibMenueAus(menueNr);
 		try {
 			input = liesEingabe();
 			verarbeiteEingabe(input);
@@ -85,11 +91,13 @@ private void verarbeiteEingabe(String line) throws IOException {
 	
 	// Eingabe bearbeiten:
 	switch (line) {
+	//Alle Artikel anzeigen
 	case "a":
 		liste = bst.gibAlleArtikel();
 		gibArtikellisteAus(liste);
 		System.out.println("\n   Gib die Nr eines Artikels ein um damit zu interagieren.\n");
 		break;
+	//Artikel löschen
 	case "d":
 		// lies die notwendigen Parameter, einzeln pro Zeile
 		System.out.print("Buchnummer > ");
@@ -100,6 +108,7 @@ private void verarbeiteEingabe(String line) throws IOException {
 		// Die Bibliothek das Buch löschen lassen:
 		bst.loescheArtikel(name, nummer);
 		break;
+	//Artikel einfügen
 	case "e":
 		// lies die notwendigen Parameter, einzeln pro Zeile
 		System.out.print("Artikelnummer > ");
@@ -110,24 +119,30 @@ private void verarbeiteEingabe(String line) throws IOException {
 
 		try {
 			bst.fuegeArtikelEin(name, nummer);
-			System.out.println("Einfügen ok");
+			liste = bst.sucheNachNr(nummer);
+			gibArtikellisteAus(liste);
+			System.out.print("\n");
+			System.out.print("");
 		} catch (ArtikelExistiertBereitsException e) {
 			// Hier Fehlerbehandlung...
 			System.out.println("Fehler beim Einfügen");
 			e.printStackTrace();
 		}
 		break;
+	//Artikel suchen
 	case "f":
 		System.out.print("Buchtitel  > ");
 		name = liesEingabe();
 		liste = bst.sucheNachName(name);
 		gibArtikellisteAus(liste);
 		break;
+	//Artikel sichern
 	case "s":
 		bst.schreibeArtikel();
 		break;
+	//Sitzungsnummer anzeigen
 	case "n":
-		System.out.println("Ihre Sitzungsnummer lautet: " + kunde.getSitzungsNr() +"\n");
+		System.out.println("Ihre Sitzungsnummer lautet: " + user.getSitzungsNr() +"\n");
 		break;
 	case "r":
 		System.out.println("Neue Sitzung startet.\n");
@@ -136,18 +151,26 @@ private void verarbeiteEingabe(String line) throws IOException {
 	}
 }
 	
-	private void gibMenueAus() {
-		System.out.print("Befehle: \n  (a) Alle Artikel anzeigen");
-		System.out.print("         \n  (d) Artikel löschen");
-		System.out.print("         \n  (e) Artikel einfügen");
-		System.out.print("         \n  (f) Artikel suchen");
-		System.out.print("         \n  (s) Artikel sichern");
-		System.out.print("         \n  (n) Sitzungsnummer anzeigen");
-		System.out.print("         \n  ---------------------");
-		System.out.print("         \n  (r) Neue Sitzung starten");
-		System.out.println("         \n  (q) Beenden");
-		System.out.print("> "); // Prompt
-		System.out.flush(); // ohne NL ausgeben
+	private void gibMenueAus(String menueNr) {
+		
+		switch(menueNr) {
+		
+		case "1":
+			System.out.print("Befehle: \n  (a) Alle Artikel anzeigen");
+			System.out.print("         \n  (d) Artikel löschen");
+			System.out.print("         \n  (e) Artikel einfügen");
+			System.out.print("         \n  (f) Artikel suchen");
+			System.out.print("         \n  (s) Artikel sichern");
+			System.out.print("         \n  (n) Sitzungsnummer anzeigen");
+			System.out.print("         \n  ---------------------");
+			System.out.print("         \n  (r) Neue Sitzung starten");
+			System.out.println("         \n  (q) Beenden");
+			System.out.print("> "); // Prompt
+			System.out.flush(); // ohne NL ausgeben
+			break;
+		}
+		
+		
 	}
 	
 	private void gibArtikellisteAus(List<Artikel> liste) {
@@ -158,5 +181,12 @@ private void verarbeiteEingabe(String line) throws IOException {
 				System.out.println(artikel);
 			}
 		}
+	}
+	
+	public String neueSitzungsNr() {
+		Date objDate = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddhhmmss");
+		String sitzungsNr = formatter.format(objDate);
+		return sitzungsNr;
 	}
 }
