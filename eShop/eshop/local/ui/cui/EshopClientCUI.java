@@ -67,8 +67,8 @@ private String liesEingabe() throws IOException {
 
 private void verarbeiteEingabe(String line) throws IOException {
 	
-	String nummer;
-	int nr;
+	String nummerString;
+	int nummer;
 	String name;
 	List<Artikel> liste;
 	int artikelNr = 0;
@@ -93,23 +93,23 @@ private void verarbeiteEingabe(String line) throws IOException {
 	case "d":
 		// lies die notwendigen Parameter, einzeln pro Zeile
 		System.out.print("Buchnummer > ");
-		nummer = liesEingabe();
-		nr = Integer.parseInt(nummer);
+		nummerString = liesEingabe();
+		nummer = Integer.parseInt(nummerString);
 		System.out.print("Buchtitel  > ");
 		name = liesEingabe();
 		// Die Bibliothek das Buch löschen lassen:
-		bst.loescheArtikel(name, nr);
+		bst.loescheArtikel(name, nummer);
 		break;
 	case "e":
 		// lies die notwendigen Parameter, einzeln pro Zeile
-		System.out.print("Buchnummer > ");
-		nummer = liesEingabe();
-		nr = Integer.parseInt(nummer);
-		System.out.print("Buchtitel  > ");
+		System.out.print("Artikelnummer > ");
+		nummerString = liesEingabe();
+		nummer = Integer.parseInt(nummerString);
+		System.out.print("Name des Artikels  > ");
 		name = liesEingabe();
 
 		try {
-			bst.fuegeArtikelEin(name, nr);
+			bst.fuegeArtikelEin(name, nummer);
 			System.out.println("Einfügen ok");
 		} catch (ArtikelExistiertBereitsException e) {
 			// Hier Fehlerbehandlung...
