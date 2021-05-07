@@ -45,8 +45,16 @@ public class Eingabeverarbeitung {
 		this.level = level;
 	}
 	
+	public int getLevel() {
+		return this.level;
+	}
+	
 	public void setLine(String line) {
 		this.line = line;
+	}
+	
+	public String getLine() {
+		return this.line;
 	}
 	
 	public String liesEingabe() throws IOException {

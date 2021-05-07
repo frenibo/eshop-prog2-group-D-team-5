@@ -59,7 +59,8 @@ public void run() {
 		menue.gibMenueAus();
 		try {
 			
-			input = ev.liesEingabe();
+			ev.liesEingabe();
+			input = ev.getLine();
 			ev.verarbeitung(input);
 			
 		} catch (IOException e) {
