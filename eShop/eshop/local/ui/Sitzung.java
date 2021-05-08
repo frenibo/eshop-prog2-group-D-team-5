@@ -12,11 +12,29 @@ import eshop.local.valueobjects.User;
 public class Sitzung {
 	
 	public static Bestand bst;
+	public static Bestand wnk;
 	public static User user;
 	private static Eingabeverarbeitung ev;
 	
 	private static Artikel aktuellerArtikel;
 	private static String aktuelleSitzungsNr;
+	
+	public Sitzung() throws IOException {
+		
+		aktuelleSitzungsNr = neueSitzungsNr();
+		// die Bst-Verwaltung erledigt die Aufgaben, 
+		// die nichts mit Ein-/Ausgabe zu tun haben
+		bst = new Bestand();
+		
+		// neue Warenkorb-Liste wird angelegt.
+		wnk = new Bestand(getSitzungsNr()+".txt");
+
+		// Jede "Sitzung", ob angemeldet oder nicht, erzeugt ein Kunden-Objekt. Zuerst aber nur mit "sitzungsNr" und wenigen Rechten.
+		user = new User();
+	
+		// 
+		ev = new Eingabeverarbeitung();
+	}
 	
 	public Sitzung(String datei) throws IOException {
 		
@@ -24,6 +42,9 @@ public class Sitzung {
 		// die Bst-Verwaltung erledigt die Aufgaben, 
 		// die nichts mit Ein-/Ausgabe zu tun haben
 		bst = new Bestand(datei);
+		
+		// neue Warenkorb-Liste wird angelegt.
+		wnk = new Bestand(getSitzungsNr()+".txt");
 
 		// Jede "Sitzung", ob angemeldet oder nicht, erzeugt ein Kunden-Objekt. Zuerst aber nur mit "sitzungsNr" und wenigen Rechten.
 		user = new User();
@@ -51,10 +72,10 @@ public class Sitzung {
 	}
 	
 	
-	public void run() throws IOException {
+	public static void run() throws IOException {
 		
 		String input = "";
-		ev.setLevel(1);
+		ev.setLevel("startmenue");
 	
 		do {
 			ev.gibMenueAus();

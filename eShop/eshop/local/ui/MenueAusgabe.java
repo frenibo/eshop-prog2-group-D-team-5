@@ -1,22 +1,22 @@
 package eshop.local.ui;
 
-public class Menue {
+public class MenueAusgabe {
 	
-	private int menueLevel;
+	private String menueLevel;
 	
-	public Menue() {
-		setMenueLevel(1);
+	public MenueAusgabe() {
+		setMenueLevel("startmenue");
 	}
 	
-	public Menue(int menueLevel) {
+	public MenueAusgabe(String menueLevel) {
 		setMenueLevel(menueLevel);
 	}
 	
-	public int getMenueLevel() {
+	public String getMenueLevel() {
 		return menueLevel;
 	}
 	
-	public void setMenueLevel(int menueLevel) {
+	public void setMenueLevel(String menueLevel) {
 		this.menueLevel = menueLevel;
 		
 	}
@@ -25,16 +25,17 @@ public class Menue {
 		menueAuswahl(this.menueLevel);
 	}
 	
-	public void gibMenueAus(int menueLevel) {
+	public void gibMenueAus(String menueLevel) {
 		menueAuswahl(menueLevel);
 	}
 	
-	public void menueAuswahl(int menueLevel) {
+	public void menueAuswahl(String menueLevel) {
 		
 		switch(menueLevel) {
 		//Standard- und Initial-Menü
-		case 1:
-			System.out.print("Befehle: \n  (a) Alle Artikel anzeigen");
+		case "startmenue":
+			System.out.print("\nBefehle: \n  (a) Alle Artikel anzeigen");
+			System.out.print("         \n  (w) Warenkorb anzeigen");
 			System.out.print("         \n  (d) Artikel löschen");
 			System.out.print("         \n  (e) Artikel einfügen");
 			System.out.print("         \n  (f) Artikel suchen");
@@ -47,10 +48,11 @@ public class Menue {
 			System.out.flush(); // ohne NL ausgeben
 			break;
 			
-		case 2:
-			System.out.print("Artikel wie angezeigt abspeichern oder rückgängig machen?\n");
+		case "speichern":
+			System.out.print("\nArtikel wie angezeigt abspeichern oder rückgängig machen?\n");
 			System.out.print("(s) speichern\n");
 			System.out.print("(r) rückgängig machen\n");
+			System.out.print("(w) weiter ohne zu speichern\n");
 			break;
 		}
 			

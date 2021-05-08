@@ -85,13 +85,31 @@ public class ArtikelVerwaltung {
 	 * @param einBuch das einzufügende Buch
 	 * @throws BuchExistiertBereitsException wenn das Buch bereits existiert
 	 */
-	public void einfuegen(Artikel einArtikel) throws ArtikelExistiertBereitsException {
-		if (artikelBestand.contains(einArtikel)) {
-			throw new ArtikelExistiertBereitsException(einArtikel, " - in 'einfuegen()'");
+	public String einfuegen(Artikel einArtikel) throws ArtikelExistiertBereitsException {
+		
+		List<Artikel> suchErgNummer = new Vector<Artikel>();
+		suchErgNummer = sucheArtikel(einArtikel.getNummer());
+		List<Artikel> suchErgName = new Vector<Artikel>();
+		suchErgName = sucheArtikel(einArtikel.getName());
+		
+		if (!suchErgNummer.isEmpty() && suchErgName.isEmpty()) {
+			System.out.print("\nEin anderer Artikel mit Artikelnummer " +einArtikel.getNummer() + " existiert bereits:\n");
+			System.out.println(suchErgNummer);
+			return "Nummer vergeben";
+			//throw new ArtikelExistiertBereitsException(einArtikel, " - in 'einfuegen()'");
+		}
+		else if(!suchErgName.isEmpty()) {
+			System.out.print("\nEin Artikel mit dem Namen " + einArtikel.getName() + " existiert bereits mit der Artikelnummer " + suchErgName.get(0).getNummer() + ".\n");
+			System.out.println(suchErgName);
+			return "Artikel existiert bereits";
+		}
+		else {
+			// das übernimmt der Vector:
+			artikelBestand.add(einArtikel);
+			return "Erfolgreich hinzugefügt";
 		}
 
-		// das übernimmt der Vector:
-		artikelBestand.add(einArtikel);
+		
 	}
 
 	/**
@@ -150,6 +168,32 @@ public class ArtikelVerwaltung {
 			// 			(-> Vergleiche mit Einsatz von Vector OHNE Generics)
 			Artikel a = iter.next();
 			if (a.getNummer() == nummer)
+				suchErg.add(a);
+		}
+		// Alternative Implementierung mit neuer for-Schleife:
+		/*
+		for (Buch buch : buchBestand) {
+			if ((buch).getTitel().equals(titel))
+				suchErg.add(buch);
+		}
+		*/
+
+		return suchErg;
+	}
+	
+	public List<Artikel> sucheArtikel(String name, int nummer) {
+		// auch für das Suchergebnis bietet sich
+		// die Verwendung von Generics an
+		List<Artikel> suchErg = new Vector<Artikel>();
+
+		// Buchbestand durchlaufen und nach Titel suchen
+		Iterator<Artikel> iter = artikelBestand.iterator();
+		while (iter.hasNext()) {
+			// WICHTIG: Type Cast auf 'Buch' für späteren Zugriff auf Titel
+			// 		    hier nicht erforderlich wegen Verwendung von Generics
+			// 			(-> Vergleiche mit Einsatz von Vector OHNE Generics)
+			Artikel a = iter.next();
+			if (a.getNummer() == nummer && a.getName().equals(name))
 				suchErg.add(a);
 		}
 		// Alternative Implementierung mit neuer for-Schleife:

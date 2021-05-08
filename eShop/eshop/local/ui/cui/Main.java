@@ -9,8 +9,8 @@ public class Main {
 	public static void main(String[] args) {
 		Sitzung stz;
 		try {
-			stz = new Sitzung("BST");
-			stz.run();
+			stz = new Sitzung("BST_B.txt");
+			Sitzung.run();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -20,3 +20,4 @@ public class Main {
 	
 
 }
+

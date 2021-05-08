@@ -11,21 +11,21 @@ import java.io.InputStreamReader;
 import eshop.local.domain.exceptions.ArtikelExistiertBereitsException;
 //import eshop.local.ui.cui.EshopClientCUI;
 import eshop.local.ui.cui.Main;
-import eshop.local.ui.Menue;
+import eshop.local.ui.MenueAusgabe;
 
 public class Eingabeverarbeitung {
 
 	private String line;
-	private int level;
+	private String level;
 	private BufferedReader in;
-	private Menue menue;
+	private MenueAusgabe menue;
 	
 	public Eingabeverarbeitung() {
 		
 		setLine("");
 		// Stream-Objekt fuer Texteingabe ueber Konsolenfenster erzeugen
 		this.in = new BufferedReader(new InputStreamReader(System.in));
-		this.menue = new Menue();
+		this.menue = new MenueAusgabe();
 	}
 	
 	public Eingabeverarbeitung(String line) {
@@ -33,19 +33,19 @@ public class Eingabeverarbeitung {
 		setLine(line);
 		// Stream-Objekt fuer Texteingabe ueber Konsolenfenster erzeugen
 		this.in = new BufferedReader(new InputStreamReader(System.in));
-		this.menue = new Menue();
+		this.menue = new MenueAusgabe();
 	}
 	
-	public Eingabeverarbeitung(String line, int level) {
+	public Eingabeverarbeitung(String line, String level) {
 		
 		setLine(line);
 		setLevel(level);
 		// Stream-Objekt fuer Texteingabe ueber Konsolenfenster erzeugen
 		this.in = new BufferedReader(new InputStreamReader(System.in));
-		this.menue = new Menue();
+		this.menue = new MenueAusgabe();
 	}
 	
-	public void setLevel(int level) {
+	public void setLevel(String level) {
 		this.level = level;
 		this.menue.setMenueLevel(level);
 	}
@@ -54,7 +54,7 @@ public class Eingabeverarbeitung {
 		this.menue.gibMenueAus();
 	}
 	
-	public int getLevel() {
+	public String getLevel() {
 		return this.level;
 	}
 	
@@ -81,28 +81,29 @@ public class Eingabeverarbeitung {
 	
 	public void verarbeitung(String line) throws IOException {
 		
-	
-		if(this.level < 0) {
-			this.level = 1;
+		if(this.level.isEmpty()) {
+			this.level = "startmenue";
 		}
 
 		verarbeitungsLevel(line, level);
 	}
 	
-	public void verarbeitung(String line, int level) throws IOException {
+	public void verarbeitung(String line, String level) throws IOException {
 		
 		verarbeitungsLevel(line, level);
 	}
 	
-	public void verarbeitungsLevel(String line, int level) throws IOException {
+	public void verarbeitungsLevel(String line, String level) throws IOException {
 		
 		String nummerString;
 		int nummer = 0;
+		String anzahlString;
+		int anzahl = 0;
 		String name;
 		List<Artikel> liste;
-		Artikel artikel;
+		Artikel a;
 		
-		if(level == 1) {
+		if(level.equals("startmenue")) {
 			
 			
 			try {
@@ -112,7 +113,6 @@ public class Eingabeverarbeitung {
 			if (nummer > 0) {
 				liste = Sitzung.bst.sucheNachNr(nummer);
 				Sitzung.gibArtikellisteAus(liste);
-				System.out.print("\n");
 			}
 			
 			// Eingabe bearbeiten:
@@ -121,7 +121,11 @@ public class Eingabeverarbeitung {
 			case "a":
 				liste = Sitzung.bst.gibAlleArtikel();
 				Sitzung.gibArtikellisteAus(liste);
-				System.out.println("\n   Gib die Nr eines Artikels ein um damit zu interagieren.\n");
+				System.out.println("\n   Gib die Nr eines Artikels ein um damit zu interagieren.");
+				break;
+			case "w":
+				liste = Sitzung.wnk.gibAlleArtikel();
+				Sitzung.gibArtikellisteAus(liste);
 				break;
 			//Artikel löschen
 			case "d":
@@ -142,14 +146,26 @@ public class Eingabeverarbeitung {
 				nummer = Integer.parseInt(nummerString);
 				System.out.print("Name des Artikels  > ");
 				name = liesEingabe();
+				System.out.print("Anzahl > ");
+				anzahlString = liesEingabe();
+				anzahl = Integer.parseInt(anzahlString);
 
 				try {
-					Sitzung.setAktuellerArtikel(Sitzung.bst.fuegeArtikelEin(name, nummer));
-					liste = Sitzung.bst.sucheNachNr(nummer);
-					System.out.print("\n");
-					Sitzung.gibArtikellisteAus(liste);
-					System.out.print("\n");
-					setLevel(2);
+					//sollte man so wahrscheinlich nicht machen:
+					String resultat = Sitzung.bst.fuegeArtikelEin(name, nummer, anzahl);
+					
+					if(resultat.equals("Erfolgreich hinzugefügt")) {
+						Sitzung.setAktuellerArtikel(new Artikel(name, nummer, anzahl));
+						System.out.print("\n");
+						System.out.println(Sitzung.getAktuellerArtikel());
+						setLevel("speichern");
+					}
+					else if(resultat.equals("Artikel existiert bereits")) {
+						setLevel("startmenue");
+					}
+					else if(resultat.equals("Nummer vergeben")) {
+						setLevel("startmenue");
+					}
 					
 				} catch (ArtikelExistiertBereitsException e) {
 					// Hier Fehlerbehandlung...
@@ -180,19 +196,22 @@ public class Eingabeverarbeitung {
 	
 		
 		}
-		else if(level == 2) {
+		else if(level.equals("speichern")) {
 			switch (line) {
 			case "s":
 				Sitzung.bst.schreibeArtikel();
 				System.out.print("Artikel in Datenbank eingetragen.\n");
 				System.out.print("\n");
-				setLevel(1);
+				setLevel("startmenue");
 				break;
 			case "r":
-				
 				Sitzung.bst.loescheArtikel(Sitzung.getAktuellerArtikel());
 				System.out.println("Artikel nicht gespeichert.\n");
-				setLevel(1);
+				setLevel("startmenue");
+				break;
+			case "w":
+				setLevel("startmenue");
+				Sitzung.run();
 				break;
 			}
 		}

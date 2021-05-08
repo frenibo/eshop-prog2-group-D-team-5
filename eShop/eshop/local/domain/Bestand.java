@@ -1,6 +1,10 @@
 package eshop.local.domain;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.io.File;
 import java.util.List;
 
 import eshop.local.domain.exceptions.ArtikelExistiertBereitsException;
@@ -10,6 +14,7 @@ public class Bestand {
 	
 	// Präfix für Namen der Dateien, in der die Bibliotheksdaten gespeichert sind
 		private String datei = "";
+		private Path pfad;
 		
 		private ArtikelVerwaltung meineArtikel;
 		// private KundenVerwaltung meineKunden;
@@ -29,10 +34,52 @@ public class Bestand {
 		public Bestand(String datei) throws IOException {
 			this.datei = datei;
 			
-			// Buchbestand aus Datei einlesen
-			meineArtikel = new ArtikelVerwaltung();
-			meineArtikel.liesDaten(datei+"_B.txt");
-
+			pfad = Paths.get(datei);
+			
+			if(!Files.exists(pfad)) {
+				try {
+					File file = new File(this.datei);
+					// Buchbestand aus Datei einlesen
+					meineArtikel = new ArtikelVerwaltung();
+					meineArtikel.liesDaten(file.getName());
+				}
+				catch (IOException e) {
+					// TODO Auto-generated catch block
+					//e.printStackTrace();
+				}
+			} else {
+				meineArtikel = new ArtikelVerwaltung();
+				meineArtikel.liesDaten(this.datei);
+			}
+//			// Kundenkartei aus Datei einlesen
+//			meineKunden = new KundenVerwaltung();
+//			meineKunden.liesDaten(datei+"_K.txt");
+//			meineKunden.schreibeDaten(datei+"_K.txt");
+		}
+//			Wird der Bestand ohne Eingabe-Datei initialisiert, 
+//			so wird eine "lokale", völlig leere Datei mit Namen LOCAL_B.txt erstellt
+//			existiert diese Datei bereits, so wird sie nicht erstellt und 
+//			es wird mit der bereits existierenden Datei gearbeitet.
+		public Bestand() throws IOException {
+			
+			this.datei = "LOCAL.txt";
+			pfad = Paths.get("LOCAL_B.txt");
+			
+			if(!Files.exists(pfad)) {
+				try {
+					File file = new File("LOCAL_B.txt");
+					// Buchbestand aus Datei einlesen
+					meineArtikel = new ArtikelVerwaltung();
+					meineArtikel.liesDaten(file.getName());
+				}
+				catch (IOException e) {
+					// TODO Auto-generated catch block
+					//e.printStackTrace();
+				}
+			} else {
+				meineArtikel = new ArtikelVerwaltung();
+				meineArtikel.liesDaten("LOCAL_B.txt");
+			}
 //			// Kundenkartei aus Datei einlesen
 //			meineKunden = new KundenVerwaltung();
 //			meineKunden.liesDaten(datei+"_K.txt");
@@ -77,10 +124,14 @@ public class Bestand {
 		 * @return Buch-Objekt, das im Erfolgsfall eingefügt wurde
 		 * @throws BuchExistiertBereitsException wenn das Buch bereits existiert
 		 */
-		public Artikel fuegeArtikelEin(String name, int nummer) throws ArtikelExistiertBereitsException {
+		public String fuegeArtikelEin(String name, int nummer) throws ArtikelExistiertBereitsException {
 			Artikel a = new Artikel(name, nummer);
-			meineArtikel.einfuegen(a);
-			return a;
+			return meineArtikel.einfuegen(a);
+		}
+		
+		public String fuegeArtikelEin(String name, int nummer, int anzahl) throws ArtikelExistiertBereitsException {
+			Artikel a = new Artikel(name, nummer, anzahl);
+			return meineArtikel.einfuegen(a);
 		}
 
 		/**
@@ -105,7 +156,7 @@ public class Bestand {
 		 * @throws IOException z.B. wenn Datei nicht existiert
 		 */
 		public void schreibeArtikel() throws IOException {
-			meineArtikel.schreibeDaten(datei+"_B.txt");
+			meineArtikel.schreibeDaten(datei);
 		}
 
 		// TODO: Weitere Funktionen der Bibliotheksverwaltung, z.B. ausleihen, zurückgeben etc.
