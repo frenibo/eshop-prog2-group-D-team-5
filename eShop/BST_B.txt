@@ -1,6 +1,6 @@
 Zahnbürste
 1
-1001
+100
 3.5
 Putzt gut.
 test
@@ -10,16 +10,16 @@ test
 
 Klopapier
 4
-0
+6
 0.0
 
 Kaugummi
 2
-0
+2
 0.0
 
 bla bla
 5
-0
+5
 0.0
 

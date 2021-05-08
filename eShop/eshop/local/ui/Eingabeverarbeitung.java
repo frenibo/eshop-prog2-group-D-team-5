@@ -101,7 +101,6 @@ public class Eingabeverarbeitung {
 		int anzahl = 0;
 		String name;
 		List<Artikel> liste;
-		Artikel a;
 		
 		if(level.equals("startmenue")) {
 			
@@ -123,9 +122,31 @@ public class Eingabeverarbeitung {
 				Sitzung.gibArtikellisteAus(liste);
 				System.out.println("\n   Gib die Nr eines Artikels ein um damit zu interagieren.");
 				break;
+			//Warenkorb anzeigen
 			case "w":
 				liste = Sitzung.wnk.gibAlleArtikel();
 				Sitzung.gibArtikellisteAus(liste);
+				break;
+			//Artikel in Warenkorb verschieben
+			case "k":
+				System.out.print("Artikelnummer > ");
+				nummerString = liesEingabe();
+				nummer = Integer.parseInt(nummerString);
+				System.out.print("Neue Anzahl > ");
+				anzahlString = liesEingabe();
+				anzahl = Integer.parseInt(anzahlString);
+				Sitzung.bst.verschiebeWarenkorb(nummer, anzahl);
+				break;
+			//Artikelanzahl ändern
+			case "v":
+				System.out.print("Artikelnummer > ");
+				nummerString = liesEingabe();
+				nummer = Integer.parseInt(nummerString);
+				System.out.print("Neue Anzahl > ");
+				anzahlString = liesEingabe();
+				anzahl = Integer.parseInt(anzahlString);
+				Sitzung.bst.aendereAnzahl(nummer, anzahl);
+				System.out.print("\nAnzahl aktualisiert.");
 				break;
 			//Artikel löschen
 			case "d":
@@ -183,6 +204,7 @@ public class Eingabeverarbeitung {
 			//Artikel sichern
 			case "s":
 				Sitzung.bst.schreibeArtikel();
+				System.out.println("gespeichert.");
 				break;
 			//Sitzungsnummer anzeigen
 			case "n":

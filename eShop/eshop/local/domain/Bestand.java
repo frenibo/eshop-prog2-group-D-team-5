@@ -8,6 +8,7 @@ import java.io.File;
 import java.util.List;
 
 import eshop.local.domain.exceptions.ArtikelExistiertBereitsException;
+import eshop.local.ui.Sitzung;
 import eshop.local.valueobjects.Artikel;
 
 public class Bestand {
@@ -126,14 +127,29 @@ public class Bestand {
 		 */
 		public String fuegeArtikelEin(String name, int nummer) throws ArtikelExistiertBereitsException {
 			Artikel a = new Artikel(name, nummer);
-			return meineArtikel.einfuegen(a);
+			String rueckmeldung = meineArtikel.einfuegen(a);
+			return rueckmeldung;
 		}
 		
 		public String fuegeArtikelEin(String name, int nummer, int anzahl) throws ArtikelExistiertBereitsException {
 			Artikel a = new Artikel(name, nummer, anzahl);
-			return meineArtikel.einfuegen(a);
+			String rueckmeldung = meineArtikel.einfuegen(a);
+			return rueckmeldung;
 		}
 
+		public void aendereAnzahl(int nummer, int anzahl) {
+			
+			meineArtikel.aendereArtikelAnzahl(nummer, anzahl);
+			
+		}
+		
+		public void verschiebeWarenkorb(int nummer, int anzahl) {
+			
+			String sitzungsNr = Sitzung.getSitzungsNr();			
+			meineArtikel.verschieben(nummer, anzahl, sitzungsNr);
+			
+		}
+		
 		/**
 		 * Methode zum Löschen eines Buchs aus dem Bestand. 
 		 * Es wird nur das erste Vorkommen des Buchs gelöscht.

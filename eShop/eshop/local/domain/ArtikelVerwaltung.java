@@ -122,6 +122,30 @@ public class ArtikelVerwaltung {
 		artikelBestand.remove(einArtikel);
 	}
 
+	public void aendereArtikelAnzahl(int nummer, int anzahl) {
+		
+		int zaehler = -1;
+		
+		// Buchbestand durchlaufen und nach Titel suchen
+		Iterator<Artikel> iter = artikelBestand.iterator();
+		while (iter.hasNext()) {
+			zaehler++;
+			// WICHTIG: Type Cast auf 'Buch' für späteren Zugriff auf Titel
+			// 		    hier nicht erforderlich wegen Verwendung von Generics
+			// 			(-> Vergleiche mit Einsatz von Vector OHNE Generics)
+			Artikel a = iter.next();
+			if (a.getNummer() == nummer)
+				artikelBestand.get(zaehler).setAnzahl(anzahl);
+		}
+		
+	}
+	
+	public void verschieben(int nummer, int anzahl, String sitzungsNr) {
+		
+		// start here!
+		
+	}
+	
 	/**
 	 * Methode, die anhand eines Titels nach Büchern sucht. Es wird eine Liste von Büchern
 	 * zurückgegeben, die alle Bücher mit exakt übereinstimmendem Titel enthält.

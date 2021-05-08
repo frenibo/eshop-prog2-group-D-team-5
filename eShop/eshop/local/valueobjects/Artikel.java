@@ -74,6 +74,7 @@ public class Artikel {
 		public int getNummer() {
 			return nummer;
 		}
+		
 
 		public String getName() {
 			return name;
@@ -89,6 +90,11 @@ public class Artikel {
 		
 		public String getBeschreibung() {
 			return beschreibung;
+		}
+
+		public void setAnzahl(int anzahl) {
+			this.verfuegbarkeit = anzahl;
+			
 		}
 
 }
