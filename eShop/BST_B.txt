@@ -18,3 +18,13 @@ Kaugummi
 0
 0.0
 
+bla bla
+5
+0
+0.0
+
+Buch
+6
+0
+0.0
+

@@ -1,0 +1,22 @@
+package eshop.local.ui.cui;
+
+import java.io.IOException;
+
+import eshop.local.ui.Sitzung;
+
+public class Main {
+	
+	public static void main(String[] args) {
+		Sitzung stz;
+		try {
+			stz = new Sitzung("BST");
+			stz.run();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+
+}

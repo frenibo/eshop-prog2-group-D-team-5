@@ -11,13 +11,11 @@ public class User {
 	private String plz = "";
 	private String wohnort = "";
 	
-	public User(String sitzungsNr) {
-		this.sitzungsNr = sitzungsNr;
+	public User() {
 		
 	}
 
-    public User(String sitzungsNr, int nr, String name) {
-    	this.sitzungsNr = sitzungsNr;
+    public User(int nr, String name) {
 		userNr = nr;
 		this.name = name;
 	}

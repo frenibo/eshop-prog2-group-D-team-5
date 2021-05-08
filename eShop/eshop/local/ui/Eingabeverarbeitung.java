@@ -9,40 +9,49 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import eshop.local.domain.exceptions.ArtikelExistiertBereitsException;
-import eshop.local.ui.cui.EshopClientCUI;
+//import eshop.local.ui.cui.EshopClientCUI;
+import eshop.local.ui.cui.Main;
+import eshop.local.ui.Menue;
 
 public class Eingabeverarbeitung {
 
 	private String line;
 	private int level;
 	private BufferedReader in;
-	
+	private Menue menue;
 	
 	public Eingabeverarbeitung() {
 		
 		setLine("");
-		setLevel(1);
 		// Stream-Objekt fuer Texteingabe ueber Konsolenfenster erzeugen
 		this.in = new BufferedReader(new InputStreamReader(System.in));
+		this.menue = new Menue();
 	}
 	
 	public Eingabeverarbeitung(String line) {
 		
 		setLine(line);
-		setLevel(1);
 		// Stream-Objekt fuer Texteingabe ueber Konsolenfenster erzeugen
 		this.in = new BufferedReader(new InputStreamReader(System.in));
+		this.menue = new Menue();
 	}
 	
 	public Eingabeverarbeitung(String line, int level) {
 		
 		setLine(line);
 		setLevel(level);
+		// Stream-Objekt fuer Texteingabe ueber Konsolenfenster erzeugen
 		this.in = new BufferedReader(new InputStreamReader(System.in));
+		this.menue = new Menue();
 	}
 	
 	public void setLevel(int level) {
 		this.level = level;
+		this.menue.setMenueLevel(level);
+	}
+	
+	public void gibMenueAus() {
+		this.menue.gibMenueAus();
 	}
 	
 	public int getLevel() {
@@ -57,6 +66,13 @@ public class Eingabeverarbeitung {
 		return this.line;
 	}
 	
+	
+	public void einlesenUndVerarbeiten() throws IOException {
+			
+		verarbeitung(liesEingabe());
+		
+	}
+	
 	public String liesEingabe() throws IOException {
 		// einlesen von Konsole
 		setLine(in.readLine());
@@ -65,7 +81,11 @@ public class Eingabeverarbeitung {
 	
 	public void verarbeitung(String line) throws IOException {
 		
-		int level = this.level;
+	
+		if(this.level < 0) {
+			this.level = 1;
+		}
+
 		verarbeitungsLevel(line, level);
 	}
 	
@@ -77,21 +97,21 @@ public class Eingabeverarbeitung {
 	public void verarbeitungsLevel(String line, int level) throws IOException {
 		
 		String nummerString;
-		int nummer;
+		int nummer = 0;
 		String name;
 		List<Artikel> liste;
-		int artikelNr = 0;
+		Artikel artikel;
 		
 		if(level == 1) {
 			
 			
 			try {
-				artikelNr = Integer.parseInt(line);
+				nummer = Integer.parseInt(line);
 			} catch (Exception e) {}
 			
-			if (artikelNr > 0) {
-				liste = EshopClientCUI.bst.sucheNachNr(artikelNr);
-				EshopClientCUI.gibArtikellisteAus(liste);
+			if (nummer > 0) {
+				liste = Sitzung.bst.sucheNachNr(nummer);
+				Sitzung.gibArtikellisteAus(liste);
 				System.out.print("\n");
 			}
 			
@@ -99,8 +119,8 @@ public class Eingabeverarbeitung {
 			switch (line) {
 			//Alle Artikel anzeigen
 			case "a":
-				liste = EshopClientCUI.bst.gibAlleArtikel();
-				EshopClientCUI.gibArtikellisteAus(liste);
+				liste = Sitzung.bst.gibAlleArtikel();
+				Sitzung.gibArtikellisteAus(liste);
 				System.out.println("\n   Gib die Nr eines Artikels ein um damit zu interagieren.\n");
 				break;
 			//Artikel löschen
@@ -112,7 +132,7 @@ public class Eingabeverarbeitung {
 				System.out.print("Buchtitel  > ");
 				name = liesEingabe();
 				// Die Bibliothek das Buch löschen lassen:
-				EshopClientCUI.bst.loescheArtikel(name, nummer);
+				Sitzung.bst.loescheArtikel(name, nummer);
 				break;
 			//Artikel einfügen
 			case "e":
@@ -124,12 +144,12 @@ public class Eingabeverarbeitung {
 				name = liesEingabe();
 
 				try {
-					EshopClientCUI.bst.fuegeArtikelEin(name, nummer);
-					liste = EshopClientCUI.bst.sucheNachNr(nummer);
+					Sitzung.setAktuellerArtikel(Sitzung.bst.fuegeArtikelEin(name, nummer));
+					liste = Sitzung.bst.sucheNachNr(nummer);
 					System.out.print("\n");
-					EshopClientCUI.gibArtikellisteAus(liste);
+					Sitzung.gibArtikellisteAus(liste);
 					System.out.print("\n");
-					EshopClientCUI.setLevel(2);
+					setLevel(2);
 					
 				} catch (ArtikelExistiertBereitsException e) {
 					// Hier Fehlerbehandlung...
@@ -141,20 +161,20 @@ public class Eingabeverarbeitung {
 			case "f":
 				System.out.print("Buchtitel  > ");
 				name = liesEingabe();
-				liste = EshopClientCUI.bst.sucheNachName(name);
-				EshopClientCUI.gibArtikellisteAus(liste);
+				liste = Sitzung.bst.sucheNachName(name);
+				Sitzung.gibArtikellisteAus(liste);
 				break;
 			//Artikel sichern
 			case "s":
-				EshopClientCUI.bst.schreibeArtikel();
+				Sitzung.bst.schreibeArtikel();
 				break;
 			//Sitzungsnummer anzeigen
 			case "n":
-				System.out.println("Ihre Sitzungsnummer lautet: " + EshopClientCUI.user.getSitzungsNr() +"\n");
+				System.out.println("Ihre Sitzungsnummer lautet: " + Sitzung.getSitzungsNr() +"\n");
 				break;
 			case "r":
 				System.out.println("Neue Sitzung startet.\n");
-				EshopClientCUI.main(null);
+				Main.main(null);
 				break;
 			}
 	
@@ -163,12 +183,16 @@ public class Eingabeverarbeitung {
 		else if(level == 2) {
 			switch (line) {
 			case "s":
-				EshopClientCUI.bst.schreibeArtikel();
+				Sitzung.bst.schreibeArtikel();
 				System.out.print("Artikel in Datenbank eingetragen.\n");
 				System.out.print("\n");
-				EshopClientCUI.setLevel(1);
+				setLevel(1);
 				break;
 			case "r":
+				
+				Sitzung.bst.loescheArtikel(Sitzung.getAktuellerArtikel());
+				System.out.println("Artikel nicht gespeichert.\n");
+				setLevel(1);
 				break;
 			}
 		}

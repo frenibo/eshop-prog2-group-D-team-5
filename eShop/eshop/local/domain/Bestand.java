@@ -95,6 +95,10 @@ public class Bestand {
 			meineArtikel.loeschen(a);
 		}
 		
+		public void loescheArtikel(Artikel a) {
+			meineArtikel.loeschen(a);
+		}
+		
 		/**
 		 * Methode zum Speichern des Buchbestands in einer Datei.
 		 * 
