@@ -1,6 +1,6 @@
 Zahnbürste
 1
-93
+90
 3.5
 test
 3
@@ -18,3 +18,7 @@ bla bla
 5
 5
 0.0
+Goldbarren
+6
+30
+1000.0

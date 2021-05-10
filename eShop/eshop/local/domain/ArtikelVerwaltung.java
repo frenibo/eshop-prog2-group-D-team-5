@@ -196,7 +196,7 @@ public class ArtikelVerwaltung {
 			if(imWarenkorbHinzugefügt == false) {
 				
 				try {
-					zielListe.fuegeArtikelEin(artikelHV3.getName(), artikelHV3.getNummer(), anzahl);
+					zielListe.fuegeArtikelEin(artikelHV3.getName(), artikelHV3.getNummer(), anzahl, artikelHV3.getPreis());
 				} catch (ArtikelExistiertBereitsException e) {
 					
 				}

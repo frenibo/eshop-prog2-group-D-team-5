@@ -10,6 +10,7 @@ public class User {
 	private String strasse = "";
 	private String plz = "";
 	private String wohnort = "";
+	private String passwort = "";
 	
 	public User() {
 		

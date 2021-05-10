@@ -135,6 +135,12 @@ public class Bestand {
 			String rueckmeldung = meineArtikel.einfuegen(a);
 			return rueckmeldung;
 		}
+		
+		public String fuegeArtikelEin(String name, int nummer, int anzahl, double preis) throws ArtikelExistiertBereitsException {
+			Artikel a = new Artikel(name, nummer, anzahl, preis);
+			String rueckmeldung = meineArtikel.einfuegen(a);
+			return rueckmeldung;
+		}
 
 		public void aendereAnzahl(int nummer, int anzahl) {
 			

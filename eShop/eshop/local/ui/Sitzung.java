@@ -65,6 +65,15 @@ public class Sitzung {
 		}
 	}
 	
+	public static double gibGesamtpreisAus(List<Artikel> liste) {
+		double Gesamtpreis = 0.00;
+		for(Artikel artikel : liste) {
+			double produkt = artikel.getPreis() * artikel.getAnzahl();
+			Gesamtpreis += produkt;
+		}
+		return Gesamtpreis;
+	}
+	
 	
 	public static void run() throws IOException {
 		

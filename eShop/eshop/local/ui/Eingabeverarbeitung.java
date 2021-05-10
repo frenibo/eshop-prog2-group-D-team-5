@@ -95,12 +95,15 @@ public class Eingabeverarbeitung {
 	
 	public void verarbeitungsLevel(String line, String level) throws IOException {
 		
-		String nummerString;
-		int nummer = 0;
-		String anzahlString;
-		int anzahl = 0;
-		String name;
 		List<Artikel> liste;
+		
+		String nummerString = "";
+		int nummer = 0;
+		String anzahlString = "";
+		int anzahl = 0;
+		String name = "";
+		String preisString = "";
+		double preis = 0.0;
 		
 		if(level.equals("startmenue")) {
 			
@@ -126,6 +129,7 @@ public class Eingabeverarbeitung {
 			case "w":
 				liste = Sitzung.wnk.gibAlleArtikel();
 				Sitzung.gibArtikellisteAus(liste);
+				System.out.println("Gesamtpreis: " + Sitzung.gibGesamtpreisAus(liste) + " €");
 				break;
 			//Artikel in Warenkorb verschieben
 			case "k":
@@ -185,13 +189,16 @@ public class Eingabeverarbeitung {
 				System.out.print("Anzahl > ");
 				anzahlString = liesEingabe();
 				anzahl = Integer.parseInt(anzahlString);
+				System.out.print("Preis > ");
+				preisString = liesEingabe();
+				preis = Double.parseDouble(preisString);
 
 				try {
 					//sollte man so wahrscheinlich nicht machen:
-					String resultat = Sitzung.bst.fuegeArtikelEin(name, nummer, anzahl);
+					String resultat = Sitzung.bst.fuegeArtikelEin(name, nummer, anzahl, preis);
 					
 					if(resultat.equals("Erfolgreich hinzugefügt")) {
-						Sitzung.setAktuellerArtikel(new Artikel(name, nummer, anzahl));
+						Sitzung.setAktuellerArtikel(new Artikel(name, nummer, anzahl, preis));
 						System.out.print("\n");
 						System.out.println(Sitzung.getAktuellerArtikel());
 						setLevel("speichern");
