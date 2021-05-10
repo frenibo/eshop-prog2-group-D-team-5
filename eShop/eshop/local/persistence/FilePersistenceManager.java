@@ -104,8 +104,8 @@ public class FilePersistenceManager implements PersistenceManager {
 		//der int-Wert, der von getVerfuegbarkeit() ausgegeben wird, 
 		//wird in einen String konvertiert und in der Hilfsvariable verfuegbarkeitString zwischengespeichert.
 		//dann wird der String über schreibeZeile() in die Zeile geschrieben.
-		String verfuegbarkeitString = String.valueOf(a.getVerfuegbarkeit());
-		schreibeZeile(verfuegbarkeitString);
+		String anzahlString = String.valueOf(a.getAnzahl());
+		schreibeZeile(anzahlString);
 		
 		//hier das gleiche nochmal, nur ist der int-Wert diesmal ein double-Wert. Ich hoffe valueOf() kann das.
 		String preisString = String.valueOf(a.getPreis());

@@ -15,7 +15,6 @@ public class Bestand {
 	
 	// Präfix für Namen der Dateien, in der die Bibliotheksdaten gespeichert sind
 		private String datei = "";
-		private Path pfad;
 		
 		private ArtikelVerwaltung meineArtikel;
 		// private KundenVerwaltung meineKunden;
@@ -35,7 +34,7 @@ public class Bestand {
 		public Bestand(String datei) throws IOException {
 			this.datei = datei;
 			
-			pfad = Paths.get(datei);
+			Path pfad = Paths.get(datei);
 			
 			if(!Files.exists(pfad)) {
 				try {
@@ -64,7 +63,7 @@ public class Bestand {
 		public Bestand() throws IOException {
 			
 			this.datei = "LOCAL.txt";
-			pfad = Paths.get("LOCAL_B.txt");
+			Path pfad = Paths.get("LOCAL_B.txt");
 			
 			if(!Files.exists(pfad)) {
 				try {
@@ -143,10 +142,15 @@ public class Bestand {
 			
 		}
 		
-		public void verschiebeWarenkorb(int nummer, int anzahl) {
+		public void verschiebeInWarenkorb(int nummer, int anzahl) {
+								
+			meineArtikel.verschiebenArtikel(nummer, anzahl, Sitzung.wnk);
 			
-			String sitzungsNr = Sitzung.getSitzungsNr();			
-			meineArtikel.verschieben(nummer, anzahl, sitzungsNr);
+		}
+		
+		public void verschiebeInBestand(int nummer, int anzahl) {
+			
+			meineArtikel.verschiebenArtikel(nummer, anzahl, Sitzung.bst);
 			
 		}
 		

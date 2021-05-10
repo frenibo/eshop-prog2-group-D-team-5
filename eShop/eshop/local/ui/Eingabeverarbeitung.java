@@ -132,10 +132,20 @@ public class Eingabeverarbeitung {
 				System.out.print("Artikelnummer > ");
 				nummerString = liesEingabe();
 				nummer = Integer.parseInt(nummerString);
-				System.out.print("Neue Anzahl > ");
+				System.out.print("Anzahl > ");
 				anzahlString = liesEingabe();
 				anzahl = Integer.parseInt(anzahlString);
-				Sitzung.bst.verschiebeWarenkorb(nummer, anzahl);
+				Sitzung.bst.verschiebeInWarenkorb(nummer, anzahl);
+				break;
+				//Artikel von Warenkorb zurücklegen
+			case "l":
+				System.out.print("Artikelnummer > ");
+				nummerString = liesEingabe();
+				nummer = Integer.parseInt(nummerString);
+				System.out.print("Anzahl > ");
+				anzahlString = liesEingabe();
+				anzahl = Integer.parseInt(anzahlString);
+				Sitzung.wnk.verschiebeInBestand(nummer, anzahl);
 				break;
 			//Artikelanzahl ändern
 			case "v":
@@ -204,6 +214,7 @@ public class Eingabeverarbeitung {
 			//Artikel sichern
 			case "s":
 				Sitzung.bst.schreibeArtikel();
+				Sitzung.wnk.schreibeArtikel();
 				System.out.println("gespeichert.");
 				break;
 			//Sitzungsnummer anzeigen

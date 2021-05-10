@@ -1,11 +1,11 @@
 Zahnbürste
 1
-100
+93
 3.5
 Putzt gut.
 test
 3
-0
+7
 0.0
 
 Klopapier

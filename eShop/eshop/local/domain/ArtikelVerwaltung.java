@@ -6,6 +6,7 @@ import java.util.*;
 import eshop.local.domain.exceptions.ArtikelExistiertBereitsException;
 import eshop.local.persistence.FilePersistenceManager;
 import eshop.local.persistence.PersistenceManager;
+import eshop.local.ui.Sitzung;
 import eshop.local.valueobjects.Artikel;
 
 
@@ -140,10 +141,66 @@ public class ArtikelVerwaltung {
 		
 	}
 	
-	public void verschieben(int nummer, int anzahl, String sitzungsNr) {
+	public void verschiebenArtikel(int nummer, int anzahl, Bestand zielListe) {
 		
-		// start here!
+				int anzahlZuvor = 0;
+		boolean imBestandAbgezogen = false;
+		boolean imWarenkorbHinzugefügt = false;
+		//Hilfsvariablen
+		Artikel artikelHV = new Artikel ("error", 0, 0);
+		Artikel artikelHV2 = new Artikel ("error2", 0, 0);
+		Artikel artikelHV3 = new Artikel ("error3", 0, 0);
 		
+		List<Artikel> list = zielListe.gibAlleArtikel();
+		
+		// Bestand durchlaufen und nach Artikelnummer suchen
+		Iterator<Artikel> iter = artikelBestand.iterator();
+		while (iter.hasNext()) {
+			// WICHTIG: Type Cast auf 'Buch' für späteren Zugriff auf Titel
+			// 		    hier nicht erforderlich wegen Verwendung von Generics
+			// 			(-> Vergleiche mit Einsatz von Vector OHNE Generics)
+			artikelHV = iter.next();
+			if (artikelHV.getNummer() == nummer) {
+				anzahlZuvor = artikelHV.getAnzahl();
+				if(anzahlZuvor >= anzahl) {
+					int ergebnis = anzahlZuvor - anzahl;
+					
+					//artikelBestand.get(zaehler).setAnzahl(ergebnis);
+					artikelHV.setAnzahl(ergebnis);
+					artikelHV3 = artikelHV;
+					imBestandAbgezogen = true;
+					if(ergebnis == 0) {
+						//crashes program
+						//loeschen(artikelHV);
+					}
+				}
+				else {
+					System.out.println("Diese Menge überschreitet die Verfügbarkeit.");
+				}
+			}	
+		}
+		if(imBestandAbgezogen == true) {
+			Iterator<Artikel> iterZiel = list.iterator();
+			while (iterZiel.hasNext()) {
+				artikelHV2 = iterZiel.next();
+				if (artikelHV2.getNummer() == nummer) {
+					anzahlZuvor = artikelHV2.getAnzahl();
+					int ergebnis2 = anzahlZuvor+anzahl;
+					artikelHV2.setAnzahl(ergebnis2);
+					imWarenkorbHinzugefügt = true;
+				}
+			}
+			if(imWarenkorbHinzugefügt == false) {
+				
+				try {
+					zielListe.fuegeArtikelEin(artikelHV3.getName(), artikelHV3.getNummer(), anzahl);
+				} catch (ArtikelExistiertBereitsException e) {
+					
+				}
+				
+								
+			}
+		}	
 	}
 	
 	/**

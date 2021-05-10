@@ -37,7 +37,8 @@ public class MenueAusgabe {
 			System.out.println("\n");
 			System.out.print("Befehle: \n  (a) Alle Artikel anzeigen");
 			System.out.print("         \n  (w) Warenkorb anzeigen");
-			System.out.print("         \n  (w) Artikel in Warenkorb verschieben");
+			System.out.print("         \n  (k) Artikel in Warenkorb verschieben");
+			System.out.print("         \n  (l) Artikel von Warenkorb zurücklegen");
 			System.out.print("         \n  (v) Artikelanzahl ändern");
 			System.out.print("         \n  (d) Artikel löschen");
 			System.out.print("         \n  (e) Artikel einfügen");

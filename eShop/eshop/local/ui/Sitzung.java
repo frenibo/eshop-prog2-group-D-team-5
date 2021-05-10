@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import eshop.local.domain.Bestand;
+import eshop.local.domain.exceptions.ArtikelExistiertBereitsException;
 import eshop.local.valueobjects.Artikel;
 import eshop.local.valueobjects.User;
 
@@ -93,6 +94,10 @@ public class Sitzung {
 	
 	public static String getSitzungsNr() {
 		return aktuelleSitzungsNr;
+	}
+	
+	public static Bestand getWarenkorb() {
+		return wnk;
 	}
 
 	public static void setAktuellerArtikel(Artikel a) {

@@ -5,7 +5,7 @@ public class Artikel {
 	// Attribute zur Beschreibung eines Artikels:
 		private String name;
 		private int nummer;
-		private int verfuegbarkeit;
+		private int anzahl;
 		private double preis;
 		private String beschreibung;
 		
@@ -16,18 +16,18 @@ public class Artikel {
 			this(titel, nr, 0, 0.00, "");
 		}
 		
-		public Artikel(String titel, int nr, int verfuegbarkeit) {
-			this(titel, nr, verfuegbarkeit, 0.00, "");
+		public Artikel(String titel, int nr, int anzahl) {
+			this(titel, nr, anzahl, 0.00, "");
 		}
 		
-		public Artikel(String titel, int nr, int verfuegbarkeit, double preis) {
-			this(titel, nr, verfuegbarkeit, preis, "");
+		public Artikel(String titel, int nr, int anzahl, double preis) {
+			this(titel, nr, anzahl, preis, "");
 		}
 
-		public Artikel(String titel, int nr, int verfuegbarkeit, double preis, String beschreibung) {
+		public Artikel(String titel, int nr, int anzahl, double preis, String beschreibung) {
 			nummer = nr;
 			this.name = titel;
-			this.verfuegbarkeit = verfuegbarkeit;
+			this.anzahl = anzahl;
 			this.preis = preis;
 			this.beschreibung = beschreibung;
 		}
@@ -40,7 +40,7 @@ public class Artikel {
 		 * @see java.lang.Object#toString()
 		 */
 		public String toString() {
-			return ("Nr: " + nummer + " / Titel: " + name + " / Preis: " + preis + " / Verfuegbarkeit: " + verfuegbarkeit + " / Beschreibung: " + beschreibung);
+			return ("Nr: " + nummer + " / Titel: " + name + " / Preis: " + preis + " / Verfuegbarkeit: " + anzahl + " / Beschreibung: " + beschreibung);
 		}
 		
 		// --- Dienste der Artikel-Objekte ---
@@ -65,7 +65,7 @@ public class Artikel {
 		 */
 		
 		public boolean isVerfuegbar() {
-			if(this.verfuegbarkeit > 0) {
+			if(this.anzahl > 0) {
 				return true;
 			}
 			else return false;
@@ -80,8 +80,8 @@ public class Artikel {
 			return name;
 		}
 
-		public int getVerfuegbarkeit() {
-			return verfuegbarkeit;
+		public int getAnzahl() {
+			return anzahl;
 		}
 		
 		public double getPreis() {
@@ -92,8 +92,9 @@ public class Artikel {
 			return beschreibung;
 		}
 
+		
 		public void setAnzahl(int anzahl) {
-			this.verfuegbarkeit = anzahl;
+			this.anzahl = anzahl;
 			
 		}
 
