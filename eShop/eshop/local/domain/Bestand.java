@@ -157,6 +157,8 @@ public class Bestand {
 		public void warenkorbLeeren() {
 			
 			meineArtikel.alleArtikelVerschieben(Sitzung.bst);
+			//crashes program (may be out of sync)
+			//meineArtikel.alleArtikelLoeschen();
 		}
 		
 		/**

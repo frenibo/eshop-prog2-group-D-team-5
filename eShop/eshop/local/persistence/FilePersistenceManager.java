@@ -79,8 +79,6 @@ public class FilePersistenceManager implements PersistenceManager {
 		String preisString = liesZeile();
 		double preis = Double.parseDouble(preisString);
 		
-		String beschreibung = liesZeile();
-		
 		
 		
 		// neues Buch-Objekt anlegen und zurückgeben

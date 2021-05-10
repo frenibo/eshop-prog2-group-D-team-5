@@ -6,7 +6,6 @@ import java.util.*;
 import eshop.local.domain.exceptions.ArtikelExistiertBereitsException;
 import eshop.local.persistence.FilePersistenceManager;
 import eshop.local.persistence.PersistenceManager;
-import eshop.local.ui.Sitzung;
 import eshop.local.valueobjects.Artikel;
 
 
@@ -79,7 +78,7 @@ public class ArtikelVerwaltung {
 		// Persistenz-Schnittstelle wieder schließen
 		pm.close();
 	}
-
+	
 	/**
 	 * Methode, die ein Buch an das Ende der Bücherliste einfügt.
 	 * 
@@ -121,6 +120,12 @@ public class ArtikelVerwaltung {
 	public void loeschen(Artikel einArtikel) {
 		// das übernimmt der Vector:
 		artikelBestand.remove(einArtikel);
+	}
+	
+	public void alleArtikelLoeschen() {
+		for(Artikel a:artikelBestand) {
+			artikelBestand.remove(a);
+		}
 	}
 
 	public void aendereArtikelAnzahl(int nummer, int anzahl) {
@@ -204,20 +209,27 @@ public class ArtikelVerwaltung {
 	public void alleArtikelVerschieben(Bestand zielListe) {
 		
 		boolean imWarenkorbHinzugefügt = false;
-		//Hilfsvariablen
+		
 		Artikel artikelUrsprung = new Artikel ("error", 0, 0);
 		Artikel artikelZiel = new Artikel ("error2", 0, 0);
 		
 		List<Artikel> list = zielListe.gibAlleArtikel();
-		Iterator<Artikel> iterZiel = list.iterator();
 		
 		// Bestand durchlaufen und nach Artikelnummer suchen
 		Iterator<Artikel> iterUrsprung = artikelBestand.iterator();
+		
 		while (iterUrsprung.hasNext()) {
 			
-			imWarenkorbHinzugefügt = false;
-
+			// Zielliste durchlaufen und nach Artikelnummer suchen
+			// Muss hier gesetzt werden und nicht außerhalb der while Schleife
+			// um iterZiel auf null zu setzen.
+			Iterator<Artikel> iterZiel = list.iterator();
+			
+			// artikelUrsprung scheint auf das Artikelobjekt im artikelBestand zu zeigen.
+			// ich hatte angenommen es wäre 
 			artikelUrsprung = iterUrsprung.next();
+			
+			imWarenkorbHinzugefügt = false;
 						
 			while (iterZiel.hasNext()) {
 				
@@ -227,7 +239,6 @@ public class ArtikelVerwaltung {
 					int zielAnzahl = artikelZiel.getAnzahl();
 					int ursprungAnzahl = artikelUrsprung.getAnzahl();
 					int ergebnis = zielAnzahl + ursprungAnzahl; 
-					System.out.println(ergebnis);
 					artikelZiel.setAnzahl(ergebnis);
 					imWarenkorbHinzugefügt = true;
 				}
@@ -239,15 +250,12 @@ public class ArtikelVerwaltung {
 					
 				}
 			}
+			
 			artikelUrsprung.setAnzahl(0);
-			//crashes program:
+			//crashes program for some reason:
 			//loeschen(artikelUrsprung);
 			//artikelBestand.remove(artikelUrsprung);
 		}
-
-		
-		
-			
 	}
 	
 	
