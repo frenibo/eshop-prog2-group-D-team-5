@@ -84,7 +84,7 @@ public class FilePersistenceManager implements PersistenceManager {
 		
 		
 		// neues Buch-Objekt anlegen und zurückgeben
-		return new Artikel(name, nummer, verfuegbarkeit, preis, beschreibung);
+		return new Artikel(name, nummer, verfuegbarkeit, preis);
 	}
 
 	/**
@@ -109,11 +109,7 @@ public class FilePersistenceManager implements PersistenceManager {
 		
 		//hier das gleiche nochmal, nur ist der int-Wert diesmal ein double-Wert. Ich hoffe valueOf() kann das.
 		String preisString = String.valueOf(a.getPreis());
-		schreibeZeile(preisString);
-		
-		//getBeschreibung() returned einen String also ist keine umwandlung nötig, um ihn in die Zeile zu schreiben.
-		schreibeZeile(a.getBeschreibung());
-		
+		schreibeZeile(preisString);		
 
 		return true;
 	}

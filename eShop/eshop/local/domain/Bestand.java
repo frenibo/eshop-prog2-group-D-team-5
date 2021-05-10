@@ -154,6 +154,11 @@ public class Bestand {
 			
 		}
 		
+		public void warenkorbLeeren() {
+			
+			meineArtikel.alleArtikelVerschieben(Sitzung.bst);
+		}
+		
 		/**
 		 * Methode zum Löschen eines Buchs aus dem Bestand. 
 		 * Es wird nur das erste Vorkommen des Buchs gelöscht.

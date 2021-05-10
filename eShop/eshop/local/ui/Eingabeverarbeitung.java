@@ -147,6 +147,11 @@ public class Eingabeverarbeitung {
 				anzahl = Integer.parseInt(anzahlString);
 				Sitzung.wnk.verschiebeInBestand(nummer, anzahl);
 				break;
+			//Warenkorb leeren
+			case "wl":
+				Sitzung.wnk.warenkorbLeeren();
+				System.out.println("Warenkorb geleert.");
+				break;
 			//Artikelanzahl ändern
 			case "v":
 				System.out.print("Artikelnummer > ");

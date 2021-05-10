@@ -7,29 +7,29 @@ public class Artikel {
 		private int nummer;
 		private int anzahl;
 		private double preis;
-		private String beschreibung;
 		
 		
 	
 		
 		public Artikel(String titel, int nr) {
-			this(titel, nr, 0, 0.00, "");
+			nummer = nr;
+			this.name = titel;
+			this.anzahl = 0;
+			this.preis = 0.00;
 		}
 		
 		public Artikel(String titel, int nr, int anzahl) {
-			this(titel, nr, anzahl, 0.00, "");
+			nummer = nr;
+			this.name = titel;
+			this.anzahl = anzahl;
+			this.preis = 0.00;
 		}
 		
 		public Artikel(String titel, int nr, int anzahl, double preis) {
-			this(titel, nr, anzahl, preis, "");
-		}
-
-		public Artikel(String titel, int nr, int anzahl, double preis, String beschreibung) {
 			nummer = nr;
 			this.name = titel;
 			this.anzahl = anzahl;
 			this.preis = preis;
-			this.beschreibung = beschreibung;
 		}
 		
 		/**
@@ -40,7 +40,9 @@ public class Artikel {
 		 * @see java.lang.Object#toString()
 		 */
 		public String toString() {
-			return ("Nr: " + nummer + " / Titel: " + name + " / Preis: " + preis + " / Verfuegbarkeit: " + anzahl + " / Beschreibung: " + beschreibung);
+			//TODO: Artikel mit String.format spaltenweise ausgeben.
+			//String artikelString = String.format("%5s);
+			return ("Nr: " + nummer + " / Name: " + name + " / Preis: " + preis + " / Anzahl: " + anzahl);
 		}
 		
 		// --- Dienste der Artikel-Objekte ---
@@ -87,11 +89,6 @@ public class Artikel {
 		public double getPreis() {
 			return preis;
 		}
-		
-		public String getBeschreibung() {
-			return beschreibung;
-		}
-
 		
 		public void setAnzahl(int anzahl) {
 			this.anzahl = anzahl;

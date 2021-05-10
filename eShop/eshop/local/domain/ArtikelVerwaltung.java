@@ -143,7 +143,7 @@ public class ArtikelVerwaltung {
 	
 	public void verschiebenArtikel(int nummer, int anzahl, Bestand zielListe) {
 		
-				int anzahlZuvor = 0;
+		int anzahlZuvor = 0;
 		boolean imBestandAbgezogen = false;
 		boolean imWarenkorbHinzugefügt = false;
 		//Hilfsvariablen
@@ -156,9 +156,7 @@ public class ArtikelVerwaltung {
 		// Bestand durchlaufen und nach Artikelnummer suchen
 		Iterator<Artikel> iter = artikelBestand.iterator();
 		while (iter.hasNext()) {
-			// WICHTIG: Type Cast auf 'Buch' für späteren Zugriff auf Titel
-			// 		    hier nicht erforderlich wegen Verwendung von Generics
-			// 			(-> Vergleiche mit Einsatz von Vector OHNE Generics)
+
 			artikelHV = iter.next();
 			if (artikelHV.getNummer() == nummer) {
 				anzahlZuvor = artikelHV.getAnzahl();
@@ -202,6 +200,56 @@ public class ArtikelVerwaltung {
 			}
 		}	
 	}
+	
+	public void alleArtikelVerschieben(Bestand zielListe) {
+		
+		boolean imWarenkorbHinzugefügt = false;
+		//Hilfsvariablen
+		Artikel artikelUrsprung = new Artikel ("error", 0, 0);
+		Artikel artikelZiel = new Artikel ("error2", 0, 0);
+		
+		List<Artikel> list = zielListe.gibAlleArtikel();
+		Iterator<Artikel> iterZiel = list.iterator();
+		
+		// Bestand durchlaufen und nach Artikelnummer suchen
+		Iterator<Artikel> iterUrsprung = artikelBestand.iterator();
+		while (iterUrsprung.hasNext()) {
+			
+			imWarenkorbHinzugefügt = false;
+
+			artikelUrsprung = iterUrsprung.next();
+						
+			while (iterZiel.hasNext()) {
+				
+				artikelZiel = iterZiel.next();
+				
+				if (artikelZiel.getNummer() == artikelUrsprung.getNummer()) {
+					int zielAnzahl = artikelZiel.getAnzahl();
+					int ursprungAnzahl = artikelUrsprung.getAnzahl();
+					int ergebnis = zielAnzahl + ursprungAnzahl; 
+					System.out.println(ergebnis);
+					artikelZiel.setAnzahl(ergebnis);
+					imWarenkorbHinzugefügt = true;
+				}
+			}
+			if(imWarenkorbHinzugefügt == false) {
+				try {
+					zielListe.fuegeArtikelEin(artikelUrsprung.getName(), artikelUrsprung.getNummer(), artikelUrsprung.getAnzahl());
+				} catch (ArtikelExistiertBereitsException e) {
+					
+				}
+			}
+			artikelUrsprung.setAnzahl(0);
+			//crashes program:
+			//loeschen(artikelUrsprung);
+			//artikelBestand.remove(artikelUrsprung);
+		}
+
+		
+		
+			
+	}
+	
 	
 	/**
 	 * Methode, die anhand eines Titels nach Büchern sucht. Es wird eine Liste von Büchern

@@ -13,11 +13,12 @@ public class Main {
 			Sitzung.run();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 	}
 	
-	
+	//TODO: login, registrieren, cleanup, Ein-Auslagerung-Eventmanager, Warenkorb (komplett) leeren, 
 
 }
 

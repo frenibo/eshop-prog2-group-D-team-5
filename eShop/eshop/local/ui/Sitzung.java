@@ -14,7 +14,6 @@ public class Sitzung {
 	
 	public static Bestand bst;
 	public static Bestand wnk;
-	public static User user;
 	private static Eingabeverarbeitung ev;
 	
 	private static Artikel aktuellerArtikel;
@@ -29,9 +28,6 @@ public class Sitzung {
 		
 		// neue Warenkorb-Liste wird angelegt.
 		wnk = new Bestand(getSitzungsNr()+".txt");
-
-		// Jede "Sitzung", ob angemeldet oder nicht, erzeugt ein Kunden-Objekt. Zuerst aber nur mit "sitzungsNr" und wenigen Rechten.
-		user = new User();
 	
 		// 
 		ev = new Eingabeverarbeitung();
@@ -46,9 +42,6 @@ public class Sitzung {
 		
 		// neue Warenkorb-Liste wird angelegt.
 		wnk = new Bestand(getSitzungsNr()+".txt");
-
-		// Jede "Sitzung", ob angemeldet oder nicht, erzeugt ein Kunden-Objekt. Zuerst aber nur mit "sitzungsNr" und wenigen Rechten.
-		user = new User();
 	
 		// 
 		ev = new Eingabeverarbeitung();
@@ -76,6 +69,7 @@ public class Sitzung {
 	public static void run() throws IOException {
 		
 		String input = "";
+		cleanUp();
 		ev.setLevel("startmenue");
 	
 		do {
@@ -90,6 +84,19 @@ public class Sitzung {
 				e.printStackTrace();
 			}
 		} while (!input.equals("q"));
+	}
+	
+	public static boolean cleanUp() {
+		//legt für jedes Warenkorb-Textobjekt(.txt) im Speicher eine Artikelliste an
+		//und verschiebt jeden Artikel in die Bestand-Artikelliste
+		//löscht dann die Warenkorb-Textobjekte(.txt)
+		//und speichert dann.
+		
+		//Achtung! Wird der neue Warenkorb vor dem cleanup erstellt, so wird auch er gelöscht
+		//dies ist momentan der Fall.
+		//Warenkorb könnte in cleanUp() erstellt werden.
+		
+		return true;
 	}
 	
 	public static String getSitzungsNr() {
