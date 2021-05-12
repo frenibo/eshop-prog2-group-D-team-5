@@ -5,15 +5,17 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import eshop.local.domain.Bestand;
+import eshop.local.domain.ArtikelVektorListe;
+import eshop.local.domain.UserVektorListe;
 import eshop.local.domain.exceptions.ArtikelExistiertBereitsException;
 import eshop.local.valueobjects.Artikel;
 import eshop.local.valueobjects.User;
 
 public class Sitzung {
 	
-	public static Bestand bst;
-	public static Bestand wnk;
+	public static ArtikelVektorListe bst;
+	public static ArtikelVektorListe wnk;
+	public static UserVektorListe usr;
 	private static Eingabeverarbeitung ev;
 	
 	private static Artikel aktuellerArtikel;
@@ -24,10 +26,10 @@ public class Sitzung {
 		aktuelleSitzungsNr = neueSitzungsNr();
 		// die Bst-Verwaltung erledigt die Aufgaben, 
 		// die nichts mit Ein-/Ausgabe zu tun haben
-		bst = new Bestand();
+		bst = new ArtikelVektorListe();
 		
 		// neue Warenkorb-Liste wird angelegt.
-		wnk = new Bestand(getSitzungsNr()+".txt");
+		wnk = new ArtikelVektorListe(getSitzungsNr()+".txt");
 	
 		// 
 		ev = new Eingabeverarbeitung();
@@ -38,11 +40,27 @@ public class Sitzung {
 		aktuelleSitzungsNr = neueSitzungsNr();
 		// die Bst-Verwaltung erledigt die Aufgaben, 
 		// die nichts mit Ein-/Ausgabe zu tun haben
-		bst = new Bestand(datei);
+		bst = new ArtikelVektorListe(datei);
 		
 		// neue Warenkorb-Liste wird angelegt.
-		wnk = new Bestand(getSitzungsNr()+".txt");
+		wnk = new ArtikelVektorListe(getSitzungsNr()+".txt");
 	
+		// 
+		ev = new Eingabeverarbeitung();
+	}
+	
+	public Sitzung(String dateiArtikel, String dateiUser) throws IOException {
+		
+		aktuelleSitzungsNr = neueSitzungsNr();
+		// die Bst-Verwaltung erledigt die Aufgaben, 
+		// die nichts mit Ein-/Ausgabe zu tun haben
+		bst = new ArtikelVektorListe(dateiArtikel);
+		
+		// neue Warenkorb-Liste wird angelegt.
+		wnk = new ArtikelVektorListe(getSitzungsNr()+".txt");
+	
+		usr = new UserVektorListe(dateiUser);
+		
 		// 
 		ev = new Eingabeverarbeitung();
 	}
@@ -65,15 +83,15 @@ public class Sitzung {
 		}
 	}
 	
-	public static double gibGesamtpreisAus(List<Artikel> liste) {
-		double Gesamtpreis = 0.00;
-		for(Artikel artikel : liste) {
-			double produkt = artikel.getPreis() * artikel.getAnzahl();
-			Gesamtpreis += produkt;
+	public static void gibUserlisteAus(List<User> liste) {
+		if (liste.isEmpty()) {
+			System.out.println("Liste ist leer.");
+		} else {
+			for (User user : liste) {
+				System.out.println(user);
+			}
 		}
-		return Gesamtpreis;
 	}
-	
 	
 	public static void run() throws IOException {
 		
@@ -112,7 +130,7 @@ public class Sitzung {
 		return aktuelleSitzungsNr;
 	}
 	
-	public static Bestand getWarenkorb() {
+	public static ArtikelVektorListe getWarenkorb() {
 		return wnk;
 	}
 

@@ -3,6 +3,7 @@ package eshop.local.persistence;
 import java.io.IOException;
 
 import eshop.local.valueobjects.Artikel;
+import eshop.local.valueobjects.User;
 
 public class DBPersistenceManager implements PersistenceManager {
 
@@ -36,20 +37,16 @@ public class DBPersistenceManager implements PersistenceManager {
 		return false;
 	}
 
-	/*
-	 *  Wenn später mal eine Kundenverwaltung ergänzt wird:
-
 	@Override
-	public Kunde ladeKunde() throws IOException {
+	public User ladeUser() throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public boolean speichereKunde(Kunde k) throws IOException {
+	public boolean speichereUser(User u) throws IOException {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	*/
 }

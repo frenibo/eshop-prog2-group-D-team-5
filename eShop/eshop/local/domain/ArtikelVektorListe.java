@@ -11,7 +11,7 @@ import eshop.local.domain.exceptions.ArtikelExistiertBereitsException;
 import eshop.local.ui.Sitzung;
 import eshop.local.valueobjects.Artikel;
 
-public class Bestand {
+public class ArtikelVektorListe {
 	
 	// Präfix für Namen der Dateien, in der die Bibliotheksdaten gespeichert sind
 		private String datei = "";
@@ -31,7 +31,7 @@ public class Bestand {
 		 * @param datei Präfix für Dateien mit Basisdaten (Bücher, Kunden, Autoren)
 		 * @throws IOException z.B. wenn eine der Dateien nicht existiert.
 		 */
-		public Bestand(String datei) throws IOException {
+		public ArtikelVektorListe(String datei) throws IOException {
 			this.datei = datei;
 			
 			Path pfad = Paths.get(datei);
@@ -60,7 +60,7 @@ public class Bestand {
 //			so wird eine "lokale", völlig leere Datei mit Namen LOCAL_B.txt erstellt
 //			existiert diese Datei bereits, so wird sie nicht erstellt und 
 //			es wird mit der bereits existierenden Datei gearbeitet.
-		public Bestand() throws IOException {
+		public ArtikelVektorListe() throws IOException {
 			
 			this.datei = "LOCAL.txt";
 			Path pfad = Paths.get("LOCAL_B.txt");
@@ -95,6 +95,16 @@ public class Bestand {
 		public List<Artikel> gibAlleArtikel() {
 			// einfach delegieren an BuecherVerwaltung meineBuecher
 			return meineArtikel.getArtikelBestand();
+		}
+		
+		public double gibGesamtpreis() {
+			double Gesamtpreis = 0.00;
+			for(Artikel artikel : meineArtikel.getArtikelBestand()) {
+				double produkt = artikel.getPreis() * artikel.getAnzahl();
+				Gesamtpreis += produkt;
+			}
+			return Gesamtpreis;
+		//verschieben in ArtikelVerwaltung?
 		}
 
 		/**

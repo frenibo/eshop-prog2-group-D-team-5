@@ -1,6 +1,6 @@
 Zahnbürste
 1
-90
+84
 3.5
 test
 3

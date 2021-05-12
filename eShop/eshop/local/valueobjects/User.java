@@ -2,32 +2,52 @@ package eshop.local.valueobjects;
 
 public class User {
 
-	private String sitzungsNr;
-	
 	private int userNr;
-
 	private String name;
-	private String strasse = "";
-	private String plz = "";
-	private String wohnort = "";
+	private String adresse;
 	private String passwort = "";
 	
-	public User() {
-		
+	//benötigt vllt noch eine String-Liste als Attribut, welches jede SitzungsNr seiner bisherigen Einkäufe beinhaltet.
+	
+	public User(int userNr, String name) {
+		this.userNr = userNr;
+		this.name = name;
+		this.adresse = "Niemandsland";
+		this.passwort = "passwort";
 	}
 
-    public User(int nr, String name) {
-		userNr = nr;
+    public User(int userNr, String name, String adresse, String passwort) {
+		this.userNr = userNr;
 		this.name = name;
+		this.adresse = adresse;
+		this.passwort = passwort;
 	}
     
-    
-	
+    /**
+	 * Standard-Methode von Object überschrieben.
+	 * Methode wird immer automatisch aufgerufen, wenn ein Buch-Objekt als String
+	 * benutzt wird (z.B. in println(buch);)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		//TODO: Artikel mit String.format spaltenweise ausgeben.
+		//String artikelString = String.format("%5s);
+		return ("Nr: " + userNr + " / Name: " + name + " / Adresse: " + adresse + " / Passwort: " + passwort);
+	}
     
 	// Methoden zum Setzen und Lesen der Kunden-Eigenschaften,
 	// z.B. getStrasse() und setStrasse()
 	
-	public String getName() {
+	public int getUserNr() {
+		return userNr;
+	}
+	
+	public void setUserNr(int userNr){
+		this.userNr = userNr;
+	}
+    
+    public String getName() {
 		return name;
 	}
 
@@ -35,40 +55,20 @@ public class User {
 		this.name = name;
 	}
 
-	public String getPlz() {
-		return plz;
+	public String getAdresse() {
+		return adresse;
 	}
 
-	public void setPlz(String plz) {
-		this.plz = plz;
-	}
-
-	public String getStrasse() {
-		return strasse;
-	}
-
-	public void setStrasse(String strasse) {
-		this.strasse = strasse;
-	}
-
-	public String getWohnort() {
-		return wohnort;
-	}
-
-	public void setWohnort(String wohnort) {
-		this.wohnort = wohnort;
-	}
-
-	public int getUserNr() {
-		return userNr;
+	public void setAdresse(String adresse) {
+		this.adresse = adresse;
 	}
 	
-	public void setSitzungsNr(String sitzungsNr) {
-		this.sitzungsNr = sitzungsNr;
+	public void setPasswort(String passwort) {
+		this.passwort = passwort;
 	}
 	
-	public String getSitzungsNr() {
-		return sitzungsNr;
+	public String getPasswort() {
+		return passwort;
 	}
 
 	// Weitere Dienste der Kunden-Objekte

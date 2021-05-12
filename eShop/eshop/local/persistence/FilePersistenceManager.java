@@ -3,6 +3,7 @@ package eshop.local.persistence;
 import java.util.*;
 
 import eshop.local.valueobjects.Artikel;
+import eshop.local.valueobjects.User;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -72,9 +73,9 @@ public class FilePersistenceManager implements PersistenceManager {
 		int nummer = Integer.parseInt(nummerString);
 		
 		// Viele viele Artikel sind im Bestand vorhanden?
-		String verfuegbarkeitString = liesZeile();
+		String anzahlString = liesZeile();
 		// String in int umwandeln
-		int verfuegbarkeit = Integer.parseInt(verfuegbarkeitString);
+		int anzahl = Integer.parseInt(anzahlString);
 		
 		String preisString = liesZeile();
 		double preis = Double.parseDouble(preisString);
@@ -82,7 +83,28 @@ public class FilePersistenceManager implements PersistenceManager {
 		
 		
 		// neues Buch-Objekt anlegen und zurückgeben
-		return new Artikel(name, nummer, verfuegbarkeit, preis);
+		return new Artikel(name, nummer, anzahl, preis);
+	}
+	
+	public User ladeUser() throws IOException {
+		
+		String userNrString = liesZeile();
+		if (userNrString == null) {
+			// keine Daten mehr vorhanden
+			return null;
+		}
+		// String in int umwandeln
+		int userNr = Integer.parseInt(userNrString);
+		
+		String name = liesZeile();
+					
+		String adresse = liesZeile();
+			
+		String passwort = liesZeile();
+		
+		
+		// neues Buch-Objekt anlegen und zurückgeben
+		return new User(userNr, name, adresse, passwort);
 	}
 
 	/**
@@ -112,20 +134,20 @@ public class FilePersistenceManager implements PersistenceManager {
 		return true;
 	}
 
-	/*
-	 *  Wenn später mal eine Kundenverwaltung ergänzt wird:
+	public boolean speichereUser(User u) throws IOException {
+			
+		String userNrString = String.valueOf(u.getUserNr() + "");
+		schreibeZeile(userNrString);
 
-	public Kunde ladeKunde() throws IOException {
-		// TODO: Implementieren
-		return null;
+		schreibeZeile(u.getName());
+
+		schreibeZeile(u.getAdresse());
+			
+		schreibeZeile(u.getPasswort());
+
+		return true;
 	}
 
-	public boolean speichereKunde(Kunde k) throws IOException {
-		// TODO: Implementieren
-		return false;
-	}
-
-	*/
 	
 	/*
 	 * Private Hilfsmethoden

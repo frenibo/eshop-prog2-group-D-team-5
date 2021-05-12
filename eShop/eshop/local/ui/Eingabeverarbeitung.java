@@ -1,6 +1,8 @@
 package eshop.local.ui;
 
 import eshop.local.valueobjects.Artikel;
+import eshop.local.valueobjects.Rechnung;
+import eshop.local.valueobjects.User;
 
 import java.util.List;
 
@@ -96,6 +98,7 @@ public class Eingabeverarbeitung {
 	public void verarbeitungsLevel(String line, String level) throws IOException {
 		
 		List<Artikel> liste;
+		List<User> userListe;
 		
 		String nummerString = "";
 		int nummer = 0;
@@ -104,6 +107,7 @@ public class Eingabeverarbeitung {
 		String name = "";
 		String preisString = "";
 		double preis = 0.0;
+		String passwort = "";
 		
 		if(level.equals("startmenue")) {
 			
@@ -125,11 +129,34 @@ public class Eingabeverarbeitung {
 				Sitzung.gibArtikellisteAus(liste);
 				System.out.println("\n   Gib die Nr eines Artikels ein um damit zu interagieren.");
 				break;
+			//Alle Artikel im Warenkorb kaufen
+			case "b":
+				System.out.println("Kundennummer >");
+				nummerString = liesEingabe();
+				nummer = Integer.parseInt(nummerString);
+				userListe = Sitzung.usr.sucheNachUserNr(nummer);
+				if(!userListe.isEmpty()) {
+					Sitzung.bst.schreibeArtikel();
+					Sitzung.wnk.schreibeArtikel();
+					liste = Sitzung.wnk.gibAlleArtikel();
+					Rechnung rechnung = new Rechnung(userListe, liste);
+					System.out.println("Kauf abgeschlossen. Hier die Rechnung: \n");
+					rechnung.gibRechnungAus();
+					System.out.println("\nNeue Sitzung startet.");
+					Main.main(null);
+				} else System.out.println("Login fehlgeschlagen");
+				
+				break;
+			//Alle User anzeigen
+			case "u":
+				userListe = Sitzung.usr.gibAlleUser();
+				Sitzung.gibUserlisteAus(userListe);
+				break;
 			//Warenkorb anzeigen
 			case "w":
 				liste = Sitzung.wnk.gibAlleArtikel();
 				Sitzung.gibArtikellisteAus(liste);
-				System.out.println("Gesamtpreis: " + Sitzung.gibGesamtpreisAus(liste) + " €");
+				System.out.println("Gesamtpreis: " + Sitzung.wnk.gibGesamtpreis() + " €");
 				break;
 			//Artikel in Warenkorb verschieben
 			case "k":
@@ -212,7 +239,7 @@ public class Eingabeverarbeitung {
 					
 				} catch (ArtikelExistiertBereitsException e) {
 					// Hier Fehlerbehandlung...
-					System.out.println("Fehler beim Einfügen");
+					System.out.println("Fehler beim einfügen");
 					e.printStackTrace();
 				}
 				break;
@@ -225,22 +252,45 @@ public class Eingabeverarbeitung {
 				break;
 			//Artikel sichern
 			case "s":
+				Sitzung.wnk.warenkorbLeeren();
 				Sitzung.bst.schreibeArtikel();
-				Sitzung.wnk.schreibeArtikel();
 				System.out.println("gespeichert.");
 				break;
 			//Sitzungsnummer anzeigen
 			case "n":
 				System.out.println("Ihre Sitzungsnummer lautet: " + Sitzung.getSitzungsNr() +"\n");
 				break;
+			case "reg":
+				System.out.print("Name  > ");
+				name = liesEingabe();
+				nummer = 1 + Sitzung.usr.gibUserAnzahl();
+				
+				try {
+					//sollte man so wahrscheinlich nicht machen:
+					Sitzung.usr.fuegeUserEin(nummer, name);
+					
+					Sitzung.usr.schreibeUser();
+					
+					System.out.println("\n Wir freuen uns Sie als neuen Kunden begrüßen zu dürfen.");
+					
+					setLevel("startmenue");
+					
+				} catch (ArtikelExistiertBereitsException e) {
+					// Hier Fehlerbehandlung...
+					System.out.println("Fehler beim registrieren");
+					e.printStackTrace();
+					break;
+				}
+				break;
+			//Neue Sitzung starten
 			case "r":
 				System.out.println("Neue Sitzung startet.\n");
 				Main.main(null);
 				break;
+			
+				}
 			}
-	
 		
-		}
 		else if(level.equals("speichern")) {
 			switch (line) {
 			case "s":

@@ -20,7 +20,7 @@ import eshop.local.valueobjects.Artikel;
 public class ArtikelVerwaltung {
 
 	// Verwaltung des Buchbestands in einem Vector
-	private List<Artikel> artikelBestand = new Vector<Artikel>();
+	private List<Artikel> artikelListe = new Vector<Artikel>();
 
 	// Persistenz-Schnittstelle, die für die Details des Dateizugriffs verantwortlich ist
 	private PersistenceManager pm = new FilePersistenceManager();
@@ -64,7 +64,7 @@ public class ArtikelVerwaltung {
 		// PersistenzManager für Schreibvorgänge öffnen
 		pm.openForWriting(datei);
 
-		for (Artikel a : artikelBestand) {
+		for (Artikel a : artikelListe) {
 			pm.speichereArtikel(a);
 		}
 
@@ -105,7 +105,7 @@ public class ArtikelVerwaltung {
 		}
 		else {
 			// das übernimmt der Vector:
-			artikelBestand.add(einArtikel);
+			artikelListe.add(einArtikel);
 			return "Erfolgreich hinzugefügt";
 		}
 
@@ -119,12 +119,12 @@ public class ArtikelVerwaltung {
 	 */
 	public void loeschen(Artikel einArtikel) {
 		// das übernimmt der Vector:
-		artikelBestand.remove(einArtikel);
+		artikelListe.remove(einArtikel);
 	}
 	
 	public void alleArtikelLoeschen() {
-		for(Artikel a:artikelBestand) {
-			artikelBestand.remove(a);
+		for(Artikel a:artikelListe) {
+			artikelListe.remove(a);
 		}
 	}
 
@@ -133,7 +133,7 @@ public class ArtikelVerwaltung {
 		int zaehler = -1;
 		
 		// Buchbestand durchlaufen und nach Titel suchen
-		Iterator<Artikel> iter = artikelBestand.iterator();
+		Iterator<Artikel> iter = artikelListe.iterator();
 		while (iter.hasNext()) {
 			zaehler++;
 			// WICHTIG: Type Cast auf 'Buch' für späteren Zugriff auf Titel
@@ -141,12 +141,12 @@ public class ArtikelVerwaltung {
 			// 			(-> Vergleiche mit Einsatz von Vector OHNE Generics)
 			Artikel a = iter.next();
 			if (a.getNummer() == nummer)
-				artikelBestand.get(zaehler).setAnzahl(anzahl);
+				artikelListe.get(zaehler).setAnzahl(anzahl);
 		}
 		
 	}
 	
-	public void verschiebenArtikel(int nummer, int anzahl, Bestand zielListe) {
+	public void verschiebenArtikel(int nummer, int anzahl, ArtikelVektorListe zielListe) {
 		
 		int anzahlZuvor = 0;
 		boolean imBestandAbgezogen = false;
@@ -159,7 +159,7 @@ public class ArtikelVerwaltung {
 		List<Artikel> list = zielListe.gibAlleArtikel();
 		
 		// Bestand durchlaufen und nach Artikelnummer suchen
-		Iterator<Artikel> iter = artikelBestand.iterator();
+		Iterator<Artikel> iter = artikelListe.iterator();
 		while (iter.hasNext()) {
 
 			artikelHV = iter.next();
@@ -206,7 +206,7 @@ public class ArtikelVerwaltung {
 		}	
 	}
 	
-	public void alleArtikelVerschieben(Bestand zielListe) {
+	public void alleArtikelVerschieben(ArtikelVektorListe zielListe) {
 		
 		boolean imWarenkorbHinzugefügt = false;
 		
@@ -216,7 +216,7 @@ public class ArtikelVerwaltung {
 		List<Artikel> list = zielListe.gibAlleArtikel();
 		
 		// Bestand durchlaufen und nach Artikelnummer suchen
-		Iterator<Artikel> iterUrsprung = artikelBestand.iterator();
+		Iterator<Artikel> iterUrsprung = artikelListe.iterator();
 		
 		while (iterUrsprung.hasNext()) {
 			
@@ -272,7 +272,7 @@ public class ArtikelVerwaltung {
 		List<Artikel> suchErg = new Vector<Artikel>();
 
 		// Buchbestand durchlaufen und nach Titel suchen
-		Iterator<Artikel> iter = artikelBestand.iterator();
+		Iterator<Artikel> iter = artikelListe.iterator();
 		while (iter.hasNext()) {
 			// WICHTIG: Type Cast auf 'Buch' für späteren Zugriff auf Titel
 			// 		    hier nicht erforderlich wegen Verwendung von Generics
@@ -298,7 +298,7 @@ public class ArtikelVerwaltung {
 		List<Artikel> suchErg = new Vector<Artikel>();
 
 		// Buchbestand durchlaufen und nach Titel suchen
-		Iterator<Artikel> iter = artikelBestand.iterator();
+		Iterator<Artikel> iter = artikelListe.iterator();
 		while (iter.hasNext()) {
 			// WICHTIG: Type Cast auf 'Buch' für späteren Zugriff auf Titel
 			// 		    hier nicht erforderlich wegen Verwendung von Generics
@@ -324,7 +324,7 @@ public class ArtikelVerwaltung {
 		List<Artikel> suchErg = new Vector<Artikel>();
 
 		// Buchbestand durchlaufen und nach Titel suchen
-		Iterator<Artikel> iter = artikelBestand.iterator();
+		Iterator<Artikel> iter = artikelListe.iterator();
 		while (iter.hasNext()) {
 			// WICHTIG: Type Cast auf 'Buch' für späteren Zugriff auf Titel
 			// 		    hier nicht erforderlich wegen Verwendung von Generics
@@ -357,7 +357,7 @@ public class ArtikelVerwaltung {
 	 * @return Liste aller Bücher im Buchbestand (Kopie)
 	 */
 	public List<Artikel> getArtikelBestand() {
-		return new Vector<Artikel>(artikelBestand);
+		return new Vector<Artikel>(artikelListe);
 	}
 	
 	// TODO: Weitere Methoden, z.B. zum Auslesen und Entfernen von Büchern

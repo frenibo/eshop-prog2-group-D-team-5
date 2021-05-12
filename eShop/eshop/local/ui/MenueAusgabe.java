@@ -36,6 +36,8 @@ public class MenueAusgabe {
 		case "startmenue":
 			System.out.println("\n");
 			System.out.print("Befehle: \n  (a) Alle Artikel anzeigen");
+			System.out.print("         \n  (b) Alle Artikel im Warenkorb kaufen");
+			System.out.print("         \n  (u) Alle User anzeigen");
 			System.out.print("         \n  (w) Warenkorb anzeigen");
 			System.out.print("         \n  (k) Artikel in Warenkorb verschieben");
 			System.out.print("         \n  (l) Artikel von Warenkorb zurücklegen");
@@ -46,6 +48,7 @@ public class MenueAusgabe {
 			System.out.print("         \n  (f) Artikel suchen");
 			System.out.print("         \n  (s) Artikel sichern");
 			System.out.print("         \n  (n) Sitzungsnummer anzeigen");
+			System.out.print("         \n  (reg) Registrieren");
 			System.out.print("         \n  ---------------------");
 			System.out.print("         \n  (r) Neue Sitzung starten");
 			System.out.println("         \n  (q) Beenden");
