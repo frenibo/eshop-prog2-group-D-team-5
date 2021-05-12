@@ -7,6 +7,7 @@ import eshop.local.domain.exceptions.ArtikelExistiertBereitsException;
 import eshop.local.persistence.FilePersistenceManager;
 import eshop.local.persistence.PersistenceManager;
 import eshop.local.valueobjects.Artikel;
+import eshop.local.valueobjects.User;
 
 
 /**
@@ -360,6 +361,13 @@ public class ArtikelVerwaltung {
 		return new Vector<Artikel>(artikelListe);
 	}
 	
+	public int getObjektAnzahl() {
+		int anzahl = 0;
+		for(Artikel a: artikelListe) {
+			anzahl++;
+		}
+		return anzahl;
+	}
 	// TODO: Weitere Methoden, z.B. zum Auslesen und Entfernen von Büchern
 	// ...
 

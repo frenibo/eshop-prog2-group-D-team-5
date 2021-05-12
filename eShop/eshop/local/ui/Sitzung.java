@@ -2,8 +2,10 @@ package eshop.local.ui;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Vector;
 
 import eshop.local.domain.ArtikelVektorListe;
 import eshop.local.domain.UserVektorListe;
@@ -73,15 +75,95 @@ public class Sitzung {
 		return sitzungsNr;
 	}
 	
-	public static void gibArtikellisteAus(List<Artikel> liste) {
-		if (liste.isEmpty()) {
+	public static void gibArtikellisteUnsortiertAus(List<Artikel> vectorListe) {
+		if (vectorListe.isEmpty()) {
 			System.out.println("Liste ist leer.");
 		} else {
-			for (Artikel artikel : liste) {
+			for (Artikel artikel : vectorListe) {
 				System.out.println(artikel);
 			}
 		}
 	}
+	
+	public static void gibArtikellisteAlphabetischAus(List<Artikel> vectorListe) {
+			String tempName = "";
+			Artikel tempArtikel = new Artikel();
+			List<Artikel> tempListe = new Vector<Artikel>();
+			//Artikelanzahl ermitteln
+			int anzahl = 0; 
+			for(Artikel a : vectorListe) {
+				anzahl++;
+			}
+			//Sortieren
+			for(int loop = 0; loop <= anzahl; loop++) {
+				tempListe = List.copyOf(vectorListe);
+				vectorListe.clear(); //convert to empty Vector<Artikel> object
+				for (Artikel artikel : tempListe) {
+					if(!tempArtikel.getName().isEmpty()) {
+						tempName = tempArtikel.getName();
+					}
+					int vergleichen = artikel.getName().toLowerCase().compareTo(tempName.toLowerCase());
+					if(vergleichen <= 0){
+						if(!tempArtikel.getName().isEmpty()) {
+							vectorListe.add(tempArtikel);
+						}
+						tempArtikel = artikel;
+					}
+					else if(vergleichen > 0) {
+						vectorListe.add(artikel);
+					}
+				}
+			}
+			//Letzten Artikel hinzufügen
+			if(!tempArtikel.getName().isEmpty()) {
+				vectorListe.add(tempArtikel);
+			}
+			//Sortierte Liste ausgeben
+			for (Artikel artikel : vectorListe) {
+				System.out.println(artikel);
+			}
+
+	}
+	
+	public static void gibArtikellisteNummerischAus(List<Artikel> vectorListe) {
+
+		Artikel tempArtikel = new Artikel();
+		List<Artikel> tempListe = new Vector<Artikel>();
+		//Artikelanzahl ermitteln
+		int anzahl = 0; 
+		for(Artikel a : vectorListe) {
+			anzahl++;
+		}
+		//Sortieren
+		for(int loop = 0; loop <= anzahl; loop++) {
+			System.out.println("loop entered");
+			tempListe = List.copyOf(vectorListe); //erstelle echte Kopie von vectorList, nicht nur einen Pointer
+			vectorListe.clear(); //convert to empty Vector<Artikel> object
+			for (Artikel artikel : tempListe) {
+				System.out.println("loop2 entered");
+				if(artikel.getNummer() > tempArtikel.getNummer()){
+					if(!tempArtikel.getName().isEmpty()) {
+						vectorListe.add(tempArtikel);
+						System.out.println("if1 entered");
+					}
+					tempArtikel = artikel;
+				}
+				else if(artikel.getNummer() <= tempArtikel.getNummer()) {
+					vectorListe.add(artikel);
+					System.out.println("if2 entered");
+				}
+			}
+		}
+		//Letzten Artikel hinzufügen
+		if(!tempArtikel.getName().isEmpty()) {
+			vectorListe.add(tempArtikel);
+		}
+		//Sortierte Liste ausgeben
+		for (Artikel artikel : vectorListe) {
+			System.out.println(artikel);
+		}
+
+}
 	
 	public static void gibUserlisteAus(List<User> liste) {
 		if (liste.isEmpty()) {

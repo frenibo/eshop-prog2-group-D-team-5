@@ -36,6 +36,8 @@ public class MenueAusgabe {
 		case "startmenue":
 			System.out.println("\n");
 			System.out.print("Befehle: \n  (a) Alle Artikel anzeigen");
+			System.out.print("         \n  (abc) Alle Artikel alphabetisch sortiert anzeigen");
+			System.out.print("         \n  (a#) Alle Artikel nummerisch sortiert anzeigen");
 			System.out.print("         \n  (b) Alle Artikel im Warenkorb kaufen");
 			System.out.print("         \n  (u) Alle User anzeigen");
 			System.out.print("         \n  (w) Warenkorb anzeigen");

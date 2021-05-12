@@ -97,6 +97,11 @@ public class ArtikelVektorListe {
 			return meineArtikel.getArtikelBestand();
 		}
 		
+		public int gibArtikelAnzahl() {
+			
+			return meineArtikel.getObjektAnzahl();
+		}
+		
 		public double gibGesamtpreis() {
 			double Gesamtpreis = 0.00;
 			for(Artikel artikel : meineArtikel.getArtikelBestand()) {

@@ -118,7 +118,8 @@ public class Eingabeverarbeitung {
 			
 			if (nummer > 0) {
 				liste = Sitzung.bst.sucheNachNr(nummer);
-				Sitzung.gibArtikellisteAus(liste);
+				Sitzung.gibArtikellisteUnsortiertAus(liste);
+
 			}
 			
 			// Eingabe bearbeiten:
@@ -126,7 +127,19 @@ public class Eingabeverarbeitung {
 			//Alle Artikel anzeigen
 			case "a":
 				liste = Sitzung.bst.gibAlleArtikel();
-				Sitzung.gibArtikellisteAus(liste);
+				Sitzung.gibArtikellisteUnsortiertAus(liste);
+				System.out.println("\n   Gib die Nr eines Artikels ein um damit zu interagieren.");
+				break;
+			//Alle Artikel alphabetisch sortiert anzeigen
+			case "abc":
+				liste = Sitzung.bst.gibAlleArtikel();
+				Sitzung.gibArtikellisteAlphabetischAus(liste);
+				System.out.println("\n   Gib die Nr eines Artikels ein um damit zu interagieren.");
+				break;
+				//Alle Artikel alphabetisch sortiert anzeigen
+			case "a#":
+				liste = Sitzung.bst.gibAlleArtikel();
+				Sitzung.gibArtikellisteNummerischAus(liste);
 				System.out.println("\n   Gib die Nr eines Artikels ein um damit zu interagieren.");
 				break;
 			//Alle Artikel im Warenkorb kaufen
@@ -155,7 +168,7 @@ public class Eingabeverarbeitung {
 			//Warenkorb anzeigen
 			case "w":
 				liste = Sitzung.wnk.gibAlleArtikel();
-				Sitzung.gibArtikellisteAus(liste);
+				Sitzung.gibArtikellisteUnsortiertAus(liste);
 				System.out.println("Gesamtpreis: " + Sitzung.wnk.gibGesamtpreis() + " €");
 				break;
 			//Artikel in Warenkorb verschieben
@@ -248,7 +261,7 @@ public class Eingabeverarbeitung {
 				System.out.print("Buchtitel  > ");
 				name = liesEingabe();
 				liste = Sitzung.bst.sucheNachName(name);
-				Sitzung.gibArtikellisteAus(liste);
+				Sitzung.gibArtikellisteUnsortiertAus(liste);
 				break;
 			//Artikel sichern
 			case "s":
@@ -294,6 +307,7 @@ public class Eingabeverarbeitung {
 		else if(level.equals("speichern")) {
 			switch (line) {
 			case "s":
+				Sitzung.wnk.warenkorbLeeren();
 				Sitzung.bst.schreibeArtikel();
 				System.out.print("Artikel in Datenbank eingetragen.\n");
 				System.out.print("\n");
