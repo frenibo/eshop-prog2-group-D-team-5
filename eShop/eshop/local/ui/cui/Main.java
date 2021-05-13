@@ -9,7 +9,7 @@ public class Main {
 	public static void main(String[] args) {
 		Sitzung stz;
 		try {
-			stz = new Sitzung("BST_B.txt", "USR_B.txt");
+			stz = new Sitzung("BST_B.txt", "USR_B.txt", "RCH_B.txt");
 			Sitzung.run();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -21,6 +21,8 @@ public class Main {
 	//TODO: login, registrieren, Warenkorb-cleanup, Ein-Auslagerung-Eventmanager, Warenkorb (komplett) leeren, 
 
 }
+
+
 
 
 

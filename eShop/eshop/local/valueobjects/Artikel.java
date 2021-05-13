@@ -10,29 +10,29 @@ public class Artikel {
 		
 		
 		public Artikel() {
-			this.nummer = 0;
 			this.name = "";
+			this.nummer = 0;
 			this.anzahl = 0;
 			this.preis = 0.00;
 		}
 		
-		public Artikel(String titel, int nummer) {
+		public Artikel(String name, int nummer) {
+			this.name = name;
 			this.nummer = nummer;
-			this.name = titel;
 			this.anzahl = 0;
 			this.preis = 0.00;
 		}
 		
-		public Artikel(String titel, int nummer, int anzahl) {
+		public Artikel(String name, int nummer, int anzahl) {
+			this.name = name;
 			this.nummer = nummer;
-			this.name = titel;
 			this.anzahl = anzahl;
 			this.preis = 0.00;
 		}
 		
-		public Artikel(String titel, int nummer, int anzahl, double preis) {
+		public Artikel(String name, int nummer, int anzahl, double preis) {
+			this.name = name;
 			this.nummer = nummer;
-			this.name = titel;
 			this.anzahl = anzahl;
 			this.preis = preis;
 		}

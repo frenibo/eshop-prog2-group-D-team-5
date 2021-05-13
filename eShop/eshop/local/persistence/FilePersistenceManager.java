@@ -3,6 +3,7 @@ package eshop.local.persistence;
 import java.util.*;
 
 import eshop.local.valueobjects.Artikel;
+import eshop.local.valueobjects.Rechnung;
 import eshop.local.valueobjects.User;
 
 import java.io.FileNotFoundException;
@@ -106,6 +107,40 @@ public class FilePersistenceManager implements PersistenceManager {
 		// neues Buch-Objekt anlegen und zurückgeben
 		return new User(userNr, name, adresse, passwort);
 	}
+	
+	public Rechnung ladeRechnung() throws IOException {
+		
+		String artikelAnzahlString = liesZeile();
+		if (artikelAnzahlString == null) {
+			// keine Daten mehr vorhanden
+			return null;
+		}
+		int artikelAnzahl = Integer.parseInt(artikelAnzahlString);
+		
+		List<Artikel> artikelListe = new Vector<Artikel>();
+		
+		for(int i = 0; i < artikelAnzahl; i++) {
+			Artikel a = ladeArtikel();
+			artikelListe.add(a);
+		}
+		
+		String gesamtpreisString = liesZeile();
+		
+		double gesamtpreis = Double.parseDouble(gesamtpreisString);
+		
+		User user = ladeUser();
+		
+		String datum = liesZeile();
+		
+		String sitzungsNr = liesZeile();
+					
+		String buchungOderKaufString = liesZeile();
+		
+		boolean buchungOderKauf = Boolean.parseBoolean(buchungOderKaufString);		
+		
+		// neues Buch-Objekt anlegen und zurückgeben
+		return new Rechnung(user, artikelListe, buchungOderKauf, sitzungsNr, datum, gesamtpreis);
+	}
 
 	/**
 	 * Methode zum Schreiben der Buchdaten in eine externe Datenquelle.
@@ -145,6 +180,30 @@ public class FilePersistenceManager implements PersistenceManager {
 			
 		schreibeZeile(u.getPasswort());
 
+		return true;
+	}
+	
+	public boolean speichereRechnung(Rechnung r) throws IOException {
+		
+		String artikelAnzahl = String.valueOf(r.getArtikelAnzahl() + "");
+		schreibeZeile(artikelAnzahl);
+		
+		for(Artikel a : r.getArtikelListe()) {
+			speichereArtikel(a);
+		}
+		
+		String gesamtPreis = String.valueOf(r.getGesamtpreis());
+		schreibeZeile(gesamtPreis);
+		
+		speichereUser(r.getUser());
+		
+		schreibeZeile(r.getDatum());
+		
+		schreibeZeile(r.getSitzungsNr());
+		
+		String kauf = String.valueOf(r.getKauf() + "");
+		schreibeZeile(kauf);
+		
 		return true;
 	}
 

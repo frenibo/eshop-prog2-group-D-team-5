@@ -141,7 +141,7 @@ public class UserVerwaltung {
 		 * @return Liste aller Bücher im Buchbestand (Kopie)
 		 */
 		public List<User> getUserListe() {
-			return new Vector<User>(userListe);
+			return userListe;
 		}
 		
 		public int getObjektAnzahl() {

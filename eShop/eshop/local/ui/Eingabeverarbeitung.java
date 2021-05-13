@@ -5,7 +5,7 @@ import eshop.local.valueobjects.Rechnung;
 import eshop.local.valueobjects.User;
 
 import java.util.List;
-
+import java.util.Vector;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -147,17 +147,19 @@ public class Eingabeverarbeitung {
 				System.out.println("Kundennummer >");
 				nummerString = liesEingabe();
 				nummer = Integer.parseInt(nummerString);
-				userListe = Sitzung.usr.sucheNachUserNr(nummer);
-				if(!userListe.isEmpty()) {
+				if(nummer != Sitzung.getAktuellerUser().getUserNr() || nummer == 0) {
+					System.out.println("Bitte loggen Sie sich zunächst ein.");
+				}
+				else {
 					Sitzung.bst.schreibeArtikel();
 					Sitzung.wnk.schreibeArtikel();
 					liste = Sitzung.wnk.gibAlleArtikel();
-					Rechnung rechnung = new Rechnung(userListe, liste);
+					Rechnung rechnung = new Rechnung(Sitzung.getAktuellerUser(), liste, false);
 					System.out.println("Kauf abgeschlossen. Hier die Rechnung: \n");
-					rechnung.gibRechnungAus();
+					System.out.println(rechnung);
 					System.out.println("\nNeue Sitzung startet.");
 					Main.main(null);
-				} else System.out.println("Login fehlgeschlagen");
+				}
 				
 				break;
 			//Alle User anzeigen
@@ -198,62 +200,77 @@ public class Eingabeverarbeitung {
 				break;
 			//Artikelanzahl ändern
 			case "v":
-				System.out.print("Artikelnummer > ");
-				nummerString = liesEingabe();
-				nummer = Integer.parseInt(nummerString);
-				System.out.print("Neue Anzahl > ");
-				anzahlString = liesEingabe();
-				anzahl = Integer.parseInt(anzahlString);
-				Sitzung.bst.aendereAnzahl(nummer, anzahl);
-				System.out.print("\nAnzahl aktualisiert.");
+				if(Sitzung.getAktuellerUser().getUserNr() == 0) {
+					System.out.println("Bitte loggen Sie sich zunächst ein.");
+				}
+				else {
+					System.out.print("Artikelnummer > ");
+					nummerString = liesEingabe();
+					nummer = Integer.parseInt(nummerString);
+					System.out.print("Neue Anzahl > ");
+					anzahlString = liesEingabe();
+					anzahl = Integer.parseInt(anzahlString);
+					Sitzung.bst.aendereAnzahl(nummer, anzahl);
+					System.out.print("\nAnzahl aktualisiert.");
+				}
 				break;
 			//Artikel löschen
 			case "d":
-				// lies die notwendigen Parameter, einzeln pro Zeile
-				System.out.print("Buchnummer > ");
-				nummerString = liesEingabe();
-				nummer = Integer.parseInt(nummerString);
-				System.out.print("Buchtitel  > ");
-				name = liesEingabe();
-				// Die Bibliothek das Buch löschen lassen:
-				Sitzung.bst.loescheArtikel(name, nummer);
+				if(Sitzung.getAktuellerUser().getUserNr() == 0) {
+					System.out.println("Bitte loggen Sie sich zunächst ein.");
+				}
+				else {
+					// lies die notwendigen Parameter, einzeln pro Zeile
+					System.out.print("Buchnummer > ");
+					nummerString = liesEingabe();
+					nummer = Integer.parseInt(nummerString);
+					System.out.print("Buchtitel  > ");
+					name = liesEingabe();
+					// Die Bibliothek das Buch löschen lassen:
+					Sitzung.bst.loescheArtikel(name, nummer);
+				}
 				break;
 			//Artikel einfügen
 			case "e":
-				// lies die notwendigen Parameter, einzeln pro Zeile
-				System.out.print("Artikelnummer > ");
-				nummerString = liesEingabe();
-				nummer = Integer.parseInt(nummerString);
-				System.out.print("Name des Artikels  > ");
-				name = liesEingabe();
-				System.out.print("Anzahl > ");
-				anzahlString = liesEingabe();
-				anzahl = Integer.parseInt(anzahlString);
-				System.out.print("Preis > ");
-				preisString = liesEingabe();
-				preis = Double.parseDouble(preisString);
+				if(Sitzung.getAktuellerUser().getUserNr() == 0) {
+					System.out.println("Bitte loggen Sie sich zunächst ein.");
+				}
+				else {
+					// lies die notwendigen Parameter, einzeln pro Zeile
+					System.out.print("Artikelnummer > ");
+					nummerString = liesEingabe();
+					nummer = Integer.parseInt(nummerString);
+					System.out.print("Name des Artikels  > ");
+					name = liesEingabe();
+					System.out.print("Anzahl > ");
+					anzahlString = liesEingabe();
+					anzahl = Integer.parseInt(anzahlString);
+					System.out.print("Preis > ");
+					preisString = liesEingabe();
+					preis = Double.parseDouble(preisString);
 
-				try {
-					//sollte man so wahrscheinlich nicht machen:
-					String resultat = Sitzung.bst.fuegeArtikelEin(name, nummer, anzahl, preis);
+					try {
+						//sollte man so wahrscheinlich nicht machen:
+						String resultat = Sitzung.bst.fuegeArtikelEin(name, nummer, anzahl, preis);
 					
-					if(resultat.equals("Erfolgreich hinzugefügt")) {
-						Sitzung.setAktuellerArtikel(new Artikel(name, nummer, anzahl, preis));
-						System.out.print("\n");
-						System.out.println(Sitzung.getAktuellerArtikel());
-						setLevel("speichern");
-					}
-					else if(resultat.equals("Artikel existiert bereits")) {
-						setLevel("startmenue");
-					}
-					else if(resultat.equals("Nummer vergeben")) {
-						setLevel("startmenue");
-					}
+						if(resultat.equals("Erfolgreich hinzugefügt")) {
+							Sitzung.setAktuellerArtikel(new Artikel(name, nummer, anzahl, preis));
+							System.out.print("\n");
+							System.out.println(Sitzung.getAktuellerArtikel());
+							setLevel("speichern");
+						}
+						else if(resultat.equals("Artikel existiert bereits")) {
+							setLevel("startmenue");
+						}
+						else if(resultat.equals("Nummer vergeben")) {
+							setLevel("startmenue");
+						}
 					
-				} catch (ArtikelExistiertBereitsException e) {
-					// Hier Fehlerbehandlung...
-					System.out.println("Fehler beim einfügen");
-					e.printStackTrace();
+					} catch (ArtikelExistiertBereitsException e) {
+						// Hier Fehlerbehandlung...
+						System.out.println("Fehler beim einfügen");
+						e.printStackTrace();
+					}
 				}
 				break;
 			//Artikel suchen
@@ -266,13 +283,36 @@ public class Eingabeverarbeitung {
 			//Artikel sichern
 			case "s":
 				Sitzung.wnk.warenkorbLeeren();
+				
+				Rechnung rechnung = new Rechnung(Sitzung.getAktuellerUser(), Sitzung.produceAenderungsListe(), false);
+				System.out.println(rechnung);
+				
 				Sitzung.bst.schreibeArtikel();
+				Sitzung.rch.schreibeRechnung();
 				System.out.println("gespeichert.");
 				break;
 			//Sitzungsnummer anzeigen
 			case "n":
 				System.out.println("Ihre Sitzungsnummer lautet: " + Sitzung.getSitzungsNr() +"\n");
 				break;
+			//Login
+			case "log":
+				System.out.print("Name  > ");
+				name = liesEingabe();
+				boolean erfolgreich = false;
+				for(User u : Sitzung.usr.gibAlleUser()) {
+					if(u.getName().equals(name)) {
+						Sitzung.setAktuellerUser(u);
+						System.out.println("Willkommen " + u.getName() + "!");
+						System.out.println("Userdaten: " + Sitzung.getAktuellerUser());
+						erfolgreich = true;
+					}
+				}
+				if(!erfolgreich) {
+					System.out.println("User mit dem Namen \"" + name + "\" existiert nicht in der Datenbank. Bitte registrieren Sie sich.");
+				}
+				break;
+			//Registrieren
 			case "reg":
 				System.out.print("Name  > ");
 				name = liesEingabe();

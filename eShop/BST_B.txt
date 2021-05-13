@@ -1,6 +1,6 @@
 Zahnbürste
 1
-84
+81
 3.5
 test
 3
@@ -12,7 +12,7 @@ Klopapier
 0.0
 Kaugummi
 2
-2
+20
 0.0
 bla bla
 5
@@ -32,13 +32,13 @@ Kugelschreiber
 0.2
 Kopfhörer
 12
-7
+6
 60.0
 Papier
 9
-1000
+500
 0.1
 Hautcreme
 8
-50
+30
 5.0

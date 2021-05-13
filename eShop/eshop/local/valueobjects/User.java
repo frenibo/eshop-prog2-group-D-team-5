@@ -7,7 +7,17 @@ public class User {
 	private String adresse;
 	private String passwort = "";
 	
+	boolean istKunde = false;
+	boolean istMitarbeiter = false;
+	
 	//benötigt vllt noch eine String-Liste als Attribut, welches jede SitzungsNr seiner bisherigen Einkäufe beinhaltet.
+	
+	public User() {
+		this.userNr = 0;
+		this.name = "";
+		this.adresse = "";
+		this.passwort = "";
+	}
 	
 	public User(int userNr, String name) {
 		this.userNr = userNr;
@@ -33,7 +43,7 @@ public class User {
 	public String toString() {
 		//TODO: Artikel mit String.format spaltenweise ausgeben.
 		//String artikelString = String.format("%5s);
-		return ("Nr: " + userNr + " / Name: " + name + " / Adresse: " + adresse + " / Passwort: " + passwort);
+		return ("Usernummer: " + userNr + " / Name: " + name + " / Adresse: " + adresse + " / Passwort: " + passwort);
 	}
     
 	// Methoden zum Setzen und Lesen der Kunden-Eigenschaften,
