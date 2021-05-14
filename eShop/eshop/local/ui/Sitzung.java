@@ -12,6 +12,7 @@ import eshop.local.domain.RechnungVektorListe;
 import eshop.local.domain.UserVektorListe;
 import eshop.local.domain.exceptions.ArtikelExistiertBereitsException;
 import eshop.local.valueobjects.Artikel;
+import eshop.local.valueobjects.Rechnung;
 import eshop.local.valueobjects.User;
 
 public class Sitzung {
@@ -228,6 +229,16 @@ public Sitzung(String dateiArtikel, String dateiUser, String dateiRechnungen) th
 			}
 		}
 		return aenderungsListe;
+	}
+	
+	public static void gibRechnungslisteAus(List<Rechnung> rechnungListe) {
+		if (rechnungListe.isEmpty()) {
+			System.out.println("Liste ist leer.");
+		} else {
+			for (Rechnung rechnung : rechnungListe) {
+				System.out.println(rechnung);
+			}
+		}
 	}
 	
 	public static String getSitzungsNr() {

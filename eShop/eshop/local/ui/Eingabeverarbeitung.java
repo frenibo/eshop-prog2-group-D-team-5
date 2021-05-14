@@ -99,6 +99,7 @@ public class Eingabeverarbeitung {
 		
 		List<Artikel> liste;
 		List<User> userListe;
+		List<Rechnung> rechnungListe;
 		
 		String nummerString = "";
 		int nummer = 0;
@@ -287,6 +288,16 @@ public class Eingabeverarbeitung {
 				Rechnung rechnung = new Rechnung(Sitzung.getAktuellerUser(), Sitzung.produceAenderungsListe(), false);
 				System.out.println(rechnung);
 				
+				try {
+					//sollte man so wahrscheinlich nicht machen:
+					Sitzung.rch.fuegeRechnungEin(rechnung);
+					
+				} catch (ArtikelExistiertBereitsException e) {
+					// Hier Fehlerbehandlung...
+					System.out.println("Fehler beim einfügen");
+					e.printStackTrace();
+				}
+				
 				Sitzung.bst.schreibeArtikel();
 				Sitzung.rch.schreibeRechnung();
 				System.out.println("gespeichert.");
@@ -294,6 +305,11 @@ public class Eingabeverarbeitung {
 			//Sitzungsnummer anzeigen
 			case "n":
 				System.out.println("Ihre Sitzungsnummer lautet: " + Sitzung.getSitzungsNr() +"\n");
+				break;
+				//Alle Rechnungen anzeigen
+			case "rch":
+				rechnungListe = Sitzung.rch.gibAlleRechnungen();
+				Sitzung.gibRechnungslisteAus(rechnungListe);
 				break;
 			//Login
 			case "log":

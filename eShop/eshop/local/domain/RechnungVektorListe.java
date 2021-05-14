@@ -111,7 +111,8 @@ public class RechnungVektorListe {
 			 * 
 			 * @throws IOException z.B. wenn Datei nicht existiert
 			 */
+			
 			public void schreibeRechnung() throws IOException {
-				meineRechnungen.schreibeDaten(datei);
+				meineRechnungen.schreibeDaten(this.datei);
 			}
 }
