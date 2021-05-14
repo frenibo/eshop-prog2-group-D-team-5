@@ -1,6 +1,6 @@
 Zahnbürste
 1
-81
+60
 3.5
 test
 3
@@ -28,7 +28,7 @@ Ananas
 2.0
 Kugelschreiber
 20
-13
+20
 0.2
 Kopfhörer
 12

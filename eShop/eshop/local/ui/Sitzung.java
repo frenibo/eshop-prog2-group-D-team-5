@@ -235,8 +235,10 @@ public Sitzung(String dateiArtikel, String dateiUser, String dateiRechnungen) th
 		if (rechnungListe.isEmpty()) {
 			System.out.println("Liste ist leer.");
 		} else {
+			System.out.println("------------------------------------------------------------");
 			for (Rechnung rechnung : rechnungListe) {
 				System.out.println(rechnung);
+				System.out.println("------------------------------------------------------------");
 			}
 		}
 	}

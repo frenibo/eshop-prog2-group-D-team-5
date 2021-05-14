@@ -51,6 +51,7 @@ public class MenueAusgabe {
 			System.out.print("         \n  (s) Artikel sichern");
 			System.out.print("         \n  (n) Sitzungsnummer anzeigen");
 			System.out.print("         \n  (rch) Alle Rechnungen anzeigen");
+			System.out.print("         \n  (rch#) Userspezifische Rechnungen anzeigen");
 			System.out.print("         \n  (log) Login");
 			System.out.print("         \n  (reg) Registrieren");
 			System.out.print("         \n  ---------------------");

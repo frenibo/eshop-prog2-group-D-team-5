@@ -62,7 +62,7 @@ public class Rechnung {
 			buchungOderKaufString = "Buchung abgeschlossen.\n\n";
 		} else buchungOderKaufString = "Kauf abgeschlossen. Hier die Rechnung:\n\n";
 		
-		return (buchungOderKaufString + "" + artikelListeString + "Gesamtpreis: " + getGesamtpreis() + " €\nKundendaten: " + getUser() + "\nGekauft am " + datum + "\nSitzungsnummer: " + sitzungsNr + "\n\n");
+		return (buchungOderKaufString + "" + artikelListeString + "Gesamtpreis: " + getGesamtpreis() + " €\nKundendaten: " + getUser() + "\nGekauft am " + datum + "\nSitzungsnummer: " + sitzungsNr + "\n");
 	}
 	
 	public void gibRechnungAus() {

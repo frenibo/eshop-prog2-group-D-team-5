@@ -306,9 +306,17 @@ public class Eingabeverarbeitung {
 			case "n":
 				System.out.println("Ihre Sitzungsnummer lautet: " + Sitzung.getSitzungsNr() +"\n");
 				break;
-				//Alle Rechnungen anzeigen
+			//Alle Rechnungen anzeigen
 			case "rch":
 				rechnungListe = Sitzung.rch.gibAlleRechnungen();
+				Sitzung.gibRechnungslisteAus(rechnungListe);
+				break;
+			//Userspezifische Rechnungen anzeigen
+			case "rch#":
+				System.out.print("Kundenummer  > ");
+				nummerString = liesEingabe();
+				nummer = Integer.parseInt(nummerString);
+				rechnungListe = Sitzung.rch.sucheNachNr(nummer);
 				Sitzung.gibRechnungslisteAus(rechnungListe);
 				break;
 			//Login
