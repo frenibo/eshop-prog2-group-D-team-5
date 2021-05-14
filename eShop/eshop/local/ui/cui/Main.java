@@ -21,8 +21,3 @@ public class Main {
 	//TODO: login, registrieren, Warenkorb-cleanup, Ein-Auslagerung-Eventmanager, Warenkorb (komplett) leeren, 
 
 }
-
-
-
-
-

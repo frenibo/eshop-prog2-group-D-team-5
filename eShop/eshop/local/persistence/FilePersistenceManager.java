@@ -73,6 +73,9 @@ public class FilePersistenceManager implements PersistenceManager {
 		// ... und von String in int konvertieren
 		int nummer = Integer.parseInt(nummerString);
 		
+		String packetString = liesZeile();
+		int packet = Integer.parseInt(packetString);
+		
 		// Viele viele Artikel sind im Bestand vorhanden?
 		String anzahlString = liesZeile();
 		// String in int umwandeln
@@ -84,7 +87,7 @@ public class FilePersistenceManager implements PersistenceManager {
 		
 		
 		// neues Buch-Objekt anlegen und zurückgeben
-		return new Artikel(name, nummer, anzahl, preis);
+		return new Artikel(name, nummer, packet, anzahl, preis);
 	}
 	
 	public User ladeUser() throws IOException {
@@ -155,6 +158,9 @@ public class FilePersistenceManager implements PersistenceManager {
 		schreibeZeile(a.getName());
 //		schreibeZeile(Integer.valueOf(b.getNummer()).toString());
 		schreibeZeile(a.getNummer() + "");
+		
+		String packetString = String.valueOf(a.getPacket());
+		schreibeZeile(packetString);
 
 		//der int-Wert, der von getVerfuegbarkeit() ausgegeben wird, 
 		//wird in einen String konvertiert und in der Hilfsvariable verfuegbarkeitString zwischengespeichert.

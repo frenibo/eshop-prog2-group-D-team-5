@@ -60,7 +60,7 @@ public class Sitzung {
 		// 
 		ev = new Eingabeverarbeitung();
 		
-		this.datei = dateiArtikel;
+		Sitzung.datei = dateiArtikel;
 	}
 	
 	public Sitzung(String dateiArtikel, String dateiUser) throws IOException {
@@ -80,7 +80,7 @@ public class Sitzung {
 		// 
 		ev = new Eingabeverarbeitung();
 		
-		this.datei = dateiArtikel;
+		Sitzung.datei = dateiArtikel;
 	}
 	
 public Sitzung(String dateiArtikel, String dateiUser, String dateiRechnungen) throws IOException {
@@ -102,7 +102,7 @@ public Sitzung(String dateiArtikel, String dateiUser, String dateiRechnungen) th
 		// 
 		ev = new Eingabeverarbeitung();
 		
-		this.datei = dateiArtikel;
+		Sitzung.datei = dateiArtikel;
 	}
 	
 	public String neueSitzungsNr() {
@@ -133,13 +133,13 @@ public Sitzung(String dateiArtikel, String dateiUser, String dateiRechnungen) th
 			Artikel tempArtikel = new Artikel();
 			for (Artikel artikel : vectorListe) {
 				if(tempArtikel.getName().isEmpty()) {
-					tempArtikel = new Artikel(artikel.getName(), artikel.getNummer(), artikel.getAnzahl(), artikel.getPreis());
+					tempArtikel = new Artikel(artikel.getName(), artikel.getNummer(), artikel.getPacket(), artikel.getAnzahl(), artikel.getPreis());
 				}
 				//deep copy, not just pointer:
 				int vergleichen = artikel.getName().toLowerCase().compareTo(tempArtikel.getName().toLowerCase());
 				if(vergleichen <= 0){
 					
-					tempArtikel = new Artikel(artikel.getName(), artikel.getNummer(), artikel.getAnzahl(), artikel.getPreis());
+					tempArtikel = new Artikel(artikel.getName(), artikel.getNummer(), artikel.getPacket(), artikel.getAnzahl(), artikel.getPreis());
 				}
 			}
 			if(!tempArtikel.getName().isEmpty()) {
@@ -165,11 +165,11 @@ public Sitzung(String dateiArtikel, String dateiUser, String dateiRechnungen) th
 			for (Artikel artikel : vectorListe) {
 				if(tempArtikel.getNummer() == 0) {
 					//pointer sufficient but why not make a deep copy
-					tempArtikel = new Artikel(artikel.getName(), artikel.getNummer(), artikel.getAnzahl(), artikel.getPreis());
+					tempArtikel = new Artikel(artikel.getName(), artikel.getNummer(), artikel.getPacket(), artikel.getAnzahl(), artikel.getPreis());
 				}
 				if(artikel.getNummer() <= tempArtikel.getNummer()){
 					//deep copy necessary
-					tempArtikel = new Artikel(artikel.getName(), artikel.getNummer(), artikel.getAnzahl(), artikel.getPreis());
+					tempArtikel = new Artikel(artikel.getName(), artikel.getNummer(), artikel.getPacket(), artikel.getAnzahl(), artikel.getPreis());
 				}
 			}
 			if(!tempArtikel.getName().isEmpty()) {
@@ -215,19 +215,46 @@ public Sitzung(String dateiArtikel, String dateiUser, String dateiRechnungen) th
 	}
 	
 	public static List<Artikel> produceAenderungsListe() throws IOException{
+		boolean neuerArtikel = true;
+		boolean gelöschterArtikel = true;
 		List<Artikel> liste = Sitzung.bst.gibAlleArtikel();
 		ArtikelVektorListe listeOriginal = new ArtikelVektorListe(datei);
 		List<Artikel> aenderungsListe = new Vector<Artikel>();
 		int aenderung = 0;
+		//Änderungen in der Artikel-Anzahl finden
 		for(Artikel neu : liste) {
+			neuerArtikel = true;
 			for(Artikel alt : listeOriginal.gibAlleArtikel()) {
 				if(neu.getNummer() == alt.getNummer()) {
+					neuerArtikel = false;
 					aenderung = neu.getAnzahl() - alt.getAnzahl();
-					Artikel aenderungArtikel = new Artikel(neu.getName(), neu.getNummer(), aenderung, neu.getPreis());
-					aenderungsListe.add(aenderungArtikel);
+					if(aenderung != 0) {
+						Artikel aenderungArtikel = new Artikel(neu.getName(), neu.getNummer(), neu.getPacket(), aenderung, neu.getPreis());
+						aenderungsListe.add(aenderungArtikel);
+					}
 				}
 			}
+			//Wenn der Artikel neu eingefügt wurde
+			if(neuerArtikel == true) {
+				aenderungsListe.add(neu);
+			}
 		}
+		
+	//Gelöschte Artikel finden
+		for(Artikel alt : listeOriginal.gibAlleArtikel()) {
+			gelöschterArtikel = true;
+			for(Artikel neu : liste) {
+				if(neu.getNummer() == alt.getNummer()) {
+					gelöschterArtikel = false;
+				}
+				
+			}
+			if(gelöschterArtikel == true) {
+				Artikel aenderungArtikel = new Artikel(alt.getName(), alt.getNummer(), alt.getPacket(), 0 - alt.getAnzahl(), alt.getPreis());
+				aenderungsListe.add(aenderungArtikel);
+			}
+		}
+		
 		return aenderungsListe;
 	}
 	

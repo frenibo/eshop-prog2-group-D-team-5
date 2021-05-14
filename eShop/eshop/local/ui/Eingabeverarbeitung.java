@@ -105,6 +105,8 @@ public class Eingabeverarbeitung {
 		int nummer = 0;
 		String anzahlString = "";
 		int anzahl = 0;
+		String packetString = "";
+		int packet = 0;
 		String name = "";
 		String preisString = "";
 		double preis = 0.0;
@@ -155,7 +157,17 @@ public class Eingabeverarbeitung {
 					Sitzung.bst.schreibeArtikel();
 					Sitzung.wnk.schreibeArtikel();
 					liste = Sitzung.wnk.gibAlleArtikel();
-					Rechnung rechnung = new Rechnung(Sitzung.getAktuellerUser(), liste, false);
+					Rechnung rechnung = new Rechnung(Sitzung.getAktuellerUser(), liste, true);
+					try {
+						//sollte man so wahrscheinlich nicht machen:
+						Sitzung.rch.fuegeRechnungEin(rechnung);
+						
+					} catch (ArtikelExistiertBereitsException e) {
+						// Hier Fehlerbehandlung...
+						System.out.println("Fehler beim einfügen");
+						e.printStackTrace();
+					}
+					Sitzung.rch.schreibeRechnung();
 					System.out.println("Kauf abgeschlossen. Hier die Rechnung: \n");
 					System.out.println(rechnung);
 					System.out.println("\nNeue Sitzung startet.");
@@ -222,10 +234,10 @@ public class Eingabeverarbeitung {
 				}
 				else {
 					// lies die notwendigen Parameter, einzeln pro Zeile
-					System.out.print("Buchnummer > ");
+					System.out.print("Artikelnummer > ");
 					nummerString = liesEingabe();
 					nummer = Integer.parseInt(nummerString);
-					System.out.print("Buchtitel  > ");
+					System.out.print("Artikelname  > ");
 					name = liesEingabe();
 					// Die Bibliothek das Buch löschen lassen:
 					Sitzung.bst.loescheArtikel(name, nummer);
@@ -243,6 +255,9 @@ public class Eingabeverarbeitung {
 					nummer = Integer.parseInt(nummerString);
 					System.out.print("Name des Artikels  > ");
 					name = liesEingabe();
+					System.out.print("Packetgröße > ");
+					packetString = liesEingabe();
+					packet = Integer.parseInt(packetString);
 					System.out.print("Anzahl > ");
 					anzahlString = liesEingabe();
 					anzahl = Integer.parseInt(anzahlString);
@@ -252,18 +267,15 @@ public class Eingabeverarbeitung {
 
 					try {
 						//sollte man so wahrscheinlich nicht machen:
-						String resultat = Sitzung.bst.fuegeArtikelEin(name, nummer, anzahl, preis);
+						String resultat = Sitzung.bst.fuegeArtikelEin(name, nummer, packet, anzahl, preis);
 					
 						if(resultat.equals("Erfolgreich hinzugefügt")) {
-							Sitzung.setAktuellerArtikel(new Artikel(name, nummer, anzahl, preis));
+							Sitzung.setAktuellerArtikel(new Artikel(name, nummer, packet, anzahl, preis));
 							System.out.print("\n");
 							System.out.println(Sitzung.getAktuellerArtikel());
 							setLevel("speichern");
 						}
-						else if(resultat.equals("Artikel existiert bereits")) {
-							setLevel("startmenue");
-						}
-						else if(resultat.equals("Nummer vergeben")) {
+						else if(resultat.equals("Artikel existiert bereits") || resultat.equals("Nummer vergeben") || resultat.equals("Falsche Nummer")) {
 							setLevel("startmenue");
 						}
 					
@@ -372,9 +384,25 @@ public class Eingabeverarbeitung {
 			switch (line) {
 			case "s":
 				Sitzung.wnk.warenkorbLeeren();
+				
+				Rechnung rechnung = new Rechnung(Sitzung.getAktuellerUser(), Sitzung.produceAenderungsListe(), false);
+				System.out.println(rechnung);
+				
+				try {
+					//sollte man so wahrscheinlich nicht machen:
+					Sitzung.rch.fuegeRechnungEin(rechnung);
+					
+				} catch (ArtikelExistiertBereitsException e) {
+					// Hier Fehlerbehandlung...
+					System.out.println("Fehler beim einfügen");
+					e.printStackTrace();
+				}
+				
 				Sitzung.bst.schreibeArtikel();
-				System.out.print("Artikel in Datenbank eingetragen.\n");
-				System.out.print("\n");
+				Sitzung.rch.schreibeRechnung();
+				System.out.println("gespeichert.");
+				
+				
 				setLevel("startmenue");
 				break;
 			case "r":

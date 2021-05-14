@@ -151,8 +151,8 @@ public class ArtikelVektorListe {
 			return rueckmeldung;
 		}
 		
-		public String fuegeArtikelEin(String name, int nummer, int anzahl, double preis) throws ArtikelExistiertBereitsException {
-			Artikel a = new Artikel(name, nummer, anzahl, preis);
+		public String fuegeArtikelEin(String name, int nummer, int packet, int anzahl, double preis) throws ArtikelExistiertBereitsException {
+			Artikel a = new Artikel(name, nummer, packet, anzahl, preis);
 			String rueckmeldung = meineArtikel.einfuegen(a);
 			return rueckmeldung;
 		}

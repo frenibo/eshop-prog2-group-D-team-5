@@ -7,6 +7,7 @@ public class Artikel {
 		private int nummer;
 		private int anzahl;
 		private double preis;
+		private int packet = 1; //Packetgröße
 		
 		
 		public Artikel() {
@@ -19,20 +20,31 @@ public class Artikel {
 		public Artikel(String name, int nummer) {
 			this.name = name;
 			this.nummer = nummer;
+			this.packet = 1;
 			this.anzahl = 0;
 			this.preis = 0.00;
 		}
 		
-		public Artikel(String name, int nummer, int anzahl) {
+		public Artikel(String name, int nummer, int packet) {
 			this.name = name;
 			this.nummer = nummer;
+			this.packet = packet;
+			this.anzahl = 0;
+			this.preis = 0.00;
+		}
+		
+		public Artikel(String name, int nummer, int packet, int anzahl) {
+			this.name = name;
+			this.nummer = nummer;
+			this.packet = packet;
 			this.anzahl = anzahl;
 			this.preis = 0.00;
 		}
 		
-		public Artikel(String name, int nummer, int anzahl, double preis) {
+		public Artikel(String name, int nummer, int packet, int anzahl, double preis) {
 			this.name = name;
 			this.nummer = nummer;
+			this.packet = packet;
 			this.anzahl = anzahl;
 			this.preis = preis;
 		}
@@ -47,7 +59,7 @@ public class Artikel {
 		public String toString() {
 			//TODO: Artikel mit String.format spaltenweise ausgeben.
 			//String artikelString = String.format("%5s);
-			return ("Nr: " + nummer + " / Name: " + name + " / Preis: " + preis + " / Anzahl: " + anzahl);
+			return ("Nr: " + nummer + " / Name: " + name + " / Preis: " + preis + " / Anzahl: " + anzahl + " / Packetgröße: " + packet);
 		}
 		
 		// --- Dienste der Artikel-Objekte ---
@@ -97,6 +109,15 @@ public class Artikel {
 		
 		public void setAnzahl(int anzahl) {
 			this.anzahl = anzahl;
+			
+		}
+		
+		public int getPacket() {
+			return packet;
+		}
+		
+		public void setPacket(int packet) {
+			this.packet = packet;
 			
 		}
 

@@ -92,8 +92,11 @@ public class ArtikelVerwaltung {
 		suchErgNummer = sucheArtikel(einArtikel.getNummer());
 		List<Artikel> suchErgName = new Vector<Artikel>();
 		suchErgName = sucheArtikel(einArtikel.getName());
-		
-		if (!suchErgNummer.isEmpty() && suchErgName.isEmpty()) {
+		if(einArtikel.getNummer() <= 0) {
+			System.out.print("\nDie Artikelnummer muss eine positive ganze Zahl sein.\n");
+			return "Falsche Nummer";
+		}		
+		else if (!suchErgNummer.isEmpty() && suchErgName.isEmpty()) {
 			System.out.print("\nEin anderer Artikel mit Artikelnummer " +einArtikel.getNummer() + " existiert bereits:\n");
 			System.out.println(suchErgNummer);
 			return "Nummer vergeben";
@@ -165,21 +168,27 @@ public class ArtikelVerwaltung {
 
 			artikelHV = iter.next();
 			if (artikelHV.getNummer() == nummer) {
-				anzahlZuvor = artikelHV.getAnzahl();
-				if(anzahlZuvor >= anzahl) {
-					int ergebnis = anzahlZuvor - anzahl;
-					
-					//artikelBestand.get(zaehler).setAnzahl(ergebnis);
-					artikelHV.setAnzahl(ergebnis);
-					artikelHV3 = artikelHV;
-					imBestandAbgezogen = true;
-					if(ergebnis == 0) {
-						//crashes program
-						//loeschen(artikelHV);
-					}
+				if(anzahl % artikelHV.getPacket() != 0) {
+					System.out.println("Verschieben gescheitert.");
+					System.out.println("Sie können nur Artikelmengen verschieben und kaufen, die einem Vielfachen ihrer Packetgröße entspricht.");
+					System.out.println("Die Packetgröße des Artikels Nr. " + artikelHV.getNummer() + " ist " + artikelHV.getPacket() + ".");
+					imBestandAbgezogen = false;
 				}
 				else {
-					System.out.println("Diese Menge überschreitet die Verfügbarkeit.");
+					anzahlZuvor = artikelHV.getAnzahl();
+					if(anzahlZuvor >= anzahl) {
+						int ergebnis = anzahlZuvor - anzahl;
+						artikelHV.setAnzahl(ergebnis);
+						artikelHV3 = artikelHV;
+						imBestandAbgezogen = true;
+						if(ergebnis == 0) {
+							//crashes program
+							//loeschen(artikelHV);
+						}
+					}
+					else {
+						System.out.println("Diese Menge überschreitet die Verfügbarkeit.");
+					}
 				}
 			}	
 		}
@@ -197,7 +206,7 @@ public class ArtikelVerwaltung {
 			if(imWarenkorbHinzugefügt == false) {
 				
 				try {
-					zielListe.fuegeArtikelEin(artikelHV3.getName(), artikelHV3.getNummer(), anzahl, artikelHV3.getPreis());
+					zielListe.fuegeArtikelEin(artikelHV3.getName(), artikelHV3.getNummer(), artikelHV3.getPacket(), anzahl, artikelHV3.getPreis());
 				} catch (ArtikelExistiertBereitsException e) {
 					
 				}
@@ -246,7 +255,7 @@ public class ArtikelVerwaltung {
 			}
 			if(imWarenkorbHinzugefügt == false) {
 				try {
-					zielListe.fuegeArtikelEin(artikelUrsprung.getName(), artikelUrsprung.getNummer(), artikelUrsprung.getAnzahl());
+					zielListe.fuegeArtikelEin(artikelUrsprung.getName(), artikelUrsprung.getNummer(), artikelUrsprung.getPacket(), artikelUrsprung.getAnzahl(), artikelUrsprung.getPreis());
 				} catch (ArtikelExistiertBereitsException e) {
 					
 				}
