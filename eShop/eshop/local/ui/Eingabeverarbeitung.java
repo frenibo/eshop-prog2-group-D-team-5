@@ -227,6 +227,7 @@ public class Eingabeverarbeitung {
 					System.out.print("\nAnzahl aktualisiert.");
 				}
 				break;
+				
 			//Artikel löschen
 			case "d":
 				if(Sitzung.getAktuellerUser().getUserNr() == 0) {
