@@ -103,7 +103,7 @@ public class ArtikelVerwaltung {
 			//throw new ArtikelExistiertBereitsException(einArtikel, " - in 'einfuegen()'");
 		}
 		else if(!suchErgName.isEmpty()) {
-			System.out.print("\nEin Artikel mit dem Namen " + einArtikel.getName() + " existiert bereits mit der Artikelnummer " + suchErgName.get(0).getNummer() + ".\n");
+			System.err.print("\nEin Artikel mit dem Namen " + einArtikel.getName() + " existiert bereits mit der Artikelnummer " + suchErgName.get(0).getNummer() + ".\n");
 			System.out.println(suchErgName);
 			return "Artikel existiert bereits";
 		}
