@@ -1,6 +1,6 @@
 package eshop.local.valueobjects;
 
-public class User {
+public class User implements Valueobject{
 
 	private int userNr;
 	private String name;
@@ -46,6 +46,27 @@ public class User {
 		return ("Usernummer: " + userNr + " / Name: " + name + " / Adresse: " + adresse + " / Passwort: " + passwort);
 	}
     
+	public boolean equals(Object andererUser) {
+		if (andererUser instanceof User) 
+			if (this.userNr == ((User) andererUser).getUserNr() && this.name.equals(((User) andererUser).getName())) {
+				return true;
+			} else return false;
+			
+		else
+			return false;
+	}
+	
+	public boolean copy(Object andererUser) {
+		if(andererUser instanceof User) {
+			this.setUserNr(((User) andererUser).getUserNr());
+			this.setName(((User) andererUser).getName());
+			this.setAdresse(((User) andererUser).getAdresse());
+			this.setPasswort(((User) andererUser).getPasswort());
+			return true;
+		}
+		else return false;
+	}
+	
 	// Methoden zum Setzen und Lesen der Kunden-Eigenschaften,
 	// z.B. getStrasse() und setStrasse()
 	

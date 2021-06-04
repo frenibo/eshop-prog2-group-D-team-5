@@ -18,6 +18,9 @@ public class Main {
 		}
 	}
 	
-	//TODO: login, registrieren, Warenkorb-cleanup, Ein-Auslagerung-Eventmanager, Warenkorb (komplett) leeren, 
+	//TODO: save & quit, Ereigniselement, remove systemout von Verwaltungsklassen, remove saves from running program, 
+	// Sitzung in eShop umbenennen, eShopArtikelFunktionen + eShopUserFunktionen usw.
+	//Sitzungsnummer zu valueobject machen, dass nicht mehr pro eShop bzw Sitzungs-Objekt erstellt wird, sondern pro Warenkorb
+	//Eingabeverarbeitung resistent machen und zurück gehen ermöglichen.
 
 }

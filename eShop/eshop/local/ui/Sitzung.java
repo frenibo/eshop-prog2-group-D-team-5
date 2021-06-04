@@ -11,8 +11,11 @@ import eshop.local.domain.ArtikelVektorListe;
 import eshop.local.domain.RechnungVektorListe;
 import eshop.local.domain.UserVektorListe;
 import eshop.local.domain.exceptions.ArtikelExistiertBereitsException;
+import eshop.local.ui.cui.Main;
 import eshop.local.valueobjects.Artikel;
+import eshop.local.valueobjects.Massenartikel;
 import eshop.local.valueobjects.Rechnung;
+import eshop.local.valueobjects.Sitzungsnummer;
 import eshop.local.valueobjects.User;
 
 public class Sitzung {
@@ -106,11 +109,17 @@ public Sitzung(String dateiArtikel, String dateiUser, String dateiRechnungen) th
 	}
 	
 	public String neueSitzungsNr() {
+		
 		Date objDate = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddhhmmss");
 		String sitzungsNr = formatter.format(objDate);
 		aktuelleSitzungsNr = sitzungsNr;
 		return sitzungsNr;
+		
+		/*
+		aktuelleSitzungsNr = new Sitzungsnummer().toString();
+		return aktuelleSitzungsNr;
+		*/
 	}
 	
 	public static void gibArtikellisteUnsortiertAus(List<Artikel> vectorListe) {
@@ -130,16 +139,16 @@ public Sitzung(String dateiArtikel, String dateiUser, String dateiRechnungen) th
 		
 		//Sortieren
 		for(int loop = 0; loop <= anzahl; loop++) {
-			Artikel tempArtikel = new Artikel();
+			Artikel tempArtikel = new Massenartikel();
 			for (Artikel artikel : vectorListe) {
 				if(tempArtikel.getName().isEmpty()) {
-					tempArtikel = new Artikel(artikel.getName(), artikel.getNummer(), artikel.getPacket(), artikel.getAnzahl(), artikel.getPreis());
+					tempArtikel = new Massenartikel(artikel.getName(), artikel.getNummer(), artikel.getAnzahl(), artikel.getPreis(), artikel.getPacketgroeße());
 				}
 				//deep copy, not just pointer:
 				int vergleichen = artikel.getName().toLowerCase().compareTo(tempArtikel.getName().toLowerCase());
 				if(vergleichen <= 0){
 					
-					tempArtikel = new Artikel(artikel.getName(), artikel.getNummer(), artikel.getPacket(), artikel.getAnzahl(), artikel.getPreis());
+					tempArtikel = new Massenartikel(artikel.getName(), artikel.getNummer(), artikel.getAnzahl(), artikel.getPreis(), artikel.getPacketgroeße());
 				}
 			}
 			if(!tempArtikel.getName().isEmpty()) {
@@ -161,15 +170,15 @@ public Sitzung(String dateiArtikel, String dateiUser, String dateiRechnungen) th
 
 		//Sortieren
 		for(int loop = 0; loop <= anzahl; loop++) {
-			Artikel tempArtikel = new Artikel();
+			Artikel tempArtikel = new Massenartikel();
 			for (Artikel artikel : vectorListe) {
 				if(tempArtikel.getNummer() == 0) {
 					//pointer sufficient but why not make a deep copy
-					tempArtikel = new Artikel(artikel.getName(), artikel.getNummer(), artikel.getPacket(), artikel.getAnzahl(), artikel.getPreis());
+					tempArtikel = new Massenartikel(artikel.getName(), artikel.getNummer(), artikel.getAnzahl(), artikel.getPreis(), artikel.getPacketgroeße());
 				}
 				if(artikel.getNummer() <= tempArtikel.getNummer()){
 					//deep copy necessary
-					tempArtikel = new Artikel(artikel.getName(), artikel.getNummer(), artikel.getPacket(), artikel.getAnzahl(), artikel.getPreis());
+					tempArtikel = new Massenartikel(artikel.getName(), artikel.getNummer(), artikel.getAnzahl(), artikel.getPreis(), artikel.getPacketgroeße());
 				}
 			}
 			if(!tempArtikel.getName().isEmpty()) {
@@ -205,13 +214,31 @@ public Sitzung(String dateiArtikel, String dateiUser, String dateiRechnungen) th
 			try {
 			
 				ev.einlesenUndVerarbeiten();
-				input = ev.getLine();
+				input = ev.getInput();
 			
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} while (!input.equals("q"));
+	}
+	
+	public static Rechnung warenkorbKaufen() throws IOException {
+		bst.schreibeArtikel();
+		wnk.schreibeArtikel();
+		List<Artikel> liste = wnk.gibAlleArtikel();
+		Rechnung rechnung = new Rechnung(getAktuellerUser(), liste, true);
+		try {
+			//sollte man so wahrscheinlich nicht machen:
+			rch.fuegeRechnungEin(rechnung);
+			
+		} catch (ArtikelExistiertBereitsException e) {
+			// Hier Fehlerbehandlung...
+			e.printStackTrace();
+			return rechnung = new Rechnung();
+		}
+		rch.schreibeRechnung();
+		return rechnung;
 	}
 	
 	public static List<Artikel> produceAenderungsListe() throws IOException{
@@ -229,7 +256,7 @@ public Sitzung(String dateiArtikel, String dateiUser, String dateiRechnungen) th
 					neuerArtikel = false;
 					aenderung = neu.getAnzahl() - alt.getAnzahl();
 					if(aenderung != 0) {
-						Artikel aenderungArtikel = new Artikel(neu.getName(), neu.getNummer(), neu.getPacket(), aenderung, neu.getPreis());
+						Artikel aenderungArtikel = new Massenartikel(neu.getName(), neu.getNummer(), aenderung, neu.getPreis(), neu.getPacketgroeße());
 						aenderungsListe.add(aenderungArtikel);
 					}
 				}
@@ -250,7 +277,7 @@ public Sitzung(String dateiArtikel, String dateiUser, String dateiRechnungen) th
 				
 			}
 			if(gelöschterArtikel == true) {
-				Artikel aenderungArtikel = new Artikel(alt.getName(), alt.getNummer(), alt.getPacket(), 0 - alt.getAnzahl(), alt.getPreis());
+				Artikel aenderungArtikel = new Massenartikel(alt.getName(), alt.getNummer(), 0 - alt.getAnzahl(), alt.getPreis(), alt.getPacketgroeße());
 				aenderungsListe.add(aenderungArtikel);
 			}
 		}
@@ -268,6 +295,16 @@ public Sitzung(String dateiArtikel, String dateiUser, String dateiRechnungen) th
 				System.out.println("------------------------------------------------------------");
 			}
 		}
+	}
+	
+	public static List<User> getUserliste() {
+		
+		return usr.gibAlleUser();
+	}
+	
+	public static List<Artikel> getArtikellisteAusBestand() {
+		
+		return bst.gibAlleArtikel();
 	}
 	
 	public static String getSitzungsNr() {

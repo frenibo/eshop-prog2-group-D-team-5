@@ -33,7 +33,7 @@ public class DBPersistenceManager implements PersistenceManager {
 	}
 
 	@Override
-	public boolean speichereArtikel(Artikel a) throws IOException {
+	public boolean speichereArtikel(Object a) throws IOException {
 		// TODO Auto-generated method stub
 		return false;
 	}

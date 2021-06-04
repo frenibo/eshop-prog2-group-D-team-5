@@ -7,6 +7,7 @@ import eshop.local.domain.exceptions.ArtikelExistiertBereitsException;
 import eshop.local.persistence.FilePersistenceManager;
 import eshop.local.persistence.PersistenceManager;
 import eshop.local.valueobjects.Artikel;
+import eshop.local.valueobjects.Massenartikel;
 import eshop.local.valueobjects.User;
 
 
@@ -69,13 +70,6 @@ public class ArtikelVerwaltung {
 			pm.speichereArtikel(a);
 		}
 
-//		// Alternative Implementierung mit Iterator:
-//		Iterator<Buch> iter = buchBestand.iterator();
-//		while (iter.hasNext()) {
-//			Buch b = iter.next();
-//			pm.speichereBuch(b);
-//		}
-
 		// Persistenz-Schnittstelle wieder schließen
 		pm.close();
 	}
@@ -94,10 +88,11 @@ public class ArtikelVerwaltung {
 		suchErgName = sucheArtikel(einArtikel.getName());
 		if(einArtikel.getNummer() <= 0) {
 			System.out.print("\nDie Artikelnummer muss eine positive ganze Zahl sein.\n");
+			System.out.println(einArtikel.getNummer());
 			return "Falsche Nummer";
 		}		
 		else if (!suchErgNummer.isEmpty() && suchErgName.isEmpty()) {
-			System.out.print("\nEin anderer Artikel mit Artikelnummer " +einArtikel.getNummer() + " existiert bereits:\n");
+			System.out.print("\nEin anderer Artikel mit Artikelnummer " + einArtikel.getNummer() + " existiert bereits:\n");
 			System.out.println(suchErgNummer);
 			return "Nummer vergeben";
 			//throw new ArtikelExistiertBereitsException(einArtikel, " - in 'einfuegen()'");
@@ -155,10 +150,10 @@ public class ArtikelVerwaltung {
 		int anzahlZuvor = 0;
 		boolean imBestandAbgezogen = false;
 		boolean imWarenkorbHinzugefügt = false;
-		//Hilfsvariablen
-		Artikel artikelHV = new Artikel ("error", 0, 0);
-		Artikel artikelHV2 = new Artikel ("error2", 0, 0);
-		Artikel artikelHV3 = new Artikel ("error3", 0, 0);
+		//Hilfsvariablen HV
+		Massenartikel artikelHV = new Massenartikel ("error", 0, 0);
+		Massenartikel artikelHV2 = new Massenartikel ("error2", 0, 0);
+		Massenartikel artikelHV3 = new Massenartikel ("error3", 0, 0);
 		
 		List<Artikel> list = zielListe.gibAlleArtikel();
 		
@@ -166,12 +161,13 @@ public class ArtikelVerwaltung {
 		Iterator<Artikel> iter = artikelListe.iterator();
 		while (iter.hasNext()) {
 
-			artikelHV = iter.next();
+			artikelHV = (Massenartikel) iter.next();  //add cast to Massenartikel?
 			if (artikelHV.getNummer() == nummer) {
-				if(anzahl % artikelHV.getPacket() != 0) {
+				if(anzahl % artikelHV.getPacketgroeße() != 0) {
+					//TODO: system out entfernen
 					System.out.println("Verschieben gescheitert.");
 					System.out.println("Sie können nur Artikelmengen verschieben und kaufen, die einem Vielfachen ihrer Packetgröße entspricht.");
-					System.out.println("Die Packetgröße des Artikels Nr. " + artikelHV.getNummer() + " ist " + artikelHV.getPacket() + ".");
+					System.out.println("Die Packetgröße des Artikels Nr. " + artikelHV.getNummer() + " ist " + artikelHV.getPacketgroeße() + ".");
 					imBestandAbgezogen = false;
 				}
 				else {
@@ -195,7 +191,7 @@ public class ArtikelVerwaltung {
 		if(imBestandAbgezogen == true) {
 			Iterator<Artikel> iterZiel = list.iterator();
 			while (iterZiel.hasNext()) {
-				artikelHV2 = iterZiel.next();
+				artikelHV2 = (Massenartikel) iterZiel.next(); //add cast to Massenartikel?
 				if (artikelHV2.getNummer() == nummer) {
 					anzahlZuvor = artikelHV2.getAnzahl();
 					int ergebnis2 = anzahlZuvor+anzahl;
@@ -206,7 +202,7 @@ public class ArtikelVerwaltung {
 			if(imWarenkorbHinzugefügt == false) {
 				
 				try {
-					zielListe.fuegeArtikelEin(artikelHV3.getName(), artikelHV3.getNummer(), artikelHV3.getPacket(), anzahl, artikelHV3.getPreis());
+					zielListe.fuegeArtikelEin(artikelHV3.getName(), artikelHV3.getNummer(), anzahl, artikelHV3.getPreis());
 				} catch (ArtikelExistiertBereitsException e) {
 					
 				}
@@ -255,7 +251,7 @@ public class ArtikelVerwaltung {
 			}
 			if(imWarenkorbHinzugefügt == false) {
 				try {
-					zielListe.fuegeArtikelEin(artikelUrsprung.getName(), artikelUrsprung.getNummer(), artikelUrsprung.getPacket(), artikelUrsprung.getAnzahl(), artikelUrsprung.getPreis());
+					zielListe.fuegeArtikelEin(artikelUrsprung.getName(), artikelUrsprung.getNummer(), artikelUrsprung.getAnzahl(), artikelUrsprung.getPreis());
 				} catch (ArtikelExistiertBereitsException e) {
 					
 				}

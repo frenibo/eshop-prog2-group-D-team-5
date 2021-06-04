@@ -3,6 +3,7 @@ package eshop.local.persistence;
 import java.util.*;
 
 import eshop.local.valueobjects.Artikel;
+import eshop.local.valueobjects.Massenartikel;
 import eshop.local.valueobjects.Rechnung;
 import eshop.local.valueobjects.User;
 
@@ -73,9 +74,6 @@ public class FilePersistenceManager implements PersistenceManager {
 		// ... und von String in int konvertieren
 		int nummer = Integer.parseInt(nummerString);
 		
-		String packetString = liesZeile();
-		int packet = Integer.parseInt(packetString);
-		
 		// Viele viele Artikel sind im Bestand vorhanden?
 		String anzahlString = liesZeile();
 		// String in int umwandeln
@@ -84,10 +82,17 @@ public class FilePersistenceManager implements PersistenceManager {
 		String preisString = liesZeile();
 		double preis = Double.parseDouble(preisString);
 		
+		zeileMarkieren();
 		
+		String checkMassenartikel = liesZeile();
+		int packet = 1;
+		if(checkMassenartikel.equals("Packetgroeße:")) {
+			String packetString = liesZeile();
+			packet = Integer.parseInt(packetString);
+		} else zurMarkierungZurueck();
 		
 		// neues Buch-Objekt anlegen und zurückgeben
-		return new Artikel(name, nummer, packet, anzahl, preis);
+		return new Massenartikel(name, nummer, anzahl, preis, packet);
 	}
 	
 	public User ladeUser() throws IOException {
@@ -128,7 +133,6 @@ public class FilePersistenceManager implements PersistenceManager {
 		}
 		
 		String gesamtpreisString = liesZeile();
-		
 		double gesamtpreis = Double.parseDouble(gesamtpreisString);
 		
 		User user = ladeUser();
@@ -153,24 +157,31 @@ public class FilePersistenceManager implements PersistenceManager {
 	 * @param b Buch-Objekt, das gespeichert werden soll
 	 * @return true, wenn Schreibvorgang erfolgreich, false sonst
 	 */
-	public boolean speichereArtikel(Artikel a) throws IOException {
-		// Titel, Nummer, Verfügbarkeit , Preis, Beschreibung schreiben
-		schreibeZeile(a.getName());
-//		schreibeZeile(Integer.valueOf(b.getNummer()).toString());
-		schreibeZeile(a.getNummer() + "");
+	public boolean speichereArtikel(Object a) throws IOException {
 		
-		String packetString = String.valueOf(a.getPacket());
-		schreibeZeile(packetString);
-
-		//der int-Wert, der von getVerfuegbarkeit() ausgegeben wird, 
-		//wird in einen String konvertiert und in der Hilfsvariable verfuegbarkeitString zwischengespeichert.
-		//dann wird der String über schreibeZeile() in die Zeile geschrieben.
-		String anzahlString = String.valueOf(a.getAnzahl());
-		schreibeZeile(anzahlString);
+		if(a instanceof Artikel) {
 		
-		//hier das gleiche nochmal, nur ist der int-Wert diesmal ein double-Wert. Ich hoffe valueOf() kann das.
-		String preisString = String.valueOf(a.getPreis());
-		schreibeZeile(preisString);		
+			// Titel, Nummer, Verfügbarkeit , Preis, Beschreibung schreiben
+			schreibeZeile(((Artikel) a).getName());
+//			schreibeZeile(Integer.valueOf(b.getNummer()).toString());
+			schreibeZeile(((Artikel) a).getNummer() + "");
+		
+			//der int-Wert, der von getVerfuegbarkeit() ausgegeben wird, 
+			//wird in einen String konvertiert und in der Hilfsvariable verfuegbarkeitString zwischengespeichert.
+			//dann wird der String über schreibeZeile() in die Zeile geschrieben.
+			String anzahlString = String.valueOf(((Artikel) a).getAnzahl());
+			schreibeZeile(anzahlString);
+		
+			//hier das gleiche nochmal, nur ist der int-Wert diesmal ein double-Wert. Ich hoffe valueOf() kann das.
+			String preisString = String.valueOf(((Artikel) a).getPreis());
+			schreibeZeile(preisString);		
+		}
+		
+		if(a instanceof Massenartikel) {
+			schreibeZeile("Packetgroeße:");
+			String packetString = String.valueOf(((Massenartikel) a).getPacketgroeße());
+			schreibeZeile(packetString);
+		}
 
 		return true;
 	}
@@ -228,5 +239,15 @@ public class FilePersistenceManager implements PersistenceManager {
 	private void schreibeZeile(String daten) {
 		if (writer != null)
 			writer.println(daten);
+	}
+	
+	private void zeileMarkieren() throws IOException {
+		if (reader != null)
+			reader.mark(500);
+	}
+	
+	private void zurMarkierungZurueck() throws IOException {
+		if (reader != null)
+			reader.reset();
 	}
 }

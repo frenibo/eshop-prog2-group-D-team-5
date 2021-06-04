@@ -1,8 +1,10 @@
 package eshop.local.ui;
 
 import eshop.local.valueobjects.Artikel;
+import eshop.local.valueobjects.Massenartikel;
 import eshop.local.valueobjects.Rechnung;
 import eshop.local.valueobjects.User;
+import eshop.local.valueobjects.Valueobject;
 
 import java.util.List;
 import java.util.Vector;
@@ -17,30 +19,30 @@ import eshop.local.ui.MenueAusgabe;
 
 public class Eingabeverarbeitung {
 
-	private String line;
+	private String input;
 	private String level;
 	private BufferedReader in;
 	private MenueAusgabe menue;
 	
 	public Eingabeverarbeitung() {
 		
-		setLine("");
+		setInput("");
 		// Stream-Objekt fuer Texteingabe ueber Konsolenfenster erzeugen
 		this.in = new BufferedReader(new InputStreamReader(System.in));
 		this.menue = new MenueAusgabe();
 	}
 	
-	public Eingabeverarbeitung(String line) {
+	public Eingabeverarbeitung(String input) {
 		
-		setLine(line);
+		setInput(input);
 		// Stream-Objekt fuer Texteingabe ueber Konsolenfenster erzeugen
 		this.in = new BufferedReader(new InputStreamReader(System.in));
 		this.menue = new MenueAusgabe();
 	}
 	
-	public Eingabeverarbeitung(String line, String level) {
+	public Eingabeverarbeitung(String input, String level) {
 		
-		setLine(line);
+		setInput(input);
 		setLevel(level);
 		// Stream-Objekt fuer Texteingabe ueber Konsolenfenster erzeugen
 		this.in = new BufferedReader(new InputStreamReader(System.in));
@@ -60,12 +62,12 @@ public class Eingabeverarbeitung {
 		return this.level;
 	}
 	
-	public void setLine(String line) {
-		this.line = line;
+	public void setInput(String input) {
+		this.input = input;
 	}
 	
-	public String getLine() {
-		return this.line;
+	public String getInput() {
+		return this.input;
 	}
 	
 	
@@ -77,8 +79,8 @@ public class Eingabeverarbeitung {
 	
 	public String liesEingabe() throws IOException {
 		// einlesen von Konsole
-		setLine(in.readLine());
-		return this.line;
+		setInput(in.readLine());
+		return this.input;
 	}
 	
 	public void verarbeitung(String line) throws IOException {
@@ -95,7 +97,7 @@ public class Eingabeverarbeitung {
 		verarbeitungsLevel(line, level);
 	}
 	
-	public void verarbeitungsLevel(String line, String level) throws IOException {
+	public void verarbeitungsLevel(String input, String level) throws IOException {
 		
 		List<Artikel> liste;
 		List<User> userListe;
@@ -116,7 +118,7 @@ public class Eingabeverarbeitung {
 			
 			
 			try {
-				nummer = Integer.parseInt(line);
+				nummer = Integer.parseInt(input);
 			} catch (Exception e) {}
 			
 			if (nummer > 0) {
@@ -126,58 +128,46 @@ public class Eingabeverarbeitung {
 			}
 			
 			// Eingabe bearbeiten:
-			switch (line) {
+			switch (input) {
 			//Alle Artikel anzeigen
 			case "a":
-				liste = Sitzung.bst.gibAlleArtikel();
-				Sitzung.gibArtikellisteUnsortiertAus(liste);
+				gibListeAus(Sitzung.getArtikellisteAusBestand());
 				System.out.println("\n   Gib die Nr eines Artikels ein um damit zu interagieren.");
 				break;
 			//Alle Artikel alphabetisch sortiert anzeigen
 			case "abc":
-				liste = Sitzung.bst.gibAlleArtikel();
-				Sitzung.gibArtikellisteAlphabetischAus(liste);
+				//liste = Sitzung.getArtikellisteAusBestand();
+				//Sitzung.gibArtikellisteAlphabetischAus(liste);
+				gibListeAlphabetischAus(Sitzung.getArtikellisteAusBestand());
 				System.out.println("\n   Gib die Nr eines Artikels ein um damit zu interagieren.");
 				break;
 				//Alle Artikel alphabetisch sortiert anzeigen
 			case "a#":
-				liste = Sitzung.bst.gibAlleArtikel();
+				liste = Sitzung.getArtikellisteAusBestand();
 				Sitzung.gibArtikellisteNummerischAus(liste);
 				System.out.println("\n   Gib die Nr eines Artikels ein um damit zu interagieren.");
 				break;
 			//Alle Artikel im Warenkorb kaufen
 			case "b":
-				System.out.println("Kundennummer >");
-				nummerString = liesEingabe();
-				nummer = Integer.parseInt(nummerString);
-				if(nummer != Sitzung.getAktuellerUser().getUserNr() || nummer == 0) {
-					System.out.println("Bitte loggen Sie sich zunächst ein.");
-				}
-				else {
-					Sitzung.bst.schreibeArtikel();
-					Sitzung.wnk.schreibeArtikel();
-					liste = Sitzung.wnk.gibAlleArtikel();
-					Rechnung rechnung = new Rechnung(Sitzung.getAktuellerUser(), liste, true);
-					try {
-						//sollte man so wahrscheinlich nicht machen:
-						Sitzung.rch.fuegeRechnungEin(rechnung);
-						
-					} catch (ArtikelExistiertBereitsException e) {
-						// Hier Fehlerbehandlung...
+				
+				boolean loggedIn = loginCheck();
+				if(loggedIn == true) {
+					Rechnung rechnung = Sitzung.warenkorbKaufen();
+					if(rechnung.getSitzungsNr().equals("")) {
 						System.out.println("Fehler beim einfügen");
-						e.printStackTrace();
 					}
-					Sitzung.rch.schreibeRechnung();
-					System.out.println("Kauf abgeschlossen. Hier die Rechnung: \n");
-					System.out.println(rechnung);
-					System.out.println("\nNeue Sitzung startet.");
-					Main.main(null);
+					else {
+						System.out.println("Kauf abgeschlossen. Hier die Rechnung: \n");
+						System.out.println(rechnung);
+						System.out.println("\nNeue Sitzung startet.");
+						Main.main(null);
+					}
 				}
 				
 				break;
 			//Alle User anzeigen
 			case "u":
-				userListe = Sitzung.usr.gibAlleUser();
+				userListe = Sitzung.getUserliste();
 				Sitzung.gibUserlisteAus(userListe);
 				break;
 			//Warenkorb anzeigen
@@ -262,16 +252,24 @@ public class Eingabeverarbeitung {
 					System.out.print("Anzahl > ");
 					anzahlString = liesEingabe();
 					anzahl = Integer.parseInt(anzahlString);
-					System.out.print("Preis > ");
-					preisString = liesEingabe();
-					preis = Double.parseDouble(preisString);
+					boolean a = false;
+					while(a == false) {
+						System.out.print("Preis > ");
+						preisString = liesEingabe();
+						try {
+							preis = Double.parseDouble(preisString);
+							a = true;
+						} catch (NumberFormatException e) {
+							System.out.println("Falsches Format! \n Format für Preis ist integer.integer \n Try again...");
+						}
+					}
 
 					try {
 						//sollte man so wahrscheinlich nicht machen:
-						String resultat = Sitzung.bst.fuegeArtikelEin(name, nummer, packet, anzahl, preis);
+						String resultat = Sitzung.bst.fuegeArtikelEin(name, nummer, anzahl, preis, packet);
 					
 						if(resultat.equals("Erfolgreich hinzugefügt")) {
-							Sitzung.setAktuellerArtikel(new Artikel(name, nummer, packet, anzahl, preis));
+							Sitzung.setAktuellerArtikel(new Massenartikel(name, nummer, anzahl, preis, packet));
 							System.out.print("\n");
 							System.out.println(Sitzung.getAktuellerArtikel());
 							setLevel("speichern");
@@ -382,7 +380,7 @@ public class Eingabeverarbeitung {
 			}
 		
 		else if(level.equals("speichern")) {
-			switch (line) {
+			switch (input) {
 			case "s":
 				Sitzung.wnk.warenkorbLeeren();
 				
@@ -416,6 +414,74 @@ public class Eingabeverarbeitung {
 				Sitzung.run();
 				break;
 			}
+		}
+	}
+	
+	public boolean loginCheck() throws IOException {
+		System.out.println("Kundennummer >");
+		String nummerString = liesEingabe();
+		int nummer = Integer.parseInt(nummerString);
+		if(nummer != Sitzung.getAktuellerUser().getUserNr() || nummer == 0) {
+			System.out.println("Bitte loggen Sie sich zunächst ein.");
+			return false;
+		} else return true;
+		
+	}
+	
+	public <Thing> void gibListeAus(List<Thing> liste) {
+		if (liste.isEmpty()) {
+			System.out.println("Liste ist leer.");
+		} else {
+			for (Thing thing : liste) {
+				System.out.println(thing);
+			}
+		}
+		
+	}
+	
+	public <Thing extends Valueobject> void gibListeAlphabetischAus(List<Thing> vectorListe){
+		int anzahl = vectorListe.size();
+		List<Thing> tempListe = new Vector<Thing>();
+
+		//Sortieren
+		for(int loop = 0; loop <= anzahl; loop++) {
+
+			//Class<?> tempObject = new Artikel();
+			Thing tempObject = (Thing) new Rechnung();
+			
+			
+			
+			try {
+				Class<?> cls = Class.forName(vectorListe.get(0).getClass().getName());
+				Thing tempClass = (Thing) cls.getConstructor().newInstance();
+				tempObject = tempClass;
+				//tempObject = (Thing) cls.getDeclaredConstructor().newInstance();
+				//Class tempObjekt = new Class.forName(eshop.local.valueobjects.Artikel);
+				tempObject.copy(vectorListe.get(0));
+				tempObject.setName("");
+			} catch (Exception e) {}
+
+			//Thing tempObject = (Thing) vectorListe.get(0);
+			//tempObject.copy(vectorListe.get(anzahl));
+			
+			for (Thing thing : vectorListe) {
+				if(tempObject.getName().isEmpty()) {
+					tempObject.copy(thing);
+				}
+				//deep copy, not just pointer:
+				int vergleichen = thing.getName().toLowerCase().compareTo(tempObject.getName().toLowerCase());
+				if(vergleichen <= 0){
+					tempObject.copy(thing);
+				}
+			}
+			if(!tempObject.getName().isEmpty()) {
+				tempListe.add(tempObject);
+			}
+			vectorListe.remove(tempObject);
+		}
+		//Sortierte Liste ausgeben
+		for (Thing thing : tempListe) {
+			System.out.println(thing);
 		}
 	}
 }

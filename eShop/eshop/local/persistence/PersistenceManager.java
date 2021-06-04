@@ -37,7 +37,7 @@ public interface PersistenceManager {
 	 * @param b Buch-Objekt, das gespeichert werden soll
 	 * @return true, wenn Schreibvorgang erfolgreich, false sonst
 	 */
-	public boolean speichereArtikel(Artikel a) throws IOException;
+	public boolean speichereArtikel(Object a) throws IOException;
 
 
 	public User ladeUser() throws IOException;

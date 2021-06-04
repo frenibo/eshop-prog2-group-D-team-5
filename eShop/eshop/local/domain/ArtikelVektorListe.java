@@ -10,6 +10,7 @@ import java.util.List;
 import eshop.local.domain.exceptions.ArtikelExistiertBereitsException;
 import eshop.local.ui.Sitzung;
 import eshop.local.valueobjects.Artikel;
+import eshop.local.valueobjects.Massenartikel;
 
 public class ArtikelVektorListe {
 	
@@ -151,8 +152,14 @@ public class ArtikelVektorListe {
 			return rueckmeldung;
 		}
 		
-		public String fuegeArtikelEin(String name, int nummer, int packet, int anzahl, double preis) throws ArtikelExistiertBereitsException {
-			Artikel a = new Artikel(name, nummer, packet, anzahl, preis);
+		public String fuegeArtikelEin(String name, int nummer, int anzahl, double preis) throws ArtikelExistiertBereitsException {
+			Artikel a = new Artikel(name, nummer, anzahl, preis);
+			String rueckmeldung = meineArtikel.einfuegen(a);
+			return rueckmeldung;
+		}
+		
+		public String fuegeArtikelEin(String name, int nummer, int anzahl, double preis, int packetgroeße) throws ArtikelExistiertBereitsException {
+			Massenartikel a = new Massenartikel(name, nummer, anzahl, preis, packetgroeße);
 			String rueckmeldung = meineArtikel.einfuegen(a);
 			return rueckmeldung;
 		}
