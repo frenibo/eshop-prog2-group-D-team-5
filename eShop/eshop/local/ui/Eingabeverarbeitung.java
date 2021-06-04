@@ -6,6 +6,8 @@ import eshop.local.valueobjects.Rechnung;
 import eshop.local.valueobjects.User;
 import eshop.local.valueobjects.Valueobject;
 
+import eshop.local.ui.Sitzung;
+
 import java.util.List;
 import java.util.Vector;
 import java.io.BufferedReader;
@@ -116,7 +118,7 @@ public class Eingabeverarbeitung {
 		
 		if(level.equals("startmenue")) {
 			
-			
+			/*cool but not needed
 			try {
 				nummer = Integer.parseInt(input);
 			} catch (Exception e) {}
@@ -126,32 +128,29 @@ public class Eingabeverarbeitung {
 				Sitzung.gibArtikellisteUnsortiertAus(liste);
 
 			}
+			*/
 			
 			// Eingabe bearbeiten:
 			switch (input) {
 			//Alle Artikel anzeigen
 			case "a":
 				gibListeAus(Sitzung.getArtikellisteAusBestand());
-				System.out.println("\n   Gib die Nr eines Artikels ein um damit zu interagieren.");
 				break;
 			//Alle Artikel alphabetisch sortiert anzeigen
 			case "abc":
-				//liste = Sitzung.getArtikellisteAusBestand();
-				//Sitzung.gibArtikellisteAlphabetischAus(liste);
 				gibListeAlphabetischAus(Sitzung.getArtikellisteAusBestand());
-				System.out.println("\n   Gib die Nr eines Artikels ein um damit zu interagieren.");
 				break;
 				//Alle Artikel alphabetisch sortiert anzeigen
 			case "a#":
-				liste = Sitzung.getArtikellisteAusBestand();
-				Sitzung.gibArtikellisteNummerischAus(liste);
-				System.out.println("\n   Gib die Nr eines Artikels ein um damit zu interagieren.");
+				gibArtikellisteNummerischAus(Sitzung.getArtikellisteAusBestand());
 				break;
 			//Alle Artikel im Warenkorb kaufen
 			case "b":
 				
-				boolean loggedIn = loginCheck();
-				if(loggedIn == true) {
+				if(loginCheck() == false) {
+					loginDialog();
+				}
+				else{
 					Rechnung rechnung = Sitzung.warenkorbKaufen();
 					if(rechnung.getSitzungsNr().equals("")) {
 						System.out.println("Fehler beim einfügen");
@@ -163,18 +162,15 @@ public class Eingabeverarbeitung {
 						Main.main(null);
 					}
 				}
-				
 				break;
 			//Alle User anzeigen
 			case "u":
-				userListe = Sitzung.getUserliste();
-				Sitzung.gibUserlisteAus(userListe);
+				gibListeAus(Sitzung.getUserliste());
 				break;
 			//Warenkorb anzeigen
 			case "w":
-				liste = Sitzung.wnk.gibAlleArtikel();
-				Sitzung.gibArtikellisteUnsortiertAus(liste);
-				System.out.println("Gesamtpreis: " + Sitzung.wnk.gibGesamtpreis() + " €");
+				Sitzung.gibArtikellisteUnsortiertAus(Sitzung.getArtikellisteAusWarenkorb());
+				System.out.println("Gesamtpreis: " + Sitzung.getGesamtpreisWarenkorb() + " €");
 				break;
 			//Artikel in Warenkorb verschieben
 			case "k":
@@ -184,7 +180,7 @@ public class Eingabeverarbeitung {
 				System.out.print("Anzahl > ");
 				anzahlString = liesEingabe();
 				anzahl = Integer.parseInt(anzahlString);
-				Sitzung.bst.verschiebeInWarenkorb(nummer, anzahl);
+				Sitzung.verschiebeVonBestandInWarenkorb(nummer, anzahl);
 				break;
 				//Artikel von Warenkorb zurücklegen
 			case "l":
@@ -194,11 +190,11 @@ public class Eingabeverarbeitung {
 				System.out.print("Anzahl > ");
 				anzahlString = liesEingabe();
 				anzahl = Integer.parseInt(anzahlString);
-				Sitzung.wnk.verschiebeInBestand(nummer, anzahl);
+				Sitzung.verschiebeVonWarenkorbinBestand(nummer, anzahl);
 				break;
 			//Warenkorb leeren
 			case "wl":
-				Sitzung.wnk.warenkorbLeeren();
+				Sitzung.warenkorbLeeren();
 				System.out.println("Warenkorb geleert.");
 				break;
 			//Artikelanzahl ändern
@@ -213,7 +209,7 @@ public class Eingabeverarbeitung {
 					System.out.print("Neue Anzahl > ");
 					anzahlString = liesEingabe();
 					anzahl = Integer.parseInt(anzahlString);
-					Sitzung.bst.aendereAnzahl(nummer, anzahl);
+					Sitzung.aendereAnzahlImBestand(nummer, anzahl);
 					System.out.print("\nAnzahl aktualisiert.");
 				}
 				break;
@@ -231,15 +227,12 @@ public class Eingabeverarbeitung {
 					System.out.print("Artikelname  > ");
 					name = liesEingabe();
 					// Die Bibliothek das Buch löschen lassen:
-					Sitzung.bst.loescheArtikel(name, nummer);
+					Sitzung.loescheArtikelImBestand(name, nummer);
 				}
 				break;
 			//Artikel einfügen
 			case "e":
-				if(Sitzung.getAktuellerUser().getUserNr() == 0) {
-					System.out.println("Bitte loggen Sie sich zunächst ein.");
-				}
-				else {
+				if(loginCheck() == true) {
 					// lies die notwendigen Parameter, einzeln pro Zeile
 					System.out.print("Artikelnummer > ");
 					nummerString = liesEingabe();
@@ -272,10 +265,10 @@ public class Eingabeverarbeitung {
 							Sitzung.setAktuellerArtikel(new Massenartikel(name, nummer, anzahl, preis, packet));
 							System.out.print("\n");
 							System.out.println(Sitzung.getAktuellerArtikel());
-							setLevel("speichern");
+							setLevel("startmenue");
 						}
 						else if(resultat.equals("Artikel existiert bereits") || resultat.equals("Nummer vergeben") || resultat.equals("Falsche Nummer")) {
-							setLevel("startmenue");
+							setLevel("startmenu"); //vorher "speichern"
 						}
 					
 					} catch (ArtikelExistiertBereitsException e) {
@@ -294,7 +287,7 @@ public class Eingabeverarbeitung {
 				break;
 			//Artikel sichern
 			case "s":
-				Sitzung.wnk.warenkorbLeeren();
+				Sitzung.warenkorbLeeren();
 				
 				Rechnung rechnung = new Rechnung(Sitzung.getAktuellerUser(), Sitzung.produceAenderungsListe(), false);
 				System.out.println(rechnung);
@@ -311,6 +304,7 @@ public class Eingabeverarbeitung {
 				
 				Sitzung.bst.schreibeArtikel();
 				Sitzung.rch.schreibeRechnung();
+				Sitzung.usr.schreibeUser();
 				System.out.println("gespeichert.");
 				break;
 			//Sitzungsnummer anzeigen
@@ -417,16 +411,19 @@ public class Eingabeverarbeitung {
 		}
 	}
 	
-	public boolean loginCheck() throws IOException {
-		System.out.println("Kundennummer >");
-		String nummerString = liesEingabe();
-		int nummer = Integer.parseInt(nummerString);
-		if(nummer != Sitzung.getAktuellerUser().getUserNr() || nummer == 0) {
-			System.out.println("Bitte loggen Sie sich zunächst ein.");
+	public boolean loginCheck() {
+		if(Sitzung.getAktuellerUser().getUserNr() == 0) {
+			System.out.println("Sie sind nicht eingeloggt.");
 			return false;
 		} else return true;
 		
 	}
+	
+	public boolean loginDialog() {
+		return true;
+	}
+	
+	///Sitzung.getAktuellerUser().getUserNr() == 0
 	
 	public <Thing> void gibListeAus(List<Thing> liste) {
 		if (liste.isEmpty()) {
@@ -440,29 +437,22 @@ public class Eingabeverarbeitung {
 	}
 	
 	public <Thing extends Valueobject> void gibListeAlphabetischAus(List<Thing> vectorListe){
+		
 		int anzahl = vectorListe.size();
 		List<Thing> tempListe = new Vector<Thing>();
 
 		//Sortieren
 		for(int loop = 0; loop <= anzahl; loop++) {
 
-			//Class<?> tempObject = new Artikel();
-			Thing tempObject = (Thing) new Rechnung();
-			
-			
-			
+			Thing tempObject = (Thing) new Artikel(); //Ob Rechnung, Artikel oder User ist hoffentlich egal.
+						
 			try {
 				Class<?> cls = Class.forName(vectorListe.get(0).getClass().getName());
 				Thing tempClass = (Thing) cls.getConstructor().newInstance();
 				tempObject = tempClass;
-				//tempObject = (Thing) cls.getDeclaredConstructor().newInstance();
-				//Class tempObjekt = new Class.forName(eshop.local.valueobjects.Artikel);
 				tempObject.copy(vectorListe.get(0));
 				tempObject.setName("");
 			} catch (Exception e) {}
-
-			//Thing tempObject = (Thing) vectorListe.get(0);
-			//tempObject.copy(vectorListe.get(anzahl));
 			
 			for (Thing thing : vectorListe) {
 				if(tempObject.getName().isEmpty()) {
@@ -483,5 +473,45 @@ public class Eingabeverarbeitung {
 		for (Thing thing : tempListe) {
 			System.out.println(thing);
 		}
+	}
+	
+	public <Thing extends Valueobject> void gibArtikellisteNummerischAus(List<Thing> vectorListe) {
+
+		int anzahl = vectorListe.size();
+		List<Thing> tempListe = new Vector<Thing>();
+
+		//Sortieren
+		for(int loop = 0; loop <= anzahl; loop++) {
+			
+			Thing tempObject = (Thing) new Artikel(); //Ob Rechnung, Artikel oder User ist hoffentlich egal.
+			
+			try {
+				Class<?> cls = Class.forName(vectorListe.get(0).getClass().getName());
+				Thing tempClass = (Thing) cls.getConstructor().newInstance();
+				tempObject = tempClass;
+				tempObject.copy(vectorListe.get(0));
+				tempObject.setName("");
+			} catch (Exception e) {}
+			
+			for (Thing thing : vectorListe) {
+				if(tempObject.getNummer() == 0) {
+					//pointer sufficient but why not make a deep copy
+					tempObject.copy(thing);
+				}
+				if(thing.getNummer() <= tempObject.getNummer()){
+					//deep copy necessary
+					tempObject.copy(thing);
+				}
+			}
+			if(!tempObject.getName().isEmpty()) {
+				tempListe.add(tempObject);
+			}
+			vectorListe.remove(tempObject);
+		}
+		//Sortierte Liste ausgeben
+		for (Thing thing : tempListe) {
+			System.out.println(thing);
+		}
+
 	}
 }

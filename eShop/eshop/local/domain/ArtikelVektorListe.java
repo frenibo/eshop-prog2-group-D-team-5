@@ -170,15 +170,15 @@ public class ArtikelVektorListe {
 			
 		}
 		
-		public void verschiebeInWarenkorb(int nummer, int anzahl) {
+		public void verschiebeInWarenkorb(int nummer, int anzahl, ArtikelVektorListe warenkorb) {
 								
-			meineArtikel.verschiebenArtikel(nummer, anzahl, Sitzung.wnk);
+			meineArtikel.verschiebenArtikel(nummer, anzahl, warenkorb);
 			
 		}
 		
-		public void verschiebeInBestand(int nummer, int anzahl) {
+		public void verschiebeInBestand(int nummer, int anzahl, ArtikelVektorListe bestand) {
 			
-			meineArtikel.verschiebenArtikel(nummer, anzahl, Sitzung.bst);
+			meineArtikel.verschiebenArtikel(nummer, anzahl, bestand);
 			
 		}
 		

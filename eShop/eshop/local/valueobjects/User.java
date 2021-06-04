@@ -77,6 +77,14 @@ public class User implements Valueobject{
 	public void setUserNr(int userNr){
 		this.userNr = userNr;
 	}
+	
+	public int getNummer() {
+		return userNr;
+	}
+	
+	public void setNummer(int userNr){
+		this.userNr = userNr;
+	}
     
     public String getName() {
 		return name;

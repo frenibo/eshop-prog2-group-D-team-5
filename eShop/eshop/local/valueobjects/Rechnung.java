@@ -137,9 +137,18 @@ public class Rechnung implements Valueobject{
 		
 	}
 	
+	public int getNummer() {
+		return user.getNummer();
+	}
+
+	@Override
+	public void setNummer(int nummer) {
+		this.user.setNummer(nummer);
+	}
+	
 	@Override
 	public String getName() {
-		return this.user.getName();
+		return user.getName();
 	}
 
 	@Override
@@ -152,15 +161,15 @@ public class Rechnung implements Valueobject{
 	}
 	
 	public User getUser() {
-		return this.user;
+		return user;
 	}
 	
 	public void setArtikelListe(List<Artikel> liste) {
 		this.artikelListe = liste;
 	}
 	
-	public List<Artikel> getArtikelListe(){
-		return this.artikelListe;
+	public List<Artikel> getArtikelListe() {
+		return artikelListe;
 	}
 	
 	public void setSitzungsNr(String sitzungsNr) {
@@ -168,7 +177,7 @@ public class Rechnung implements Valueobject{
 	}
 	
 	public String getSitzungsNr() {
-		return this.sitzungsNr;
+		return sitzungsNr;
 	}
 	
 	public void setDatum(String datum) {
@@ -184,7 +193,7 @@ public class Rechnung implements Valueobject{
 	}
 	
 	public boolean getKauf() {
-		return this.kauf;
+		return kauf;
 	}
 	
 	public void setBuchung(boolean value) {
@@ -192,7 +201,7 @@ public class Rechnung implements Valueobject{
 	}
 	
 	public boolean getBuchung() {
-		return this.buchung;
+		return buchung;
 	}
 	
 	public void setGesamtpreis(double gesamtpreis) {

@@ -1,6 +1,6 @@
 Stift
 1
-11
+24
 1.5
 Packetgroeße:
 2
@@ -12,7 +12,7 @@ Packetgroeße:
 12
 Salzsträuer
 3
-18
+40
 3.0
 Packetgroeße:
 1
@@ -22,3 +22,9 @@ Qtips
 0.1
 Packetgroeße:
 100
+Auto
+5
+46
+15000.0
+Packetgroeße:
+1

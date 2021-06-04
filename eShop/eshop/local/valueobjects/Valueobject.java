@@ -6,6 +6,10 @@ public interface Valueobject {
 	
 	public void setName(String name);
 	
+	public int getNummer();
+	
+	public void setNummer(int nummer);
+	
 	public boolean copy(Object anderesObject);
 	
 	

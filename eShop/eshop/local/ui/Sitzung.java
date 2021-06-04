@@ -132,37 +132,6 @@ public Sitzung(String dateiArtikel, String dateiUser, String dateiRechnungen) th
 		}
 	}
 
-	public static void gibArtikellisteAlphabetischAus(List<Artikel> vectorListe) {
-
-		int anzahl = vectorListe.size();
-		List<Artikel> tempListe = new Vector<Artikel>();
-		
-		//Sortieren
-		for(int loop = 0; loop <= anzahl; loop++) {
-			Artikel tempArtikel = new Massenartikel();
-			for (Artikel artikel : vectorListe) {
-				if(tempArtikel.getName().isEmpty()) {
-					tempArtikel = new Massenartikel(artikel.getName(), artikel.getNummer(), artikel.getAnzahl(), artikel.getPreis(), artikel.getPacketgroeße());
-				}
-				//deep copy, not just pointer:
-				int vergleichen = artikel.getName().toLowerCase().compareTo(tempArtikel.getName().toLowerCase());
-				if(vergleichen <= 0){
-					
-					tempArtikel = new Massenartikel(artikel.getName(), artikel.getNummer(), artikel.getAnzahl(), artikel.getPreis(), artikel.getPacketgroeße());
-				}
-			}
-			if(!tempArtikel.getName().isEmpty()) {
-				tempListe.add(tempArtikel);
-			}
-			vectorListe.remove(tempArtikel);
-		}
-		//Sortierte Liste ausgeben
-		for (Artikel artikel : tempListe) {
-			System.out.println(artikel);
-		}
-
-	}
-	
 	public static void gibArtikellisteNummerischAus(List<Artikel> vectorListe) {
 
 		int anzahl = vectorListe.size();
@@ -238,6 +207,8 @@ public Sitzung(String dateiArtikel, String dateiUser, String dateiRechnungen) th
 			return rechnung = new Rechnung();
 		}
 		rch.schreibeRechnung();
+		bst.schreibeArtikel();
+		usr.schreibeUser();
 		return rechnung;
 	}
 	
@@ -297,6 +268,26 @@ public Sitzung(String dateiArtikel, String dateiUser, String dateiRechnungen) th
 		}
 	}
 	
+	public static void verschiebeVonBestandInWarenkorb(int nummer, int anzahl) {
+		bst.verschiebeInWarenkorb(nummer, anzahl, Sitzung.wnk);
+	}
+	
+	public static void verschiebeVonWarenkorbinBestand(int nummer, int anzahl) {
+		wnk.verschiebeInBestand(nummer, anzahl, Sitzung.bst);
+	}
+	
+	public static void warenkorbLeeren() {
+		wnk.warenkorbLeeren();
+	}
+	
+	public static void aendereAnzahlImBestand(int nummer, int anzahl) {
+		bst.aendereAnzahl(nummer, anzahl);
+	}
+	
+	public static void loescheArtikelImBestand(String name, int nummer) {
+		bst.loescheArtikel(name, nummer);
+	}
+	
 	public static List<User> getUserliste() {
 		
 		return usr.gibAlleUser();
@@ -305,6 +296,19 @@ public Sitzung(String dateiArtikel, String dateiUser, String dateiRechnungen) th
 	public static List<Artikel> getArtikellisteAusBestand() {
 		
 		return bst.gibAlleArtikel();
+	}
+	
+	public static List<Artikel> getArtikellisteAusWarenkorb() {
+		
+		return wnk.gibAlleArtikel();
+	}
+	
+	public static double getGesamtpreisWarenkorb() {
+		return wnk.gibGesamtpreis();
+	}
+	
+	public static double getGesamtpreisBestand() {
+		return bst.gibGesamtpreis();
 	}
 	
 	public static String getSitzungsNr() {

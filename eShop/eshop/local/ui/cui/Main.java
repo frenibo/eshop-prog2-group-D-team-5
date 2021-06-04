@@ -22,5 +22,6 @@ public class Main {
 	// Sitzung in eShop umbenennen, eShopArtikelFunktionen + eShopUserFunktionen usw.
 	//Sitzungsnummer zu valueobject machen, dass nicht mehr pro eShop bzw Sitzungs-Objekt erstellt wird, sondern pro Warenkorb
 	//Eingabeverarbeitung resistent machen und zurück gehen ermöglichen.
-
+	//Warum muss jede Methode in Sitzung/eShop static sein?
+	//Sitzung.speichern();
 }
