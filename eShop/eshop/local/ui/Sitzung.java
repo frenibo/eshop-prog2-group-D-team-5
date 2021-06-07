@@ -8,11 +8,13 @@ import java.util.List;
 import java.util.Vector;
 
 import eshop.local.domain.ArtikelVektorListe;
+import eshop.local.domain.EventVektorListe;
 import eshop.local.domain.RechnungVektorListe;
 import eshop.local.domain.UserVektorListe;
 import eshop.local.domain.exceptions.ArtikelExistiertBereitsException;
 import eshop.local.ui.cui.Main;
 import eshop.local.valueobjects.Artikel;
+import eshop.local.valueobjects.Event;
 import eshop.local.valueobjects.Massenartikel;
 import eshop.local.valueobjects.Rechnung;
 import eshop.local.valueobjects.Sitzungsnummer;
@@ -24,11 +26,13 @@ public class Sitzung {
 	public static ArtikelVektorListe wnk;
 	public static UserVektorListe usr;
 	public static RechnungVektorListe rch;
+	public static EventVektorListe evt;
 	private static Eingabeverarbeitung ev;
 	
 	private static Artikel aktuellerArtikel;
 	private static String aktuelleSitzungsNr;
 	private static User aktuellerUser;
+	private static Event aktuellesEvent;
 	
 	private static String datei = "";
 	
@@ -107,6 +111,30 @@ public Sitzung(String dateiArtikel, String dateiUser, String dateiRechnungen) th
 		
 		Sitzung.datei = dateiArtikel;
 	}
+
+public Sitzung(String dateiArtikel, String dateiUser, String dateiRechnungen, String dateiEvents) throws IOException {
+	
+	aktuelleSitzungsNr = neueSitzungsNr();
+	
+	aktuellerUser = new User();
+	// die Bst-Verwaltung erledigt die Aufgaben, 
+	// die nichts mit Ein-/Ausgabe zu tun haben
+	bst = new ArtikelVektorListe(dateiArtikel);
+	
+	// neue Warenkorb-Liste wird angelegt.
+	wnk = new ArtikelVektorListe(getSitzungsNr()+".txt");
+
+	usr = new UserVektorListe(dateiUser);
+	
+	rch = new RechnungVektorListe(dateiRechnungen);
+	
+	evt = new EventVektorListe(dateiEvents);
+	
+	// 
+	ev = new Eingabeverarbeitung();
+	
+	Sitzung.datei = dateiArtikel;
+}
 	
 	public String neueSitzungsNr() {
 		
@@ -172,7 +200,7 @@ public Sitzung(String dateiArtikel, String dateiUser, String dateiRechnungen) th
 		}
 	}
 	
-	public static void run() throws IOException {
+	public static void run() throws IOException, ArtikelExistiertBereitsException {
 		
 		String input = "";
 
@@ -256,18 +284,6 @@ public Sitzung(String dateiArtikel, String dateiUser, String dateiRechnungen) th
 		return aenderungsListe;
 	}
 	
-	public static void gibRechnungslisteAus(List<Rechnung> rechnungListe) {
-		if (rechnungListe.isEmpty()) {
-			System.out.println("Liste ist leer.");
-		} else {
-			System.out.println("------------------------------------------------------------");
-			for (Rechnung rechnung : rechnungListe) {
-				System.out.println(rechnung);
-				System.out.println("------------------------------------------------------------");
-			}
-		}
-	}
-	
 	public static void verschiebeVonBestandInWarenkorb(int nummer, int anzahl) {
 		bst.verschiebeInWarenkorb(nummer, anzahl, Sitzung.wnk);
 	}
@@ -298,9 +314,59 @@ public Sitzung(String dateiArtikel, String dateiUser, String dateiRechnungen) th
 		return bst.gibAlleArtikel();
 	}
 	
+	public static void fuegeRechnungEin(Rechnung rechnung) throws ArtikelExistiertBereitsException {
+		rch.fuegeRechnungEin(rechnung);
+	}
+	
+	public static void fuegeUserEin(int nummer, String name) throws ArtikelExistiertBereitsException {
+		usr.fuegeUserEin(nummer, name);
+	}
+	
+		public static String fuegeArtikelEin(String name, int nummer, int anzahl, double preis, int packet) throws ArtikelExistiertBereitsException {
+		return bst.fuegeArtikelEin(name, nummer, anzahl, preis, packet);
+	}
+	
+	public static void fuegeEventEin(Event event) throws ArtikelExistiertBereitsException {
+		// TODO Auto-generated method stub
+		evt.fuegeEventEin(event);
+		
+	}
+	
+	public static void speichereBestand() throws IOException {
+		bst.schreibeArtikel();
+	}
+	
+	public static void speichereRechnungsliste() throws IOException {
+		rch.schreibeRechnung();
+	}
+	
+	public static void speichereUserliste() throws IOException {
+		usr.schreibeUser();
+	}
+	
+	public static void speichereEventliste() throws IOException {
+		evt.schreibeEvents();		
+	}
+	
 	public static List<Artikel> getArtikellisteAusWarenkorb() {
 		
 		return wnk.gibAlleArtikel();
+	}
+	
+	public static List<Artikel> DurchsucheBestandNachName(String name) {
+		return bst.sucheNachName(name);
+	}
+	
+	public static List<Rechnung> DurchsucheRechnungslisteNachNr(int nummer) {
+		return rch.sucheNachNr(nummer);
+	}
+	
+	public static void loescheArtikel(Artikel artikel) {
+		bst.loescheArtikel(artikel);
+	}
+	
+	public static int getUserAnzahl() {
+		return usr.gibUserAnzahl();
 	}
 	
 	public static double getGesamtpreisWarenkorb() {
@@ -334,4 +400,6 @@ public Sitzung(String dateiArtikel, String dateiUser, String dateiRechnungen) th
 	public static User getAktuellerUser() {
 		return aktuellerUser;
 	}
+
+
 }

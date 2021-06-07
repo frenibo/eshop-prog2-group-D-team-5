@@ -81,12 +81,8 @@ public class Rechnung implements Valueobject{
 		for (Artikel artikel : artikelListe) {
 			artikelListeString += artikel + "\n";
 		}
-		String buchungOderKaufString = "";
-		if(buchung) {
-			buchungOderKaufString = "Buchung abgeschlossen.\n\n";
-		} else buchungOderKaufString = "Kauf abgeschlossen. Hier die Rechnung:\n\n";
 		
-		return (buchungOderKaufString + "" + artikelListeString + "Gesamtpreis: " + getGesamtpreis() + " €\nKundendaten: " + getUser() + "\nGekauft am " + datum + "\nSitzungsnummer: " + sitzungsNr + "\n");
+		return ("Rechnung: \n" + artikelListeString + "Gesamtpreis: " + getGesamtpreis() + " €\nKundendaten: " + getUser() + "\nGekauft am " + datum + "\nSitzungsnummer: " + sitzungsNr + "\n");
 	}
 	
 	public void gibRechnungAus() {

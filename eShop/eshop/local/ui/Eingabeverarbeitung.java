@@ -1,6 +1,7 @@
 package eshop.local.ui;
 
 import eshop.local.valueobjects.Artikel;
+import eshop.local.valueobjects.Event;
 import eshop.local.valueobjects.Massenartikel;
 import eshop.local.valueobjects.Rechnung;
 import eshop.local.valueobjects.User;
@@ -73,33 +74,40 @@ public class Eingabeverarbeitung {
 	}
 	
 	
-	public void einlesenUndVerarbeiten() throws IOException {
+	public void einlesenUndVerarbeiten() throws IOException, ArtikelExistiertBereitsException {
 			
 		verarbeitung(liesEingabe());
-		
+				
 	}
 	
-	public String liesEingabe() throws IOException {
+	public String liesEingabe() throws IOException, ArtikelExistiertBereitsException {
 		// einlesen von Konsole
 		setInput(in.readLine());
+		newEvent();
 		return this.input;
 	}
 	
-	public void verarbeitung(String line) throws IOException {
+	public void newEvent() throws ArtikelExistiertBereitsException, IOException {
+		Event event = new Event(this.input);
+		Sitzung.fuegeEventEin(event);
+		Sitzung.speichereEventliste();
+	}
+	
+	public void verarbeitung(String line) throws IOException, ArtikelExistiertBereitsException {
 		
 		if(this.level.isEmpty()) {
 			this.level = "startmenue";
 		}
 
-		verarbeitungsLevel(line, level);
+		verarbeitungsLevel(line, this.level);
 	}
 	
-	public void verarbeitung(String line, String level) throws IOException {
+	public void verarbeitung(String line, String level) throws IOException, ArtikelExistiertBereitsException {
 		
 		verarbeitungsLevel(line, level);
 	}
 	
-	public void verarbeitungsLevel(String input, String level) throws IOException {
+	public void verarbeitungsLevel(String input, String level) throws IOException, ArtikelExistiertBereitsException {
 		
 		List<Artikel> liste;
 		List<User> userListe;
@@ -142,7 +150,7 @@ public class Eingabeverarbeitung {
 				break;
 				//Alle Artikel alphabetisch sortiert anzeigen
 			case "a#":
-				gibArtikellisteNummerischAus(Sitzung.getArtikellisteAusBestand());
+				gibListeNummerischAus(Sitzung.getArtikellisteAusBestand());
 				break;
 			//Alle Artikel im Warenkorb kaufen
 			case "b":
@@ -259,7 +267,7 @@ public class Eingabeverarbeitung {
 
 					try {
 						//sollte man so wahrscheinlich nicht machen:
-						String resultat = Sitzung.bst.fuegeArtikelEin(name, nummer, anzahl, preis, packet);
+						String resultat = Sitzung.fuegeArtikelEin(name, nummer, anzahl, preis, packet);
 					
 						if(resultat.equals("Erfolgreich hinzugefügt")) {
 							Sitzung.setAktuellerArtikel(new Massenartikel(name, nummer, anzahl, preis, packet));
@@ -282,7 +290,7 @@ public class Eingabeverarbeitung {
 			case "f":
 				System.out.print("Buchtitel  > ");
 				name = liesEingabe();
-				liste = Sitzung.bst.sucheNachName(name);
+				liste = Sitzung.DurchsucheBestandNachName(name);
 				Sitzung.gibArtikellisteUnsortiertAus(liste);
 				break;
 			//Artikel sichern
@@ -294,7 +302,7 @@ public class Eingabeverarbeitung {
 				
 				try {
 					//sollte man so wahrscheinlich nicht machen:
-					Sitzung.rch.fuegeRechnungEin(rechnung);
+					Sitzung.fuegeRechnungEin(rechnung);
 					
 				} catch (ArtikelExistiertBereitsException e) {
 					// Hier Fehlerbehandlung...
@@ -302,9 +310,9 @@ public class Eingabeverarbeitung {
 					e.printStackTrace();
 				}
 				
-				Sitzung.bst.schreibeArtikel();
-				Sitzung.rch.schreibeRechnung();
-				Sitzung.usr.schreibeUser();
+				Sitzung.speichereBestand();
+				Sitzung.speichereRechnungsliste();
+				Sitzung.speichereUserliste();
 				System.out.println("gespeichert.");
 				break;
 			//Sitzungsnummer anzeigen
@@ -314,15 +322,15 @@ public class Eingabeverarbeitung {
 			//Alle Rechnungen anzeigen
 			case "rch":
 				rechnungListe = Sitzung.rch.gibAlleRechnungen();
-				Sitzung.gibRechnungslisteAus(rechnungListe);
+				gibListeAus(rechnungListe);
 				break;
 			//Userspezifische Rechnungen anzeigen
 			case "rch#":
 				System.out.print("Kundenummer  > ");
 				nummerString = liesEingabe();
 				nummer = Integer.parseInt(nummerString);
-				rechnungListe = Sitzung.rch.sucheNachNr(nummer);
-				Sitzung.gibRechnungslisteAus(rechnungListe);
+				rechnungListe = Sitzung.DurchsucheRechnungslisteNachNr(nummer);
+				gibListeAus(rechnungListe);
 				break;
 			//Login
 			case "log":
@@ -345,13 +353,13 @@ public class Eingabeverarbeitung {
 			case "reg":
 				System.out.print("Name  > ");
 				name = liesEingabe();
-				nummer = 1 + Sitzung.usr.gibUserAnzahl();
+				nummer = 1 + Sitzung.getUserAnzahl();
 				
 				try {
 					//sollte man so wahrscheinlich nicht machen:
-					Sitzung.usr.fuegeUserEin(nummer, name);
+					Sitzung.fuegeUserEin(nummer, name);
 					
-					Sitzung.usr.schreibeUser();
+					Sitzung.speichereUserliste();
 					
 					System.out.println("\n Wir freuen uns Sie als neuen Kunden begrüßen zu dürfen.");
 					
@@ -383,7 +391,7 @@ public class Eingabeverarbeitung {
 				
 				try {
 					//sollte man so wahrscheinlich nicht machen:
-					Sitzung.rch.fuegeRechnungEin(rechnung);
+					Sitzung.fuegeRechnungEin(rechnung);
 					
 				} catch (ArtikelExistiertBereitsException e) {
 					// Hier Fehlerbehandlung...
@@ -391,15 +399,15 @@ public class Eingabeverarbeitung {
 					e.printStackTrace();
 				}
 				
-				Sitzung.bst.schreibeArtikel();
-				Sitzung.rch.schreibeRechnung();
+				Sitzung.speichereBestand();
+				Sitzung.speichereRechnungsliste();
 				System.out.println("gespeichert.");
 				
 				
 				setLevel("startmenue");
 				break;
 			case "r":
-				Sitzung.bst.loescheArtikel(Sitzung.getAktuellerArtikel());
+				Sitzung.loescheArtikel(Sitzung.getAktuellerArtikel());
 				System.out.println("Artikel nicht gespeichert.\n");
 				setLevel("startmenue");
 				break;
@@ -475,7 +483,7 @@ public class Eingabeverarbeitung {
 		}
 	}
 	
-	public <Thing extends Valueobject> void gibArtikellisteNummerischAus(List<Thing> vectorListe) {
+	public <Thing extends Valueobject> void gibListeNummerischAus(List<Thing> vectorListe) {
 
 		int anzahl = vectorListe.size();
 		List<Thing> tempListe = new Vector<Thing>();
@@ -514,4 +522,5 @@ public class Eingabeverarbeitung {
 		}
 
 	}
+	
 }

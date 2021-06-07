@@ -3,6 +3,7 @@ package eshop.local.persistence;
 import java.util.*;
 
 import eshop.local.valueobjects.Artikel;
+import eshop.local.valueobjects.Event;
 import eshop.local.valueobjects.Massenartikel;
 import eshop.local.valueobjects.Rechnung;
 import eshop.local.valueobjects.User;
@@ -148,6 +149,24 @@ public class FilePersistenceManager implements PersistenceManager {
 		// neues Buch-Objekt anlegen und zurückgeben
 		return new Rechnung(user, artikelListe, buchungOderKauf, sitzungsNr, datum, gesamtpreis);
 	}
+	
+	public Event ladeEvent() throws IOException {
+		
+		String input = liesZeile();
+		if (input == null) {
+			// keine Daten mehr vorhanden
+			return null;
+		}
+		
+		User user = ladeUser();
+		
+		String sitzungsNr = liesZeile();
+		
+		String zeitstempel = liesZeile();
+		
+		// neues Buch-Objekt anlegen und zurückgeben
+		return new Event(input, user, sitzungsNr, zeitstempel);
+	}
 
 	/**
 	 * Methode zum Schreiben der Buchdaten in eine externe Datenquelle.
@@ -222,6 +241,23 @@ public class FilePersistenceManager implements PersistenceManager {
 		schreibeZeile(kauf);
 		
 		return true;
+	}
+	
+	public boolean speichereEvent(Event e) throws IOException {
+		
+		String eventInput = String.valueOf(e.getInput() + "");
+		schreibeZeile(eventInput);
+		
+		speichereUser(e.getUser());
+
+		String eventSitzungsNr = String.valueOf(e.getSitzungsNr() + "");
+		schreibeZeile(eventSitzungsNr);
+		
+		String eventZeitstempel = String.valueOf(e.getZeitstempel() + "");
+		schreibeZeile(eventZeitstempel);
+
+		return true;
+		
 	}
 
 	

@@ -3,6 +3,7 @@ package eshop.local.persistence;
 import java.io.IOException;
 
 import eshop.local.valueobjects.Artikel;
+import eshop.local.valueobjects.Event;
 import eshop.local.valueobjects.Rechnung;
 import eshop.local.valueobjects.User;
 
@@ -47,5 +48,9 @@ public interface PersistenceManager {
 	public Rechnung ladeRechnung() throws IOException;
 
 	public boolean speichereRechnung(Rechnung r) throws IOException;
+
+	public Event ladeEvent() throws IOException;
+	
+	public boolean speichereEvent(Event e) throws IOException;
 	
 }
