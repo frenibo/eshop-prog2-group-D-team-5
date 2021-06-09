@@ -20,8 +20,6 @@ public class Rechnung implements Valueobject{
 	private List<Artikel> artikelListe = new Vector<Artikel>();
 	private String sitzungsNr = "";
 	private String datum = "";
-	boolean buchung = false;
-	boolean kauf = false;
 	double gesamtpreis = 0.0;
 	
 	public Rechnung() {
@@ -30,46 +28,26 @@ public class Rechnung implements Valueobject{
 		this.artikelListe = new Vector<Artikel>();
 		this.sitzungsNr = "";
 		this.datum = "";
-		this.kauf = false;
-		this.buchung = false;
 		this.gesamtpreis = 0.0;
 		
 	}
 	
-	public Rechnung(User user, List<Artikel> artikelListe, boolean buchungOderKauf) {
+	public Rechnung(User user, List<Artikel> artikelListe) {
 		
 		this.user = user;
 		this.artikelListe = artikelListe;
 		this.sitzungsNr = Sitzung.getSitzungsNr();
 		this.datum = defineDatum();
-		if(buchungOderKauf) {
-			this.kauf = true;
-		} else this.buchung = true;
 		this.gesamtpreis = defineGesamtpreis();
 		
 	}
 	
-	public Rechnung(User user, List<Artikel> artikelListe, boolean buchungOderKauf, String sitzungsNr, String datum, double gesamtpreis) {
+	public Rechnung(User user, List<Artikel> artikelListe, String sitzungsNr, String datum, double gesamtpreis) {
 		
 		this.user = user;
 		this.artikelListe = artikelListe;
 		this.sitzungsNr = sitzungsNr;
 		this.datum = datum;
-		if(buchungOderKauf) {
-			this.kauf = true;
-		} else this.buchung = true;
-		this.gesamtpreis = gesamtpreis;
-		
-	}
-	
-	public Rechnung(User user, List<Artikel> artikelListe, boolean kauf, boolean buchung, String sitzungsNr, String datum, double gesamtpreis) {
-		
-		this.user = user;
-		this.artikelListe = artikelListe;
-		this.sitzungsNr = sitzungsNr;
-		this.datum = datum;
-		this.kauf = kauf;
-		this.buchung = buchung;
 		this.gesamtpreis = gesamtpreis;
 		
 	}
@@ -184,22 +162,6 @@ public class Rechnung implements Valueobject{
 		return this.datum;
 	}
 	
-	public void setKauf(boolean value) {
-		this.kauf = value;
-	}
-	
-	public boolean getKauf() {
-		return kauf;
-	}
-	
-	public void setBuchung(boolean value) {
-		this.buchung = value;
-	}
-	
-	public boolean getBuchung() {
-		return buchung;
-	}
-	
 	public void setGesamtpreis(double gesamtpreis) {
 		this.gesamtpreis = gesamtpreis;
 	}
@@ -215,8 +177,6 @@ public class Rechnung implements Valueobject{
 			this.setArtikelListe(((Rechnung) anderesObject).getArtikelListe());
 			this.setSitzungsNr(((Rechnung) anderesObject).getSitzungsNr());
 			this.setDatum(((Rechnung) anderesObject).getDatum());
-			this.setKauf(((Rechnung) anderesObject).getKauf());
-			this.setBuchung(((Rechnung) anderesObject).getBuchung());
 			this.setGesamtpreis(((Rechnung) anderesObject).getGesamtpreis());
 						
 			return true;

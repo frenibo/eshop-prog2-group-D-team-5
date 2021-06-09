@@ -3,6 +3,7 @@ package eshop.local.persistence;
 import java.io.IOException;
 
 import eshop.local.valueobjects.Artikel;
+import eshop.local.valueobjects.Event;
 import eshop.local.valueobjects.Rechnung;
 import eshop.local.valueobjects.User;
 
@@ -58,6 +59,18 @@ public class DBPersistenceManager implements PersistenceManager {
 
 	@Override
 	public boolean speichereRechnung(Rechnung r) throws IOException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Event ladeEvent() throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean speichereEvent(Event e) throws IOException {
 		// TODO Auto-generated method stub
 		return false;
 	}

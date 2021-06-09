@@ -140,14 +140,10 @@ public class FilePersistenceManager implements PersistenceManager {
 		
 		String datum = liesZeile();
 		
-		String sitzungsNr = liesZeile();
-					
-		String buchungOderKaufString = liesZeile();
-		
-		boolean buchungOderKauf = Boolean.parseBoolean(buchungOderKaufString);		
+		String sitzungsNr = liesZeile();	
 		
 		// neues Buch-Objekt anlegen und zurückgeben
-		return new Rechnung(user, artikelListe, buchungOderKauf, sitzungsNr, datum, gesamtpreis);
+		return new Rechnung(user, artikelListe, sitzungsNr, datum, gesamtpreis);
 	}
 	
 	public Event ladeEvent() throws IOException {
@@ -158,11 +154,11 @@ public class FilePersistenceManager implements PersistenceManager {
 			return null;
 		}
 		
-		User user = ladeUser();
-		
 		String sitzungsNr = liesZeile();
 		
 		String zeitstempel = liesZeile();
+		
+		User user = ladeUser();
 		
 		// neues Buch-Objekt anlegen und zurückgeben
 		return new Event(input, user, sitzungsNr, zeitstempel);
@@ -237,9 +233,6 @@ public class FilePersistenceManager implements PersistenceManager {
 		
 		schreibeZeile(r.getSitzungsNr());
 		
-		String kauf = String.valueOf(r.getKauf() + "");
-		schreibeZeile(kauf);
-		
 		return true;
 	}
 	
@@ -248,13 +241,13 @@ public class FilePersistenceManager implements PersistenceManager {
 		String eventInput = String.valueOf(e.getInput() + "");
 		schreibeZeile(eventInput);
 		
-		speichereUser(e.getUser());
-
 		String eventSitzungsNr = String.valueOf(e.getSitzungsNr() + "");
 		schreibeZeile(eventSitzungsNr);
 		
 		String eventZeitstempel = String.valueOf(e.getZeitstempel() + "");
 		schreibeZeile(eventZeitstempel);
+		
+		speichereUser(e.getUser());
 
 		return true;
 		

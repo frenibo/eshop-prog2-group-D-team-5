@@ -84,7 +84,21 @@ public class Eingabeverarbeitung {
 		// einlesen von Konsole
 		setInput(in.readLine());
 		newEvent();
+		liesUnterbrechung();
 		return this.input;
+	}
+	
+	public void liesUnterbrechung() throws IOException, ArtikelExistiertBereitsException {
+		if(this.input.equals("q")) {
+			//Sitzung.setRun(false);
+			System.out.println("> (q) Beenden");
+			System.exit(0);
+		}
+		else if(this.input.equals("z")) {
+			System.out.println("> (z) Zurück zum Menü");
+			verarbeitungsLevel("", "startmenue");
+			Sitzung.run();
+		}
 	}
 	
 	public void newEvent() throws ArtikelExistiertBereitsException, IOException {
@@ -94,7 +108,6 @@ public class Eingabeverarbeitung {
 	}
 	
 	public void verarbeitung(String line) throws IOException, ArtikelExistiertBereitsException {
-		
 		if(this.level.isEmpty()) {
 			this.level = "startmenue";
 		}
@@ -166,7 +179,7 @@ public class Eingabeverarbeitung {
 					else {
 						System.out.println("Kauf abgeschlossen. Hier die Rechnung: \n");
 						System.out.println(rechnung);
-						System.out.println("\nNeue Sitzung startet.");
+						System.out.println("\nNeue Sitzung startet."); // >TODO: Muss das? vllt auch: Sitzung.run();
 						Main.main(null);
 					}
 				}
@@ -182,22 +195,14 @@ public class Eingabeverarbeitung {
 				break;
 			//Artikel in Warenkorb verschieben
 			case "k":
-				System.out.print("Artikelnummer > ");
-				nummerString = liesEingabe();
-				nummer = Integer.parseInt(nummerString);
-				System.out.print("Anzahl > ");
-				anzahlString = liesEingabe();
-				anzahl = Integer.parseInt(anzahlString);
+				nummer = erfahreInt("Artikelnummer");
+				anzahl = erfahreInt("Anzahl");
 				Sitzung.verschiebeVonBestandInWarenkorb(nummer, anzahl);
 				break;
 				//Artikel von Warenkorb zurücklegen
 			case "l":
-				System.out.print("Artikelnummer > ");
-				nummerString = liesEingabe();
-				nummer = Integer.parseInt(nummerString);
-				System.out.print("Anzahl > ");
-				anzahlString = liesEingabe();
-				anzahl = Integer.parseInt(anzahlString);
+				nummer = erfahreInt("Artikelnummer");
+				anzahl = erfahreInt("Anzahl");
 				Sitzung.verschiebeVonWarenkorbinBestand(nummer, anzahl);
 				break;
 			//Warenkorb leeren
@@ -207,16 +212,9 @@ public class Eingabeverarbeitung {
 				break;
 			//Artikelanzahl ändern
 			case "v":
-				if(Sitzung.getAktuellerUser().getUserNr() == 0) {
-					System.out.println("Bitte loggen Sie sich zunächst ein.");
-				}
-				else {
-					System.out.print("Artikelnummer > ");
-					nummerString = liesEingabe();
-					nummer = Integer.parseInt(nummerString);
-					System.out.print("Neue Anzahl > ");
-					anzahlString = liesEingabe();
-					anzahl = Integer.parseInt(anzahlString);
+				if(loginCheck() == true) {
+					nummer = erfahreInt("Artikelnummer");
+					anzahl = erfahreInt("Neue Anzahl");
 					Sitzung.aendereAnzahlImBestand(nummer, anzahl);
 					System.out.print("\nAnzahl aktualisiert.");
 				}
@@ -224,17 +222,9 @@ public class Eingabeverarbeitung {
 				
 			//Artikel löschen
 			case "d":
-				if(Sitzung.getAktuellerUser().getUserNr() == 0) {
-					System.out.println("Bitte loggen Sie sich zunächst ein.");
-				}
-				else {
-					// lies die notwendigen Parameter, einzeln pro Zeile
-					System.out.print("Artikelnummer > ");
-					nummerString = liesEingabe();
-					nummer = Integer.parseInt(nummerString);
-					System.out.print("Artikelname  > ");
-					name = liesEingabe();
-					// Die Bibliothek das Buch löschen lassen:
+				if(loginCheck() == true) {
+					nummer = erfahreInt("Artikelnummer");
+					name = erfahreString("Artikelname");
 					Sitzung.loescheArtikelImBestand(name, nummer);
 				}
 				break;
@@ -242,27 +232,11 @@ public class Eingabeverarbeitung {
 			case "e":
 				if(loginCheck() == true) {
 					// lies die notwendigen Parameter, einzeln pro Zeile
-					System.out.print("Artikelnummer > ");
-					nummerString = liesEingabe();
-					nummer = Integer.parseInt(nummerString);
-					System.out.print("Name des Artikels  > ");
-					name = liesEingabe();
-					System.out.print("Packetgröße > ");
-					packetString = liesEingabe();
-					packet = Integer.parseInt(packetString);
-					System.out.print("Anzahl > ");
-					anzahlString = liesEingabe();
-					anzahl = Integer.parseInt(anzahlString);
-					boolean a = false;
-					while(a == false) {
-						System.out.print("Preis > ");
-						preisString = liesEingabe();
-						try {
-							preis = Double.parseDouble(preisString);
-							a = true;
-						} catch (NumberFormatException e) {
-							System.out.println("Falsches Format! \n Format für Preis ist integer.integer \n Try again...");
-						}
+					nummer = erfahreInt("Artikelnummer");
+					name = erfahreString("Name des Artikels");
+					packet = erfahreInt("Packetgröße");
+					anzahl = erfahreInt("Anzahl");
+					preis = erfahreDouble("Preis");
 					}
 
 					try {
@@ -284,12 +258,10 @@ public class Eingabeverarbeitung {
 						System.out.println("Fehler beim einfügen");
 						e.printStackTrace();
 					}
-				}
 				break;
 			//Artikel suchen
 			case "f":
-				System.out.print("Buchtitel  > ");
-				name = liesEingabe();
+				name = erfahreString("Name des Artikels");
 				liste = Sitzung.DurchsucheBestandNachName(name);
 				Sitzung.gibArtikellisteUnsortiertAus(liste);
 				break;
@@ -297,7 +269,7 @@ public class Eingabeverarbeitung {
 			case "s":
 				Sitzung.warenkorbLeeren();
 				
-				Rechnung rechnung = new Rechnung(Sitzung.getAktuellerUser(), Sitzung.produceAenderungsListe(), false);
+				Rechnung rechnung = new Rechnung(Sitzung.getAktuellerUser(), Sitzung.produceAenderungsListe());
 				System.out.println(rechnung);
 				
 				try {
@@ -326,16 +298,13 @@ public class Eingabeverarbeitung {
 				break;
 			//Userspezifische Rechnungen anzeigen
 			case "rch#":
-				System.out.print("Kundenummer  > ");
-				nummerString = liesEingabe();
-				nummer = Integer.parseInt(nummerString);
+				nummer = erfahreInt("Kundenummer");
 				rechnungListe = Sitzung.DurchsucheRechnungslisteNachNr(nummer);
 				gibListeAus(rechnungListe);
 				break;
 			//Login
 			case "log":
-				System.out.print("Name  > ");
-				name = liesEingabe();
+				name = erfahreString("Name");
 				boolean erfolgreich = false;
 				for(User u : Sitzung.usr.gibAlleUser()) {
 					if(u.getName().equals(name)) {
@@ -351,8 +320,7 @@ public class Eingabeverarbeitung {
 				break;
 			//Registrieren
 			case "reg":
-				System.out.print("Name  > ");
-				name = liesEingabe();
+				name = erfahreString("Name");
 				nummer = 1 + Sitzung.getUserAnzahl();
 				
 				try {
@@ -376,33 +344,20 @@ public class Eingabeverarbeitung {
 			case "r":
 				System.out.println("Neue Sitzung startet.\n");
 				Main.main(null);
+				break;			
+			//Zurück zum Startmenue
+			case "z":
+				//handled in Sitzung.run();
 				break;
-			
-				}
+		
 			}
+		}
 		
 		else if(level.equals("speichern")) {
 			switch (input) {
 			case "s":
-				Sitzung.wnk.warenkorbLeeren();
-				
-				Rechnung rechnung = new Rechnung(Sitzung.getAktuellerUser(), Sitzung.produceAenderungsListe(), false);
-				System.out.println(rechnung);
-				
-				try {
-					//sollte man so wahrscheinlich nicht machen:
-					Sitzung.fuegeRechnungEin(rechnung);
-					
-				} catch (ArtikelExistiertBereitsException e) {
-					// Hier Fehlerbehandlung...
-					System.out.println("Fehler beim einfügen");
-					e.printStackTrace();
-				}
-				
-				Sitzung.speichereBestand();
-				Sitzung.speichereRechnungsliste();
+				Sitzung.speichern();
 				System.out.println("gespeichert.");
-				
 				
 				setLevel("startmenue");
 				break;
@@ -417,6 +372,106 @@ public class Eingabeverarbeitung {
 				break;
 			}
 		}
+	}
+	
+	public int erfahreInt(String output) throws IOException, ArtikelExistiertBereitsException {
+		
+		boolean valid = false;
+		int input = 0;
+		String inputString = "";
+		
+		while(!valid) {
+			
+			System.out.print(output + " > ");
+			
+			inputString = liesEingabe();
+			
+			try {
+				input = Integer.parseInt(inputString);
+				valid = true;
+			}
+			catch(NumberFormatException n) {
+				System.out.println("invalid input");
+				valid = false;
+			}
+		}
+		return input;
+	}
+	
+	public double erfahreDouble(String output) throws IOException, ArtikelExistiertBereitsException {
+		
+		boolean valid = false;
+		double input = 0.0;
+		String inputString = "";
+		
+		while(!valid) {
+			
+			System.out.print(output + " > ");
+			
+			inputString = liesEingabe();
+			
+			try {
+				input = Double.parseDouble(inputString);
+				valid = true;
+			}
+			catch(NumberFormatException n) {
+				System.out.println("invalid input");
+				valid = false;
+			}
+		}
+		return input;
+	}
+	
+	public String erfahreString(String output) throws IOException, ArtikelExistiertBereitsException {
+		
+		boolean valid = false;
+		String input = "";
+		String inputString = "";
+		
+		while(!valid) {
+			
+			System.out.print(output + " > ");
+			
+			inputString = liesEingabe();
+			
+			try {
+				input = inputString;
+				valid = true;
+			}
+			catch(NumberFormatException n) {
+				System.out.println("invalid input");
+				valid = false;
+			}
+		}
+		return input;
+	}
+	
+	public int parseStringToInteger(String string) throws IOException, ArtikelExistiertBereitsException {
+		
+		int integer = 0;
+		
+		try {
+			integer = Integer.parseInt(string);
+		}
+		catch(NumberFormatException n) {
+			System.out.println("invalid input");
+			verarbeitungsLevel("", "startmenue");
+		}
+		return integer;
+	}
+	
+	public double parseStringToDouble(String string) throws IOException, ArtikelExistiertBereitsException {
+		
+		double doubleV = 0;
+		
+		try {
+			doubleV = Double.parseDouble(string);
+		}
+		catch(NumberFormatException n) {
+			System.out.println("invalid input");
+			verarbeitungsLevel("", "startmenue");
+		}
+		return doubleV;
 	}
 	
 	public boolean loginCheck() {

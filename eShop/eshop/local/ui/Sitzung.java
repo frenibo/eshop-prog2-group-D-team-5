@@ -27,7 +27,7 @@ public class Sitzung {
 	public static UserVektorListe usr;
 	public static RechnungVektorListe rch;
 	public static EventVektorListe evt;
-	private static Eingabeverarbeitung ev;
+	public static Eingabeverarbeitung ev;
 	
 	private static Artikel aktuellerArtikel;
 	private static String aktuelleSitzungsNr;
@@ -35,6 +35,8 @@ public class Sitzung {
 	private static Event aktuellesEvent;
 	
 	private static String datei = "";
+	
+	private static boolean run = true;
 	
 	public Sitzung() throws IOException {
 		
@@ -217,14 +219,14 @@ public Sitzung(String dateiArtikel, String dateiUser, String dateiRechnungen, St
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} while (!input.equals("q"));
+		} while (run == true);
 	}
 	
 	public static Rechnung warenkorbKaufen() throws IOException {
 		bst.schreibeArtikel();
 		wnk.schreibeArtikel();
 		List<Artikel> liste = wnk.gibAlleArtikel();
-		Rechnung rechnung = new Rechnung(getAktuellerUser(), liste, true);
+		Rechnung rechnung = new Rechnung(getAktuellerUser(), liste);
 		try {
 			//sollte man so wahrscheinlich nicht machen:
 			rch.fuegeRechnungEin(rechnung);
@@ -234,9 +236,8 @@ public Sitzung(String dateiArtikel, String dateiUser, String dateiRechnungen, St
 			e.printStackTrace();
 			return rechnung = new Rechnung();
 		}
-		rch.schreibeRechnung();
-		bst.schreibeArtikel();
 		usr.schreibeUser();
+		evt.schreibeEvents();
 		return rechnung;
 	}
 	
@@ -348,6 +349,17 @@ public Sitzung(String dateiArtikel, String dateiUser, String dateiRechnungen, St
 		evt.schreibeEvents();		
 	}
 	
+	public static void speichern() throws IOException {
+		
+		warenkorbLeeren();
+		
+		bst.schreibeArtikel();
+		wnk.schreibeArtikel();
+		rch.schreibeRechnung();
+		usr.schreibeUser();
+		evt.schreibeEvents();
+	}
+	
 	public static List<Artikel> getArtikellisteAusWarenkorb() {
 		
 		return wnk.gibAlleArtikel();
@@ -401,5 +413,12 @@ public Sitzung(String dateiArtikel, String dateiUser, String dateiRechnungen, St
 		return aktuellerUser;
 	}
 
+	public static boolean getRun() {
+		return run;
+	}
+	
+	public static void setRun(boolean a) {
+		run = a;
+	}
 
 }

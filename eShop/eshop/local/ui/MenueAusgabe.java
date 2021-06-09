@@ -35,37 +35,40 @@ public class MenueAusgabe {
 		//Standard- und Initial-Menü
 		case "startmenue":
 			System.out.println("\n");
-			System.out.print("Befehle: \n  (a) Alle Artikel anzeigen");
-			System.out.print("         \n  (abc) Alle Artikel alphabetisch sortiert anzeigen");
-			System.out.print("         \n  (a#) Alle Artikel nummerisch sortiert anzeigen");
-			System.out.print("         \n  (b) Alle Artikel im Warenkorb kaufen");
-			System.out.print("         \n  (u) Alle User anzeigen");
-			System.out.print("         \n  (w) Warenkorb anzeigen");
-			System.out.print("         \n  (k) Artikel in Warenkorb verschieben");
-			System.out.print("         \n  (l) Artikel von Warenkorb zurücklegen");
-			System.out.print("         \n  (wl) Warenkorb leeren");
-			System.out.print("         \n  (v) Artikelanzahl ändern");
-			System.out.print("         \n  (d) Artikel löschen");
-			System.out.print("         \n  (e) Artikel einfügen");
-			System.out.print("         \n  (f) Artikel suchen");
-			System.out.print("         \n  (s) Artikel sichern");
-			System.out.print("         \n  (n) Sitzungsnummer anzeigen");
-			System.out.print("         \n  (rch) Alle Rechnungen anzeigen");
-			System.out.print("         \n  (rch#) Userspezifische Rechnungen anzeigen");
-			System.out.print("         \n  (log) Login");
-			System.out.print("         \n  (reg) Registrieren");
-			System.out.print("         \n  ---------------------");
-			System.out.print("         \n  (r) Neue Sitzung starten");
-			System.out.println("         \n  (q) Beenden");
+			System.out.println("Befehle:");
+			System.out.println("(a) Alle Artikel anzeigen");
+			System.out.println("(abc) Alle Artikel alphabetisch sortiert anzeigen");
+			System.out.println("(a#) Alle Artikel nummerisch sortiert anzeigen");
+			System.out.println("(b) Alle Artikel im Warenkorb kaufen");
+			System.out.println("(u) Alle User anzeigen");
+			System.out.println("(w) Warenkorb anzeigen");
+			System.out.println("(k) Artikel in Warenkorb verschieben");
+			System.out.println("(l) Artikel von Warenkorb zurücklegen");
+			System.out.println("(wl) Warenkorb leeren");
+			System.out.println("(v) Artikelanzahl ändern");
+			System.out.println("(d) Artikel löschen");
+			System.out.println("(e) Artikel einfügen");
+			System.out.println("(f) Artikel suchen");
+			System.out.println("(s) Artikel sichern");
+			System.out.println("(n) Sitzungsnummer anzeigen");
+			System.out.println("(rch) Alle Rechnungen anzeigen");
+			System.out.println("(rch#) Userspezifische Rechnungen anzeigen");
+			System.out.println("(log) Login");
+			System.out.println("(reg) Registrieren");
+			System.out.println("(r) Neue Sitzung starten");
+			System.out.println("---------------------");
+			System.out.println("(z) Zurück zum Menü");
+			System.out.println("(q) Beenden");
 			System.out.print("> "); // Prompt
 			System.out.flush(); // ohne NL ausgeben
 			break;
 			
 		case "speichern":
-			System.out.print("\nArtikel wie angezeigt abspeichern oder rückgängig machen?\n");
-			System.out.print("(s) speichern\n");
-			System.out.print("(r) rückgängig machen\n");
-			System.out.print("(w) weiter ohne zu speichern\n");
+			System.out.println("\nArtikel wie angezeigt abspeichern oder rückgängig machen?");
+			System.out.println("(s) speichern");
+			System.out.println("(r) rückgängig machen");
+			System.out.println("(w) weiter ohne zu speichern");
+			System.out.print("> ");
 			break;
 		}
 			

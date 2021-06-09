@@ -1,6 +1,6 @@
 Stift
 1
-24
+22
 1.5
 Packetgroeße:
 2
@@ -24,7 +24,7 @@ Packetgroeße:
 100
 Auto
 5
-46
+45
 15000.0
 Packetgroeße:
 1
