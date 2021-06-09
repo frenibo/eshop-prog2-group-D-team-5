@@ -122,12 +122,21 @@ public class ArtikelVerwaltung {
 		artikelListe.remove(einArtikel);
 	}
 	
+	public void clean() {
+		List<Artikel> list = artikelListe;
+		for(Artikel a : list) {
+			if (a.getAnzahl() == 0) {
+				loeschen(a);
+			}
+		}
+	}
+	
 	public void alleArtikelLoeschen() {
 		for(Artikel a:artikelListe) {
 			artikelListe.remove(a);
 		}
 	}
-
+	
 	public void aendereArtikelAnzahl(int nummer, int anzahl) {
 		
 		int zaehler = -1;
@@ -135,29 +144,24 @@ public class ArtikelVerwaltung {
 		int difference;
 		String lagerung = "Null";
 		
-		// Buchbestand durchlaufen und nach Titel suchen
-		Iterator<Artikel> iter = artikelListe.iterator();
-		while (iter.hasNext()) {
+		for(Artikel a : artikelListe) {
 			zaehler++;
-			// WICHTIG: Type Cast auf 'Buch' für späteren Zugriff auf Titel
-			// 		    hier nicht erforderlich wegen Verwendung von Generics
-			// 			(-> Vergleiche mit Einsatz von Vector OHNE Generics)
-			Artikel a = iter.next();
-			if (a.getNummer() == nummer)
+			if (a.getNummer() == nummer) {
 				
 				anzahlUrsprung = artikelListe.get(zaehler).getAnzahl();
-			
 				artikelListe.get(zaehler).setAnzahl(anzahl);
 				
 				if(anzahlUrsprung < anzahl) {
 					lagerung = "Einlagerung";
-				} else lagerung = "Auslagerung";
+				} else if(anzahlUrsprung > anzahl) {
+					lagerung = "Auslagerung";
+				}
 				
 				difference = Math.abs(anzahlUrsprung - anzahl);
 				
 				eShop.neuesLagerungsevent(lagerung, artikelListe.get(zaehler), difference, eShop.getSitzungsNr(), eShop.getAktuellerUser());
 		}
-		
+		}
 	}
 	
 	public void verschiebenArtikel(int nummer, int anzahl, ArtikelVektorListe zielListe) {
@@ -172,17 +176,17 @@ public class ArtikelVerwaltung {
 		} else lagerung = "Einlagerung";
 		
 		//Hilfsvariablen HV
-		Massenartikel artikelHV = new Massenartikel ("error", 0, 0);
-		Massenartikel artikelHV2 = new Massenartikel ("error2", 0, 0);
-		Massenartikel artikelHV3 = new Massenartikel ("error3", 0, 0);
+		Artikel artikelHV = new Artikel ("error", 0, 0);
+		Artikel artikelHV2 = new Artikel ("error2", 0, 0);
+		Artikel artikelHV3 = new Artikel ("error3", 0, 0);
 		
 		List<Artikel> list = zielListe.gibAlleArtikel();
 		
 		// Bestand durchlaufen und nach Artikelnummer suchen
 		Iterator<Artikel> iter = artikelListe.iterator();
-		while (iter.hasNext()) {
-
-			artikelHV = (Massenartikel) iter.next();  //add cast to Massenartikel?
+		 do {
+			//TODO: throws ClassCastException:
+			artikelHV = iter.next();  //add cast to Massenartikel?
 			if (artikelHV.getNummer() == nummer) {
 				if(anzahl % artikelHV.getPacketgroeße() != 0) {
 					//TODO: system out entfernen
@@ -196,11 +200,10 @@ public class ArtikelVerwaltung {
 					if(anzahlZuvor >= anzahl) {
 						int difference = Math.abs(anzahlZuvor - anzahl);
 						artikelHV.setAnzahl(difference);
-						eShop.neuesLagerungsevent(lagerung, artikelHV, difference, eShop.getSitzungsNr(), eShop.getAktuellerUser());
 						artikelHV3 = artikelHV;
 						imBestandAbgezogen = true;
 						if(difference == 0) {
-							//crashes program
+							//throws ConcurrentModificationException
 							//loeschen(artikelHV);
 						}
 					}
@@ -209,11 +212,11 @@ public class ArtikelVerwaltung {
 					}
 				}
 			}	
-		}
+		} while (iter.hasNext());
 		if(imBestandAbgezogen == true) {
 			Iterator<Artikel> iterZiel = list.iterator();
 			while (iterZiel.hasNext()) {
-				artikelHV2 = (Massenartikel) iterZiel.next(); //add cast to Massenartikel?
+				artikelHV2 = iterZiel.next(); //add cast to Massenartikel?
 				if (artikelHV2.getNummer() == nummer) {
 					anzahlZuvor = artikelHV2.getAnzahl();
 					int ergebnis2 = anzahlZuvor+anzahl;
@@ -224,7 +227,7 @@ public class ArtikelVerwaltung {
 			}
 			if(imWarenkorbHinzugefügt == false) {			
 				try {
-					zielListe.fuegeArtikelEin(artikelHV3.getName(), artikelHV3.getNummer(), anzahl, artikelHV3.getPreis());
+					zielListe.fuegeArtikelEin(artikelHV3.getName(), artikelHV3.getNummer(), anzahl, artikelHV3.getPreis(), artikelHV3.getPacketgroeße());
 					eShop.neuesLagerungsevent(lagerung, artikelHV3, anzahl, eShop.getSitzungsNr(), eShop.getAktuellerUser());
 				} catch (ArtikelExistiertBereitsException e) {
 					
@@ -232,7 +235,12 @@ public class ArtikelVerwaltung {
 				
 								
 			}
-		}	
+		}
+		try {
+			clean();
+		} catch (ConcurrentModificationException c) {
+			
+		}
 	}
 	
 	public void alleArtikelVerschieben(ArtikelVektorListe zielListe) {

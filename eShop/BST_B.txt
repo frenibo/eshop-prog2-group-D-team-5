@@ -1,6 +1,6 @@
 Stift
 1
-22
+25
 1.5
 Packetgroeße:
 2
@@ -18,7 +18,7 @@ Packetgroeße:
 1
 Qtips
 4
-100000
+99800
 0.1
 Packetgroeße:
 100
@@ -30,7 +30,7 @@ Packetgroeße:
 1
 Löffel
 6
-44
+40
 4.5
 Packetgroeße:
 1

@@ -268,11 +268,6 @@ public class Eingabeverarbeitung {
 			//Artikel sichern
 			case "s":
 				eShop.warenkorbLeeren();
-				
-				for(Lagerungsevent l : eShop.getNeueLagerungen()) {
-					System.out.println(l);
-				}
-				
 				eShop.speichern();
 				System.out.println("gespeichert.");
 				break;

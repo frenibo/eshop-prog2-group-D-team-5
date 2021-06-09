@@ -24,4 +24,5 @@ public class Main {
 	//Sitzungsnummer zu valueobject machen, dass nicht mehr pro eShop bzw Sitzungs-Objekt erstellt wird, sondern pro Warenkorb
 	//Warum muss jede Methode in Sitzung/eShop static sein?
 	//Sitzung()
+	//Lagerungsevent hat Bugs
 }

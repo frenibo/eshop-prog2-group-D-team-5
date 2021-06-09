@@ -82,3 +82,73 @@ Fredi
 Niemandsland
 passwort
 11:32:30 09.06.2021
+Auslagerung
+Löffel
+6
+40
+4.5
+Packetgroeße:
+1
+40
+20210609114645
+1
+Fredi
+Niemandsland
+passwort
+12:44:44 09.06.2021
+Auslagerung
+Löffel
+6
+40
+4.5
+Packetgroeße:
+1
+4
+20210609114645
+1
+Fredi
+Niemandsland
+passwort
+12:44:44 09.06.2021
+Auslagerung
+Qtips
+4
+99800
+0.1
+Packetgroeße:
+100
+200
+20210609125844
+1
+Fredi
+Niemandsland
+passwort
+12:59:04 09.06.2021
+Einlagerung
+Stift
+1
+30
+1.5
+Packetgroeße:
+2
+8
+20210609012832
+1
+Fredi
+Niemandsland
+passwort
+01:28:40 09.06.2021
+Auslagerung
+Stift
+1
+25
+1.5
+Packetgroeße:
+2
+5
+20210609012914
+1
+Fredi
+Niemandsland
+passwort
+01:30:08 09.06.2021
