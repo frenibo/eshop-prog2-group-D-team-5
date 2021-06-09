@@ -8,15 +8,15 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import eshop.local.domain.exceptions.ArtikelExistiertBereitsException;
-import eshop.local.valueobjects.Event;
+import eshop.local.valueobjects.Inputevent;
 
-public class EventVektorListe {
+public class InputeventVektorListe {
 
 
 	// Präfix für Namen der Dateien, in der die Bibliotheksdaten gespeichert sind
 			private String datei = "";
 			
-			private EventVerwaltung meineEvents;
+			private InputeventVerwaltung meineInputevents;
 			// private KundenVerwaltung meineKunden;
 			// hier weitere Verwaltungsklassen, z.B. für Autoren oder Angestellte
 			
@@ -31,25 +31,26 @@ public class EventVektorListe {
 			 * @param datei Präfix für Dateien mit Basisdaten (Bücher, Kunden, Autoren)
 			 * @throws IOException z.B. wenn eine der Dateien nicht existiert.
 			 */
-			public EventVektorListe(String datei) throws IOException {
+			public InputeventVektorListe(String datei) throws IOException {
 				this.datei = datei;
 				
 				Path pfad = Paths.get(datei);
 				
 				if(!Files.exists(pfad)) {
+					
 					try {
 						File file = new File(this.datei);
 						// Buchbestand aus Datei einlesen
-						meineEvents = new EventVerwaltung();
-						meineEvents.liesDaten(file.getName());
+						meineInputevents = new InputeventVerwaltung();
+						meineInputevents.liesDaten(file.getName());
 					}
 					catch (IOException e) {
 						// TODO Auto-generated catch block
 						//e.printStackTrace();
 					}
 				} else {
-					meineEvents = new EventVerwaltung();
-					meineEvents.liesDaten(this.datei);
+					meineInputevents = new InputeventVerwaltung();
+					meineInputevents.liesDaten(this.datei);
 				}
 			}
 
@@ -62,8 +63,8 @@ public class EventVektorListe {
 			 * @return Buch-Objekt, das im Erfolgsfall eingefügt wurde
 			 * @throws BuchExistiertBereitsException wenn das Buch bereits existiert
 			 */
-			public void fuegeEventEin(Event event) throws ArtikelExistiertBereitsException {
-				meineEvents.einfuegen(event);
+			public void fuegeInputeventEin(Inputevent event) throws ArtikelExistiertBereitsException {
+				meineInputevents.einfuegen(event);
 			}
 
 			
@@ -72,8 +73,8 @@ public class EventVektorListe {
 			 * 
 			 * @throws IOException z.B. wenn Datei nicht existiert
 			 */
-			public void schreibeEvents() throws IOException {
-				meineEvents.schreibeDaten(datei);
+			public void schreibeInputevents() throws IOException {
+				meineInputevents.schreibeDaten(datei);
 			}
 
 }

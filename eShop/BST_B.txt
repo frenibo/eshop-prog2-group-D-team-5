@@ -6,7 +6,7 @@ Packetgroeße:
 2
 Kaugummi
 2
-576
+564
 0.5
 Packetgroeße:
 12
@@ -28,3 +28,15 @@ Auto
 15000.0
 Packetgroeße:
 1
+Löffel
+6
+44
+4.5
+Packetgroeße:
+1
+Schuhe
+7
+16
+30.0
+Packetgroeße:
+2

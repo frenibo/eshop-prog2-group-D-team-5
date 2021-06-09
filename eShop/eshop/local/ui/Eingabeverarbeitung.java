@@ -1,13 +1,14 @@
 package eshop.local.ui;
 
 import eshop.local.valueobjects.Artikel;
-import eshop.local.valueobjects.Event;
+import eshop.local.valueobjects.Inputevent;
+import eshop.local.valueobjects.Lagerungsevent;
 import eshop.local.valueobjects.Massenartikel;
 import eshop.local.valueobjects.Rechnung;
 import eshop.local.valueobjects.User;
 import eshop.local.valueobjects.Valueobject;
 
-import eshop.local.ui.Sitzung;
+import eshop.local.ui.eShop;
 
 import java.util.List;
 import java.util.Vector;
@@ -16,7 +17,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import eshop.local.domain.exceptions.ArtikelExistiertBereitsException;
-//import eshop.local.ui.cui.EshopClientCUI;
 import eshop.local.ui.cui.Main;
 import eshop.local.ui.MenueAusgabe;
 
@@ -90,21 +90,26 @@ public class Eingabeverarbeitung {
 	
 	public void liesUnterbrechung() throws IOException, ArtikelExistiertBereitsException {
 		if(this.input.equals("q")) {
-			//Sitzung.setRun(false);
+			//eShop.setRun(false);
 			System.out.println("> (q) Beenden");
 			System.exit(0);
 		}
 		else if(this.input.equals("z")) {
 			System.out.println("> (z) Zurück zum Menü");
 			verarbeitungsLevel("", "startmenue");
-			Sitzung.run();
+			eShop.run();
 		}
 	}
 	
-	public void newEvent() throws ArtikelExistiertBereitsException, IOException {
-		Event event = new Event(this.input);
-		Sitzung.fuegeEventEin(event);
-		Sitzung.speichereEventliste();
+	public void newEvent() {
+		Inputevent inputEvent = new Inputevent(this.input);
+		try {
+			eShop.fuegeInputeventEin(inputEvent);
+			eShop.speichereEventliste();
+		}
+		catch (Exception e) {
+			System.out.println("Input nicht geloggt!");
+		}
 	}
 	
 	public void verarbeitung(String line) throws IOException, ArtikelExistiertBereitsException {
@@ -125,17 +130,14 @@ public class Eingabeverarbeitung {
 		List<Artikel> liste;
 		List<User> userListe;
 		List<Rechnung> rechnungListe;
+		List<Lagerungsevent> lagerungseventListe;
 		
-		String nummerString = "";
 		int nummer = 0;
-		String anzahlString = "";
 		int anzahl = 0;
-		String packetString = "";
 		int packet = 0;
 		String name = "";
-		String preisString = "";
 		double preis = 0.0;
-		String passwort = "";
+		boolean bool = false;
 		
 		if(level.equals("startmenue")) {
 			
@@ -145,8 +147,8 @@ public class Eingabeverarbeitung {
 			} catch (Exception e) {}
 			
 			if (nummer > 0) {
-				liste = Sitzung.bst.sucheNachNr(nummer);
-				Sitzung.gibArtikellisteUnsortiertAus(liste);
+				liste = eShop.bst.sucheNachNr(nummer);
+				eShop.gibArtikellisteUnsortiertAus(liste);
 
 			}
 			*/
@@ -155,59 +157,54 @@ public class Eingabeverarbeitung {
 			switch (input) {
 			//Alle Artikel anzeigen
 			case "a":
-				gibListeAus(Sitzung.getArtikellisteAusBestand());
+				gibListeAus(eShop.getArtikellisteAusBestand());
 				break;
 			//Alle Artikel alphabetisch sortiert anzeigen
 			case "abc":
-				gibListeAlphabetischAus(Sitzung.getArtikellisteAusBestand());
+				gibListeAlphabetischAus(eShop.getArtikellisteAusBestand());
 				break;
 				//Alle Artikel alphabetisch sortiert anzeigen
 			case "a#":
-				gibListeNummerischAus(Sitzung.getArtikellisteAusBestand());
+				gibListeNummerischAus(eShop.getArtikellisteAusBestand());
 				break;
 			//Alle Artikel im Warenkorb kaufen
 			case "b":
 				
-				if(loginCheck() == false) {
-					loginDialog();
-				}
-				else{
-					Rechnung rechnung = Sitzung.warenkorbKaufen();
-					if(rechnung.getSitzungsNr().equals("")) {
+				if(loginCheck() == true) {
+					bool = eShop.warenkorbKaufen();
+					if(bool == false) {
 						System.out.println("Fehler beim einfügen");
 					}
 					else {
 						System.out.println("Kauf abgeschlossen. Hier die Rechnung: \n");
-						System.out.println(rechnung);
-						System.out.println("\nNeue Sitzung startet."); // >TODO: Muss das? vllt auch: Sitzung.run();
-						Main.main(null);
+						System.out.println(eShop.getAktuelleRechnung());
 					}
 				}
 				break;
 			//Alle User anzeigen
 			case "u":
-				gibListeAus(Sitzung.getUserliste());
+				gibListeAus(eShop.getUserliste());
 				break;
 			//Warenkorb anzeigen
 			case "w":
-				Sitzung.gibArtikellisteUnsortiertAus(Sitzung.getArtikellisteAusWarenkorb());
-				System.out.println("Gesamtpreis: " + Sitzung.getGesamtpreisWarenkorb() + " €");
+				eShop.gibArtikellisteUnsortiertAus(eShop.getArtikellisteAusWarenkorb());
+				System.out.println("Gesamtpreis: " + eShop.getGesamtpreisWarenkorb() + " €");
 				break;
 			//Artikel in Warenkorb verschieben
 			case "k":
 				nummer = erfahreInt("Artikelnummer");
 				anzahl = erfahreInt("Anzahl");
-				Sitzung.verschiebeVonBestandInWarenkorb(nummer, anzahl);
+				eShop.verschiebeVonBestandInWarenkorb(nummer, anzahl);
 				break;
 				//Artikel von Warenkorb zurücklegen
 			case "l":
 				nummer = erfahreInt("Artikelnummer");
 				anzahl = erfahreInt("Anzahl");
-				Sitzung.verschiebeVonWarenkorbinBestand(nummer, anzahl);
+				eShop.verschiebeVonWarenkorbinBestand(nummer, anzahl);
 				break;
 			//Warenkorb leeren
 			case "wl":
-				Sitzung.warenkorbLeeren();
+				eShop.warenkorbLeeren();
 				System.out.println("Warenkorb geleert.");
 				break;
 			//Artikelanzahl ändern
@@ -215,7 +212,7 @@ public class Eingabeverarbeitung {
 				if(loginCheck() == true) {
 					nummer = erfahreInt("Artikelnummer");
 					anzahl = erfahreInt("Neue Anzahl");
-					Sitzung.aendereAnzahlImBestand(nummer, anzahl);
+					eShop.aendereAnzahlImBestand(nummer, anzahl);
 					System.out.print("\nAnzahl aktualisiert.");
 				}
 				break;
@@ -224,8 +221,11 @@ public class Eingabeverarbeitung {
 			case "d":
 				if(loginCheck() == true) {
 					nummer = erfahreInt("Artikelnummer");
-					name = erfahreString("Artikelname");
-					Sitzung.loescheArtikelImBestand(name, nummer);
+					liste = eShop.DurchsucheBestandNachNummer(nummer);
+					for(Artikel a : liste) {
+						eShop.loescheArtikelImBestand(a);
+					}
+					
 				}
 				break;
 			//Artikel einfügen
@@ -241,12 +241,12 @@ public class Eingabeverarbeitung {
 
 					try {
 						//sollte man so wahrscheinlich nicht machen:
-						String resultat = Sitzung.fuegeArtikelEin(name, nummer, anzahl, preis, packet);
+						String resultat = eShop.fuegeArtikelEin(name, nummer, anzahl, preis, packet);
 					
 						if(resultat.equals("Erfolgreich hinzugefügt")) {
-							Sitzung.setAktuellerArtikel(new Massenartikel(name, nummer, anzahl, preis, packet));
+							eShop.setAktuellerArtikel(new Massenartikel(name, nummer, anzahl, preis, packet));
 							System.out.print("\n");
-							System.out.println(Sitzung.getAktuellerArtikel());
+							System.out.println(eShop.getAktuellerArtikel());
 							setLevel("startmenue");
 						}
 						else if(resultat.equals("Artikel existiert bereits") || resultat.equals("Nummer vergeben") || resultat.equals("Falsche Nummer")) {
@@ -262,55 +262,48 @@ public class Eingabeverarbeitung {
 			//Artikel suchen
 			case "f":
 				name = erfahreString("Name des Artikels");
-				liste = Sitzung.DurchsucheBestandNachName(name);
-				Sitzung.gibArtikellisteUnsortiertAus(liste);
+				liste = eShop.DurchsucheBestandNachName(name);
+				eShop.gibArtikellisteUnsortiertAus(liste);
 				break;
 			//Artikel sichern
 			case "s":
-				Sitzung.warenkorbLeeren();
+				eShop.warenkorbLeeren();
 				
-				Rechnung rechnung = new Rechnung(Sitzung.getAktuellerUser(), Sitzung.produceAenderungsListe());
-				System.out.println(rechnung);
-				
-				try {
-					//sollte man so wahrscheinlich nicht machen:
-					Sitzung.fuegeRechnungEin(rechnung);
-					
-				} catch (ArtikelExistiertBereitsException e) {
-					// Hier Fehlerbehandlung...
-					System.out.println("Fehler beim einfügen");
-					e.printStackTrace();
+				for(Lagerungsevent l : eShop.getNeueLagerungen()) {
+					System.out.println(l);
 				}
 				
-				Sitzung.speichereBestand();
-				Sitzung.speichereRechnungsliste();
-				Sitzung.speichereUserliste();
+				eShop.speichern();
 				System.out.println("gespeichert.");
 				break;
 			//Sitzungsnummer anzeigen
 			case "n":
-				System.out.println("Ihre Sitzungsnummer lautet: " + Sitzung.getSitzungsNr() +"\n");
+				System.out.println("Ihre Sitzungsnummer lautet: " + eShop.getSitzungsNr() +"\n");
+				break;
+			case "lag":
+				lagerungseventListe = eShop.getLagerungseventListe();
+				gibListeAus(lagerungseventListe);
 				break;
 			//Alle Rechnungen anzeigen
 			case "rch":
-				rechnungListe = Sitzung.rch.gibAlleRechnungen();
+				rechnungListe = eShop.getRechnungsliste();
 				gibListeAus(rechnungListe);
 				break;
 			//Userspezifische Rechnungen anzeigen
 			case "rch#":
 				nummer = erfahreInt("Kundenummer");
-				rechnungListe = Sitzung.DurchsucheRechnungslisteNachNr(nummer);
+				rechnungListe = eShop.DurchsucheRechnungslisteNachNr(nummer);
 				gibListeAus(rechnungListe);
 				break;
 			//Login
 			case "log":
 				name = erfahreString("Name");
 				boolean erfolgreich = false;
-				for(User u : Sitzung.usr.gibAlleUser()) {
+				for(User u : eShop.getUserliste()) {
 					if(u.getName().equals(name)) {
-						Sitzung.setAktuellerUser(u);
+						eShop.setAktuellerUser(u);
 						System.out.println("Willkommen " + u.getName() + "!");
-						System.out.println("Userdaten: " + Sitzung.getAktuellerUser());
+						System.out.println("Userdaten: " + eShop.getAktuellerUser());
 						erfolgreich = true;
 					}
 				}
@@ -321,13 +314,13 @@ public class Eingabeverarbeitung {
 			//Registrieren
 			case "reg":
 				name = erfahreString("Name");
-				nummer = 1 + Sitzung.getUserAnzahl();
+				nummer = 1 + eShop.getUserAnzahl();
 				
 				try {
 					//sollte man so wahrscheinlich nicht machen:
-					Sitzung.fuegeUserEin(nummer, name);
+					eShop.fuegeUserEin(nummer, name);
 					
-					Sitzung.speichereUserliste();
+					eShop.speichereUserliste();
 					
 					System.out.println("\n Wir freuen uns Sie als neuen Kunden begrüßen zu dürfen.");
 					
@@ -356,19 +349,19 @@ public class Eingabeverarbeitung {
 		else if(level.equals("speichern")) {
 			switch (input) {
 			case "s":
-				Sitzung.speichern();
+				eShop.speichern();
 				System.out.println("gespeichert.");
 				
 				setLevel("startmenue");
 				break;
 			case "r":
-				Sitzung.loescheArtikel(Sitzung.getAktuellerArtikel());
+				eShop.loescheArtikel(eShop.getAktuellerArtikel());
 				System.out.println("Artikel nicht gespeichert.\n");
 				setLevel("startmenue");
 				break;
 			case "w":
 				setLevel("startmenue");
-				Sitzung.run();
+				eShop.run();
 				break;
 			}
 		}
@@ -475,7 +468,7 @@ public class Eingabeverarbeitung {
 	}
 	
 	public boolean loginCheck() {
-		if(Sitzung.getAktuellerUser().getUserNr() == 0) {
+		if(eShop.getAktuellerUser().getUserNr() == 0) {
 			System.out.println("Sie sind nicht eingeloggt.");
 			return false;
 		} else return true;
@@ -484,9 +477,10 @@ public class Eingabeverarbeitung {
 	
 	public boolean loginDialog() {
 		return true;
+		//TODO:loginDialog()
 	}
 	
-	///Sitzung.getAktuellerUser().getUserNr() == 0
+	///eShop.getAktuellerUser().getUserNr() == 0
 	
 	public <Thing> void gibListeAus(List<Thing> liste) {
 		if (liste.isEmpty()) {

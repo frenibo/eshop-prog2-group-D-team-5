@@ -3,13 +3,13 @@ package eshop.local.valueobjects;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import eshop.local.ui.Sitzung;
+import eshop.local.ui.eShop;
 
 /*
  * Beschreibung: 
  */
 
-public class Event {
+public class Inputevent {
 	
 	private String input;
 	private String sitzungsNr;
@@ -18,17 +18,17 @@ public class Event {
 	private User user;
 	
 	
-	public Event (String input) {
+	public Inputevent (String input) {
 		this.input = input;
-		this.user = Sitzung.getAktuellerUser();
-		this.sitzungsNr = Sitzung.getSitzungsNr();
+		this.user = eShop.getAktuellerUser();
+		this.sitzungsNr = eShop.getSitzungsNr();
 		this.datum = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("hh:mm:ss dd.MM.yyyy");
 		this.zeitstempel = formatter.format(datum);
 				
 	}
 	
-	public Event (String input, User user, String sitzungsNr, String zeitstempel) {
+	public Inputevent (String input, User user, String sitzungsNr, String zeitstempel) {
 		this.input = input;
 		this.user = user;
 		this.datum = new Date();

@@ -8,11 +8,11 @@ import java.util.Vector;
 import eshop.local.domain.exceptions.ArtikelExistiertBereitsException;
 import eshop.local.persistence.FilePersistenceManager;
 import eshop.local.persistence.PersistenceManager;
-import eshop.local.valueobjects.Event;
+import eshop.local.valueobjects.Inputevent;
 
-public class EventVerwaltung {
+public class InputeventVerwaltung {
 	// Verwaltung des Buchbestands in einem Vector
-			private List<Event> eventListe = new Vector<Event>();
+			private List<Inputevent> eventListe = new Vector<Inputevent>();
 
 			// Persistenz-Schnittstelle, die für die Details des Dateizugriffs verantwortlich ist
 			private PersistenceManager pm = new FilePersistenceManager();
@@ -26,16 +26,18 @@ public class EventVerwaltung {
 			public void liesDaten(String datei) throws IOException {
 				// PersistenzManager für Lesevorgänge öffnen
 				pm.openForReading(datei);
-
-				Event einEvent;
+				
+				Inputevent einEvent;
 				do {
 					// Artikel-Objekt einlesen
-					einEvent = pm.ladeEvent();
+					einEvent = pm.ladeInputevents();
+					
 					if (einEvent != null) {
 						// Buch in Liste einfügen
 						try {
 							einfuegen(einEvent);
-						} catch (ArtikelExistiertBereitsException e1) {
+						} 
+						catch (Exception e) {
 							// Kann hier eigentlich nicht auftreten,
 							// daher auch keine Fehlerbehandlung...
 						}
@@ -56,8 +58,8 @@ public class EventVerwaltung {
 				// PersistenzManager für Schreibvorgänge öffnen
 				pm.openForWriting(datei);
 
-				for (Event e : eventListe) {
-					pm.speichereEvent(e);
+				for (Inputevent e : eventListe) {
+					pm.speichereInputevents(e);
 				}
 
 				// Persistenz-Schnittstelle wieder schließen
@@ -70,7 +72,7 @@ public class EventVerwaltung {
 			 * @param einBuch das einzufügende Buch
 			 * @throws BuchExistiertBereitsException wenn das Buch bereits existiert
 			 */
-			public String einfuegen(Event einEvent) throws ArtikelExistiertBereitsException {
+			public String einfuegen(Inputevent einEvent) {
 				
 					eventListe.add(einEvent);
 					return "Erfolgreich hinzugefügt";			
@@ -89,13 +91,13 @@ public class EventVerwaltung {
 			 * 
 			 * @return Liste aller Bücher im Buchbestand (Kopie)
 			 */
-			public List<Event> getEventListe() {
+			public List<Inputevent> getInputeventListe() {
 				return eventListe;
 			}
 			
 			public int getObjektAnzahl() {
 				int anzahl = 0;
-				for(Event e: eventListe) {
+				for(Inputevent e: eventListe) {
 					anzahl++;
 				}
 				return anzahl;

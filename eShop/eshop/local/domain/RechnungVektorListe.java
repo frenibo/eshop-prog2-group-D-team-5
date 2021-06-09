@@ -8,7 +8,6 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import eshop.local.domain.exceptions.ArtikelExistiertBereitsException;
-import eshop.local.ui.Sitzung;
 import eshop.local.valueobjects.Artikel;
 import eshop.local.valueobjects.Rechnung;
 

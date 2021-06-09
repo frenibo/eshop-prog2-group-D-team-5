@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
-import eshop.local.ui.Sitzung;
+import eshop.local.ui.eShop;
 import eshop.local.valueobjects.Artikel;
 import eshop.local.valueobjects.User;
 
@@ -36,7 +36,7 @@ public class Rechnung implements Valueobject{
 		
 		this.user = user;
 		this.artikelListe = artikelListe;
-		this.sitzungsNr = Sitzung.getSitzungsNr();
+		this.sitzungsNr = eShop.getSitzungsNr();
 		this.datum = defineDatum();
 		this.gesamtpreis = defineGesamtpreis();
 		

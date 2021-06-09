@@ -8,7 +8,7 @@ import java.io.File;
 import java.util.List;
 
 import eshop.local.domain.exceptions.ArtikelExistiertBereitsException;
-import eshop.local.ui.Sitzung;
+import eshop.local.ui.eShop;
 import eshop.local.valueobjects.Artikel;
 import eshop.local.valueobjects.Massenartikel;
 
@@ -184,7 +184,7 @@ public class ArtikelVektorListe {
 		
 		public void warenkorbLeeren() {
 			
-			meineArtikel.alleArtikelVerschieben(Sitzung.bst);
+			meineArtikel.alleArtikelVerschieben(eShop.bst);
 			//crashes program (may be out of sync)
 			//meineArtikel.alleArtikelLoeschen();
 		}

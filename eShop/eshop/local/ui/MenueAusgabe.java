@@ -51,6 +51,7 @@ public class MenueAusgabe {
 			System.out.println("(f) Artikel suchen");
 			System.out.println("(s) Artikel sichern");
 			System.out.println("(n) Sitzungsnummer anzeigen");
+			System.out.println("(lag) Alle Lagerungsevents anzeigen");
 			System.out.println("(rch) Alle Rechnungen anzeigen");
 			System.out.println("(rch#) Userspezifische Rechnungen anzeigen");
 			System.out.println("(log) Login");

@@ -3,7 +3,8 @@ package eshop.local.persistence;
 import java.util.*;
 
 import eshop.local.valueobjects.Artikel;
-import eshop.local.valueobjects.Event;
+import eshop.local.valueobjects.Inputevent;
+import eshop.local.valueobjects.Lagerungsevent;
 import eshop.local.valueobjects.Massenartikel;
 import eshop.local.valueobjects.Rechnung;
 import eshop.local.valueobjects.User;
@@ -146,7 +147,7 @@ public class FilePersistenceManager implements PersistenceManager {
 		return new Rechnung(user, artikelListe, sitzungsNr, datum, gesamtpreis);
 	}
 	
-	public Event ladeEvent() throws IOException {
+	public Inputevent ladeInputevents() throws IOException {
 		
 		String input = liesZeile();
 		if (input == null) {
@@ -161,7 +162,30 @@ public class FilePersistenceManager implements PersistenceManager {
 		User user = ladeUser();
 		
 		// neues Buch-Objekt anlegen und zurückgeben
-		return new Event(input, user, sitzungsNr, zeitstempel);
+		return new Inputevent(input, user, sitzungsNr, zeitstempel);
+	}
+	
+	public Lagerungsevent ladeLagerungsevents() throws IOException {
+		
+		String lagerung = liesZeile();
+		if (lagerung == null) {
+			// keine Daten mehr vorhanden
+			return null;
+		}
+		
+		Artikel artikel = ladeArtikel();
+		
+		String anzahlString = liesZeile();
+		int anzahl = Integer.parseInt(anzahlString);
+		
+		String sitzungsNr = liesZeile();
+		
+		User user = ladeUser();
+		
+		String datum = liesZeile();
+		
+		// neues Buch-Objekt anlegen und zurückgeben
+		return new Lagerungsevent(lagerung, artikel, anzahl, sitzungsNr, user, datum);
 	}
 
 	/**
@@ -236,7 +260,7 @@ public class FilePersistenceManager implements PersistenceManager {
 		return true;
 	}
 	
-	public boolean speichereEvent(Event e) throws IOException {
+	public boolean speichereInputevents(Inputevent e) throws IOException {
 		
 		String eventInput = String.valueOf(e.getInput() + "");
 		schreibeZeile(eventInput);
@@ -251,6 +275,24 @@ public class FilePersistenceManager implements PersistenceManager {
 
 		return true;
 		
+	}
+	
+	public boolean speichereLagerungsevents(Lagerungsevent e) throws IOException {
+		
+		schreibeZeile(e.getLagerung());
+		
+		speichereArtikel(e.getArtikel());
+		
+		String eventAnzahl = String.valueOf(e.getAnzahl() + "");
+		schreibeZeile(eventAnzahl);
+		
+		schreibeZeile(e.getSitzungsnummer());
+		
+		speichereUser(e.getUser());
+		
+		schreibeZeile(e.getDatum());
+
+		return true;
 	}
 
 	
@@ -279,4 +321,5 @@ public class FilePersistenceManager implements PersistenceManager {
 		if (reader != null)
 			reader.reset();
 	}
+
 }

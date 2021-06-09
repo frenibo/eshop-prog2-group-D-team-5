@@ -6,6 +6,7 @@ import java.util.*;
 import eshop.local.domain.exceptions.ArtikelExistiertBereitsException;
 import eshop.local.persistence.FilePersistenceManager;
 import eshop.local.persistence.PersistenceManager;
+import eshop.local.ui.eShop;
 import eshop.local.valueobjects.Artikel;
 import eshop.local.valueobjects.Massenartikel;
 import eshop.local.valueobjects.User;
@@ -130,6 +131,9 @@ public class ArtikelVerwaltung {
 	public void aendereArtikelAnzahl(int nummer, int anzahl) {
 		
 		int zaehler = -1;
+		int anzahlUrsprung = 0;
+		int difference;
+		String lagerung = "Null";
 		
 		// Buchbestand durchlaufen und nach Titel suchen
 		Iterator<Artikel> iter = artikelListe.iterator();
@@ -140,7 +144,18 @@ public class ArtikelVerwaltung {
 			// 			(-> Vergleiche mit Einsatz von Vector OHNE Generics)
 			Artikel a = iter.next();
 			if (a.getNummer() == nummer)
+				
+				anzahlUrsprung = artikelListe.get(zaehler).getAnzahl();
+			
 				artikelListe.get(zaehler).setAnzahl(anzahl);
+				
+				if(anzahlUrsprung < anzahl) {
+					lagerung = "Einlagerung";
+				} else lagerung = "Auslagerung";
+				
+				difference = Math.abs(anzahlUrsprung - anzahl);
+				
+				eShop.neuesLagerungsevent(lagerung, artikelListe.get(zaehler), difference, eShop.getSitzungsNr(), eShop.getAktuellerUser());
 		}
 		
 	}
@@ -150,6 +165,12 @@ public class ArtikelVerwaltung {
 		int anzahlZuvor = 0;
 		boolean imBestandAbgezogen = false;
 		boolean imWarenkorbHinzugefügt = false;
+		
+		String lagerung = "";
+		if(zielListe.equals(eShop.wnk)) {
+			lagerung = "Auslagerung";
+		} else lagerung = "Einlagerung";
+		
 		//Hilfsvariablen HV
 		Massenartikel artikelHV = new Massenartikel ("error", 0, 0);
 		Massenartikel artikelHV2 = new Massenartikel ("error2", 0, 0);
@@ -173,11 +194,12 @@ public class ArtikelVerwaltung {
 				else {
 					anzahlZuvor = artikelHV.getAnzahl();
 					if(anzahlZuvor >= anzahl) {
-						int ergebnis = anzahlZuvor - anzahl;
-						artikelHV.setAnzahl(ergebnis);
+						int difference = Math.abs(anzahlZuvor - anzahl);
+						artikelHV.setAnzahl(difference);
+						eShop.neuesLagerungsevent(lagerung, artikelHV, difference, eShop.getSitzungsNr(), eShop.getAktuellerUser());
 						artikelHV3 = artikelHV;
 						imBestandAbgezogen = true;
-						if(ergebnis == 0) {
+						if(difference == 0) {
 							//crashes program
 							//loeschen(artikelHV);
 						}
@@ -197,12 +219,13 @@ public class ArtikelVerwaltung {
 					int ergebnis2 = anzahlZuvor+anzahl;
 					artikelHV2.setAnzahl(ergebnis2);
 					imWarenkorbHinzugefügt = true;
+					eShop.neuesLagerungsevent(lagerung, artikelHV2, anzahl, eShop.getSitzungsNr(), eShop.getAktuellerUser());
 				}
 			}
-			if(imWarenkorbHinzugefügt == false) {
-				
+			if(imWarenkorbHinzugefügt == false) {			
 				try {
 					zielListe.fuegeArtikelEin(artikelHV3.getName(), artikelHV3.getNummer(), anzahl, artikelHV3.getPreis());
+					eShop.neuesLagerungsevent(lagerung, artikelHV3, anzahl, eShop.getSitzungsNr(), eShop.getAktuellerUser());
 				} catch (ArtikelExistiertBereitsException e) {
 					
 				}
@@ -250,8 +273,13 @@ public class ArtikelVerwaltung {
 				}
 			}
 			if(imWarenkorbHinzugefügt == false) {
+				String lagerung = "";
+				if(zielListe.equals(eShop.wnk)) {
+					lagerung = "Einlagerung";
+				} else lagerung = "Auslagerung";
 				try {
 					zielListe.fuegeArtikelEin(artikelUrsprung.getName(), artikelUrsprung.getNummer(), artikelUrsprung.getAnzahl(), artikelUrsprung.getPreis());
+					eShop.neuesLagerungsevent(lagerung, artikelUrsprung, artikelUrsprung.getAnzahl(), eShop.getSitzungsNr(), eShop.getAktuellerUser());
 				} catch (ArtikelExistiertBereitsException e) {
 					
 				}
