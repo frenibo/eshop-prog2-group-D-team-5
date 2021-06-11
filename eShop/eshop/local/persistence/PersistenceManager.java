@@ -6,6 +6,7 @@ import eshop.local.valueobjects.Artikel;
 import eshop.local.valueobjects.Inputevent;
 import eshop.local.valueobjects.Lagerungsevent;
 import eshop.local.valueobjects.Rechnung;
+import eshop.local.valueobjects.Sitzung;
 import eshop.local.valueobjects.User;
 
 /**
@@ -57,5 +58,9 @@ public interface PersistenceManager {
 	public Lagerungsevent ladeLagerungsevents() throws IOException;
 	
 	public boolean speichereLagerungsevents(Lagerungsevent e) throws IOException;
+	
+	public Sitzung ladeSitzungen() throws IOException;
+	
+	public boolean speichereSitzungen(Sitzung e) throws IOException;
 	
 }

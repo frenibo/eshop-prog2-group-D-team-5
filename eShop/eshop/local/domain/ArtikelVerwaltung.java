@@ -9,6 +9,7 @@ import eshop.local.persistence.PersistenceManager;
 import eshop.local.ui.eShop;
 import eshop.local.valueobjects.Artikel;
 import eshop.local.valueobjects.Massenartikel;
+import eshop.local.valueobjects.Rechnung;
 import eshop.local.valueobjects.User;
 
 
@@ -81,6 +82,13 @@ public class ArtikelVerwaltung {
 	 * @param einBuch das einzufügende Buch
 	 * @throws BuchExistiertBereitsException wenn das Buch bereits existiert
 	 */
+	
+	public String einfuegen(Artikel einArtikel) throws ArtikelExistiertBereitsException {
+		
+		artikelListe.add(einArtikel);
+		return "Erfolgreich hinzugefügt";
+	}
+	/*
 	public String einfuegen(Artikel einArtikel) throws ArtikelExistiertBereitsException {
 		
 		List<Artikel> suchErgNummer = new Vector<Artikel>();
@@ -111,6 +119,7 @@ public class ArtikelVerwaltung {
 
 		
 	}
+	*/
 
 	/**
 	 * Methode zum Löschen eines Buchs aus dem Bestand. 
@@ -137,7 +146,7 @@ public class ArtikelVerwaltung {
 		}
 	}
 	
-	public void aendereArtikelAnzahl(int nummer, int anzahl) {
+	public void aendereArtikelAnzahl(int nummer, int anzahl) throws IOException {
 		
 		int zaehler = -1;
 		int anzahlUrsprung = 0;
@@ -164,14 +173,14 @@ public class ArtikelVerwaltung {
 		}
 	}
 	
-	public void verschiebenArtikel(int nummer, int anzahl, ArtikelVektorListe zielListe) {
+	public void verschiebenArtikel(int nummer, int anzahl, ArtikelVektorListe zielListe) throws IOException {
 		
 		int anzahlZuvor = 0;
 		boolean imBestandAbgezogen = false;
 		boolean imWarenkorbHinzugefügt = false;
 		
 		String lagerung = "";
-		if(zielListe.equals(eShop.wnk)) {
+		if(zielListe.equals(eShop.getWarenkorb())) {
 			lagerung = "Auslagerung";
 		} else lagerung = "Einlagerung";
 		
@@ -243,7 +252,7 @@ public class ArtikelVerwaltung {
 		}
 	}
 	
-	public void alleArtikelVerschieben(ArtikelVektorListe zielListe) {
+	public void alleArtikelVerschieben(ArtikelVektorListe zielListe) throws IOException {
 		
 		boolean imWarenkorbHinzugefügt = false;
 		
@@ -282,11 +291,11 @@ public class ArtikelVerwaltung {
 			}
 			if(imWarenkorbHinzugefügt == false) {
 				String lagerung = "";
-				if(zielListe.equals(eShop.wnk)) {
+				if(zielListe.equals(eShop.getWarenkorb())) {
 					lagerung = "Einlagerung";
 				} else lagerung = "Auslagerung";
 				try {
-					zielListe.fuegeArtikelEin(artikelUrsprung.getName(), artikelUrsprung.getNummer(), artikelUrsprung.getAnzahl(), artikelUrsprung.getPreis());
+					zielListe.fuegeArtikelEin(artikelUrsprung.getName(), artikelUrsprung.getNummer(), artikelUrsprung.getAnzahl(), artikelUrsprung.getPreis(), artikelUrsprung.getPacketgroeße());
 					eShop.neuesLagerungsevent(lagerung, artikelUrsprung, artikelUrsprung.getAnzahl(), eShop.getSitzungsNr(), eShop.getAktuellerUser());
 				} catch (ArtikelExistiertBereitsException e) {
 					

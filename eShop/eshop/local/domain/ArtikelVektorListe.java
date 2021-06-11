@@ -140,49 +140,36 @@ public class ArtikelVektorListe {
 		 * @return Buch-Objekt, das im Erfolgsfall eingefügt wurde
 		 * @throws BuchExistiertBereitsException wenn das Buch bereits existiert
 		 */
-		public String fuegeArtikelEin(String name, int nummer) throws ArtikelExistiertBereitsException {
-			Artikel a = new Artikel(name, nummer);
+		public String fuegeArtikelEin(Artikel a) throws ArtikelExistiertBereitsException {
 			String rueckmeldung = meineArtikel.einfuegen(a);
 			return rueckmeldung;
 		}
-		
-		public String fuegeArtikelEin(String name, int nummer, int anzahl) throws ArtikelExistiertBereitsException {
-			Artikel a = new Artikel(name, nummer, anzahl);
-			String rueckmeldung = meineArtikel.einfuegen(a);
-			return rueckmeldung;
-		}
-		
-		public String fuegeArtikelEin(String name, int nummer, int anzahl, double preis) throws ArtikelExistiertBereitsException {
-			Artikel a = new Artikel(name, nummer, anzahl, preis);
-			String rueckmeldung = meineArtikel.einfuegen(a);
-			return rueckmeldung;
-		}
-		
+				
 		public String fuegeArtikelEin(String name, int nummer, int anzahl, double preis, int packetgroeße) throws ArtikelExistiertBereitsException {
 			Massenartikel a = new Massenartikel(name, nummer, anzahl, preis, packetgroeße);
 			String rueckmeldung = meineArtikel.einfuegen(a);
 			return rueckmeldung;
 		}
 
-		public void aendereAnzahl(int nummer, int anzahl) {
+		public void aendereAnzahl(int nummer, int anzahl) throws IOException {
 			
 			meineArtikel.aendereArtikelAnzahl(nummer, anzahl);
 			
 		}
 		
-		public void verschiebeInWarenkorb(int nummer, int anzahl, ArtikelVektorListe warenkorb) {
+		public void verschiebeInWarenkorb(int nummer, int anzahl, ArtikelVektorListe warenkorb) throws IOException {
 								
 			meineArtikel.verschiebenArtikel(nummer, anzahl, warenkorb);
 			
 		}
 		
-		public void verschiebeInBestand(int nummer, int anzahl, ArtikelVektorListe bestand) {
+		public void verschiebeInBestand(int nummer, int anzahl, ArtikelVektorListe bestand) throws IOException {
 			
 			meineArtikel.verschiebenArtikel(nummer, anzahl, bestand);
 			
 		}
 		
-		public void warenkorbLeeren() {
+		public void warenkorbLeeren() throws IOException {
 			
 			meineArtikel.alleArtikelVerschieben(eShop.bst);
 			//crashes program (may be out of sync)

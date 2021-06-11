@@ -7,6 +7,7 @@ import eshop.local.valueobjects.Inputevent;
 import eshop.local.valueobjects.Lagerungsevent;
 import eshop.local.valueobjects.Rechnung;
 import eshop.local.valueobjects.User;
+import eshop.local.valueobjects.Sitzung;
 
 public class DBPersistenceManager implements PersistenceManager {
 
@@ -84,6 +85,18 @@ public class DBPersistenceManager implements PersistenceManager {
 
 	@Override
 	public boolean speichereLagerungsevents(Lagerungsevent e) throws IOException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Sitzung ladeSitzungen() throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean speichereSitzungen(Sitzung e) throws IOException {
 		// TODO Auto-generated method stub
 		return false;
 	}

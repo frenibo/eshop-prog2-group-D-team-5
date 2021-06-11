@@ -1,6 +1,6 @@
 package eshop.local.valueobjects;
 
-public class User implements Valueobject{
+public class User implements ValueobjectInterface{
 
 	private int userNr;
 	private String name;

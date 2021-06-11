@@ -6,7 +6,7 @@ import eshop.local.valueobjects.Lagerungsevent;
 import eshop.local.valueobjects.Massenartikel;
 import eshop.local.valueobjects.Rechnung;
 import eshop.local.valueobjects.User;
-import eshop.local.valueobjects.Valueobject;
+import eshop.local.valueobjects.ValueobjectInterface;
 
 import eshop.local.ui.eShop;
 
@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import eshop.local.domain.exceptions.ArtikelExistiertBereitsException;
-import eshop.local.ui.cui.Main;
 import eshop.local.ui.MenueAusgabe;
 
 public class Eingabeverarbeitung {
@@ -101,7 +100,7 @@ public class Eingabeverarbeitung {
 		}
 	}
 	
-	public void newEvent() {
+	public void newEvent() throws IOException {
 		Inputevent inputEvent = new Inputevent(this.input);
 		try {
 			eShop.fuegeInputeventEin(inputEvent);
@@ -171,14 +170,9 @@ public class Eingabeverarbeitung {
 			case "b":
 				
 				if(loginCheck() == true) {
-					bool = eShop.warenkorbKaufen();
-					if(bool == false) {
-						System.out.println("Fehler beim einfügen");
-					}
-					else {
-						System.out.println("Kauf abgeschlossen. Hier die Rechnung: \n");
-						System.out.println(eShop.getAktuelleRechnung());
-					}
+					Rechnung rechnung = eShop.warenkorbKaufen();
+					System.out.println("Kauf abgeschlossen. Hier die Rechnung: \n");
+					System.out.println(rechnung);
 				}
 				break;
 			//Alle User anzeigen
@@ -228,7 +222,7 @@ public class Eingabeverarbeitung {
 					
 				}
 				break;
-			//Artikel einfügen
+			//Artikel erstellen
 			case "e":
 				if(loginCheck() == true) {
 					// lies die notwendigen Parameter, einzeln pro Zeile
@@ -237,20 +231,25 @@ public class Eingabeverarbeitung {
 					packet = erfahreInt("Packetgröße");
 					anzahl = erfahreInt("Anzahl");
 					preis = erfahreDouble("Preis");
-					}
-
+					
 					try {
 						//sollte man so wahrscheinlich nicht machen:
-						String resultat = eShop.fuegeArtikelEin(name, nummer, anzahl, preis, packet);
+						String resultat = eShop.erstelleArtikelImBestand(name, nummer, anzahl, preis, packet);
 					
 						if(resultat.equals("Erfolgreich hinzugefügt")) {
-							eShop.setAktuellerArtikel(new Massenartikel(name, nummer, anzahl, preis, packet));
-							System.out.print("\n");
+							System.out.print("\nErfolgreich hinzugefügt\n");
 							System.out.println(eShop.getAktuellerArtikel());
-							setLevel("startmenue");
 						}
-						else if(resultat.equals("Artikel existiert bereits") || resultat.equals("Nummer vergeben") || resultat.equals("Falsche Nummer")) {
-							setLevel("startmenu"); //vorher "speichern"
+						else if(resultat.equals("Nummer vergeben")) {
+							System.out.print("\nEin anderer Artikel mit Artikelnummer " + nummer + " existiert bereits:\n");
+							System.out.print(eShop.getAktuellerArtikel());
+						}
+						else if(resultat.equals("Artikel existiert bereits")) {
+							System.out.print("\nEin Artikel mit dem Namen " + name + " existiert bereits mit der Artikelnummer " + eShop.getAktuellerArtikel().getNummer() + ".\n");
+							System.out.print(eShop.getAktuellerArtikel());
+						}
+						else if(resultat.equals("Falsche Nummer")) {
+							System.out.print("\nDie Artikelnummer muss eine positive ganze Zahl sein.\n");
 						}
 					
 					} catch (ArtikelExistiertBereitsException e) {
@@ -258,6 +257,7 @@ public class Eingabeverarbeitung {
 						System.out.println("Fehler beim einfügen");
 						e.printStackTrace();
 					}
+				}
 				break;
 			//Artikel suchen
 			case "f":
@@ -331,11 +331,14 @@ public class Eingabeverarbeitung {
 			//Neue Sitzung starten
 			case "r":
 				System.out.println("Neue Sitzung startet.\n");
-				Main.main(null);
+				eShop.main(null);
 				break;			
 			//Zurück zum Startmenue
 			case "z":
 				//handled in Sitzung.run();
+				break;
+			default:
+				System.out.println("invalid input");
 				break;
 		
 			}
@@ -462,7 +465,7 @@ public class Eingabeverarbeitung {
 		return doubleV;
 	}
 	
-	public boolean loginCheck() {
+	public boolean loginCheck() throws IOException {
 		if(eShop.getAktuellerUser().getUserNr() == 0) {
 			System.out.println("Sie sind nicht eingeloggt.");
 			return false;
@@ -488,7 +491,7 @@ public class Eingabeverarbeitung {
 		
 	}
 	
-	public <Thing extends Valueobject> void gibListeAlphabetischAus(List<Thing> vectorListe){
+	public <Thing extends ValueobjectInterface> void gibListeAlphabetischAus(List<Thing> vectorListe){
 		
 		int anzahl = vectorListe.size();
 		List<Thing> tempListe = new Vector<Thing>();
@@ -527,7 +530,7 @@ public class Eingabeverarbeitung {
 		}
 	}
 	
-	public <Thing extends Valueobject> void gibListeNummerischAus(List<Thing> vectorListe) {
+	public <Thing extends ValueobjectInterface> void gibListeNummerischAus(List<Thing> vectorListe) {
 
 		int anzahl = vectorListe.size();
 		List<Thing> tempListe = new Vector<Thing>();

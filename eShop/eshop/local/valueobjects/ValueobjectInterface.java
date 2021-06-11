@@ -1,6 +1,6 @@
 package eshop.local.valueobjects;
 
-public interface Valueobject {
+public interface ValueobjectInterface {
 	
 	public String getName();
 	

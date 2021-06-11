@@ -11,9 +11,9 @@ import eshop.local.domain.ArtikelVektorListe;
 import eshop.local.domain.InputeventVektorListe;
 import eshop.local.domain.LagerungseventVektorListe;
 import eshop.local.domain.RechnungVektorListe;
+import eshop.local.domain.SitzungVektorListe;
 import eshop.local.domain.UserVektorListe;
 import eshop.local.domain.exceptions.ArtikelExistiertBereitsException;
-import eshop.local.ui.cui.Main;
 import eshop.local.valueobjects.Artikel;
 import eshop.local.valueobjects.Inputevent;
 import eshop.local.valueobjects.Lagerungsevent;
@@ -22,139 +22,37 @@ import eshop.local.valueobjects.Rechnung;
 import eshop.local.valueobjects.Sitzung;
 import eshop.local.valueobjects.User;
 
-public class eShop {
+public class eShop implements eShopInterface {
+	
+	//TODO: save & quit, Ereigniselement, remove saves from running program, 
+		// Sitzung in eShop umbenennen, eShopArtikelFunktionen + eShopUserFunktionen usw.
+		//Sitzungsnummer zu valueobject machen, dass nicht mehr pro eShop bzw Sitzungs-Objekt erstellt wird, sondern pro Warenkorb
+		//Warum muss jede Methode in Sitzung/eShop static sein?
+		//Sitzung()
+		//Lagerungsevent hat Bugs
+		//serializable
+		//threads
+		//serializable
 	
 	public static ArtikelVektorListe bst;
-	public static ArtikelVektorListe wnk;
 	public static UserVektorListe usr;
 	public static RechnungVektorListe rch;
 	public static InputeventVektorListe inp;
 	public static LagerungseventVektorListe lag;
-	public static LagerungseventVektorListe lagSitzung;
 	public static Eingabeverarbeitung ev;
-	
-	private static Artikel aktuellerArtikel;
-	private static String aktuelleSitzungsNr;
-	private static User aktuellerUser;
-	private static Inputevent aktuellesInputevent;
-	private static Lagerungsevent aktuellesLagerungsevent;
-	private static Rechnung aktuelleRechnung;
-	
+	public static SitzungVektorListe stz;
+		
+	public static String aktuelleSitzungsNr;
+		
 	private static String datei = "";
 	
 	private static boolean run = true;
 	
-	public eShop() throws IOException {
+	public eShop(String dateiArtikel, String dateiUser, String dateiRechnungen, String dateiInputevents, String dateiLagerungsevents, String dateiSitzungen) throws IOException, ArtikelExistiertBereitsException {
 		
-		aktuelleSitzungsNr = neueSitzungsNr();
-		// die Bst-Verwaltung erledigt die Aufgaben, 
-		// die nichts mit Ein-/Ausgabe zu tun haben
-		bst = new ArtikelVektorListe();
-		
-		// neue Warenkorb-Liste wird angelegt.
-		wnk = new ArtikelVektorListe(getSitzungsNr()+".txt");
-	
-		// 
-		ev = new Eingabeverarbeitung();
-		
-		
-	}
-	
-	public eShop(String dateiArtikel) throws IOException {
-		
-		aktuelleSitzungsNr = neueSitzungsNr();
-		
-		aktuellerUser = new User();
 		// die Bst-Verwaltung erledigt die Aufgaben, 
 		// die nichts mit Ein-/Ausgabe zu tun haben
 		bst = new ArtikelVektorListe(dateiArtikel);
-		
-		// neue Warenkorb-Liste wird angelegt.
-		wnk = new ArtikelVektorListe(getSitzungsNr()+".txt");
-	
-		// 
-		ev = new Eingabeverarbeitung();
-		
-		eShop.datei = dateiArtikel;
-	}
-	
-	public eShop(String dateiArtikel, String dateiUser) throws IOException {
-		
-		aktuelleSitzungsNr = neueSitzungsNr();
-		
-		aktuellerUser = new User();
-		// die Bst-Verwaltung erledigt die Aufgaben, 
-		// die nichts mit Ein-/Ausgabe zu tun haben
-		bst = new ArtikelVektorListe(dateiArtikel);
-		
-		// neue Warenkorb-Liste wird angelegt.
-		wnk = new ArtikelVektorListe(getSitzungsNr()+".txt");
-	
-		usr = new UserVektorListe(dateiUser);
-		
-		// 
-		ev = new Eingabeverarbeitung();
-		
-		eShop.datei = dateiArtikel;
-	}
-	
-	public eShop(String dateiArtikel, String dateiUser, String dateiRechnungen) throws IOException {
-		
-		aktuelleSitzungsNr = neueSitzungsNr();
-		
-		aktuellerUser = new User();
-		// die Bst-Verwaltung erledigt die Aufgaben, 
-		// die nichts mit Ein-/Ausgabe zu tun haben
-		bst = new ArtikelVektorListe(dateiArtikel);
-		
-		// neue Warenkorb-Liste wird angelegt.
-		wnk = new ArtikelVektorListe(getSitzungsNr()+".txt");
-	
-		usr = new UserVektorListe(dateiUser);
-		
-		rch = new RechnungVektorListe(dateiRechnungen);
-		
-		// 
-		ev = new Eingabeverarbeitung();
-		
-		eShop.datei = dateiArtikel;
-	}
-
-	public eShop(String dateiArtikel, String dateiUser, String dateiRechnungen, String dateiInputevents) throws IOException {
-	
-		aktuelleSitzungsNr = neueSitzungsNr();
-	
-		aktuellerUser = new User();
-		// die Bst-Verwaltung erledigt die Aufgaben, 
-		// die nichts mit Ein-/Ausgabe zu tun haben
-		bst = new ArtikelVektorListe(dateiArtikel);
-	
-		// neue Warenkorb-Liste wird angelegt.
-		wnk = new ArtikelVektorListe(getSitzungsNr()+".txt");
-
-		usr = new UserVektorListe(dateiUser);
-	
-		rch = new RechnungVektorListe(dateiRechnungen);
-	
-		inp = new InputeventVektorListe(dateiInputevents);
-	
-		// 
-		ev = new Eingabeverarbeitung();
-	
-		eShop.datei = dateiArtikel;
-	}
-	
-	public eShop(String dateiArtikel, String dateiUser, String dateiRechnungen, String dateiInputevents, String dateiLagerungsevents, String dateiLagerungseventsTemp) throws IOException {
-		
-		aktuelleSitzungsNr = neueSitzungsNr();
-	
-		aktuellerUser = new User();
-		// die Bst-Verwaltung erledigt die Aufgaben, 
-		// die nichts mit Ein-/Ausgabe zu tun haben
-		bst = new ArtikelVektorListe(dateiArtikel);
-	
-		// neue Warenkorb-Liste wird angelegt.
-		wnk = new ArtikelVektorListe(getSitzungsNr()+".txt");
 
 		usr = new UserVektorListe(dateiUser);
 	
@@ -164,12 +62,26 @@ public class eShop {
 		
 		lag = new LagerungseventVektorListe(dateiLagerungsevents);
 		
-		lagSitzung = new LagerungseventVektorListe(dateiLagerungseventsTemp);
-	
+		stz = new SitzungVektorListe(dateiSitzungen);
+		
+		neueSitzung();
+			
 		// 
 		ev = new Eingabeverarbeitung();
 	
 		eShop.datei = dateiArtikel;
+	}
+	
+	public static void main(String[] args) throws ArtikelExistiertBereitsException {
+		eShop esp;
+		try {
+			esp = new eShop("BST_B.txt", "USR_B.txt", "RCH_B.txt", "INP_B.txt", "LAG_B.txt", "STZ_B.txt");
+			eShop.run();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			
+			e.printStackTrace();
+		}
 	}
 
 	public static void run() throws IOException, ArtikelExistiertBereitsException {
@@ -192,34 +104,50 @@ public class eShop {
 		} while (run == true);
 	}
 	
+	public static Sitzung neueSitzung() throws IOException, ArtikelExistiertBereitsException {
+		Sitzung sitzung = new Sitzung(neueSitzungsNr());
+		stz.fuegeSitzungEin(sitzung);
+		aktuelleSitzungsNr = sitzung.getAktuelleSitzungsNr();
+		return sitzung;
+	}
+	
+	public static Sitzung neueSitzung(User user) throws IOException, ArtikelExistiertBereitsException {
+		Sitzung sitzung = new Sitzung(neueSitzungsNr(), user);
+		stz.fuegeSitzungEin(sitzung);
+		aktuelleSitzungsNr = sitzung.getAktuelleSitzungsNr();
+		return sitzung;
+	}
+	
 	public static String neueSitzungsNr() {
-		
 		Date objDate = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddhhmmss");
 		String sitzungsNr = formatter.format(objDate);
-		aktuelleSitzungsNr = sitzungsNr;
 		return sitzungsNr;
-		
-		/*
-		aktuelleeShopsNr = new eShopsnummer().toString();
-		return aktuelleeShopsNr;
-		*/
 	}
 	
-	public static Lagerungsevent neuesLagerungsevent(String lagerung, Artikel artikel, int anzahl, String sitzungsnummer, User user) {
+	public static Sitzung getAktuelleSitzung(String sitzungsNr) throws IOException {
+		for(Sitzung s : stz.getSitzungListe()) {
+			if(s.getAktuelleSitzungsNr() == sitzungsNr) {
+				return s;
+			}
+		}
+		return null;
+	}
+	
+	public static Lagerungsevent neuesLagerungsevent(String lagerung, Artikel artikel, int anzahl, String sitzungsnummer, User user) throws IOException {
 		Lagerungsevent event = new Lagerungsevent(lagerung, artikel, anzahl, sitzungsnummer, user);
 		try {
 			lag.fuegeLagerungseventEin(event);
 		} catch (Exception e) {}
 		try {
-			lagSitzung.fuegeLagerungseventEin(event);
+			getAktuelleSitzung(aktuelleSitzungsNr).getAktuellerLagerungsevents().fuegeLagerungseventEin(event);
 		} catch (Exception e) {}
-		aktuellesLagerungsevent = event;
+		getAktuelleSitzung(aktuelleSitzungsNr).setAktuellesLagerungsevent(event);
 		return event;
 	}
 	
-	public static List<Lagerungsevent> getNeueLagerungen(){
-		return lagSitzung.getLagerungseventListe();
+	public static List<Lagerungsevent> getNeueLagerungen() throws IOException{
+		return getAktuelleSitzung(aktuelleSitzungsNr).getAktuellerLagerungsevents().getLagerungseventListe();
 	}
 	
 	public static void gibArtikellisteUnsortiertAus(List<Artikel> vectorListe) {
@@ -272,26 +200,24 @@ public class eShop {
 		}
 	}
 	
-	public static boolean warenkorbKaufen() throws IOException {
+	public static Rechnung warenkorbKaufen() throws IOException, ArtikelExistiertBereitsException {
 		
-		boolean erfolg = false;
-		List<Artikel> liste = wnk.gibAlleArtikel();
+		List<Artikel> liste = getAktuelleSitzung(aktuelleSitzungsNr).getAktuellerWarenkorb().gibAlleArtikel();
 		Rechnung rechnung = new Rechnung(getAktuellerUser(), liste);
-		aktuelleRechnung = rechnung;
+		getAktuelleSitzung(aktuelleSitzungsNr).setAktuelleRechnung(rechnung);
 		try {
 			
 			rch.fuegeRechnungEin(rechnung);
-			erfolg = true;
 			
 		} catch (Exception e) {
 			
 			e.printStackTrace();
-			return erfolg;
+			
 		}
-		aktuelleSitzungsNr = neueSitzungsNr();
-		wnk = new ArtikelVektorListe(getSitzungsNr()+".txt");
+		User user = getAktuelleSitzung(aktuelleSitzungsNr).getAktuellerUser();
+		neueSitzung(user);
 		speichern();
-		return erfolg;
+		return rechnung;
 	}
 	
 	public static List<Artikel> produceAenderungsListe() throws IOException{
@@ -338,23 +264,23 @@ public class eShop {
 		return aenderungsListe;
 	}
 	
-	public static void verschiebeVonBestandInWarenkorb(int nummer, int anzahl) {
-		bst.verschiebeInWarenkorb(nummer, anzahl, eShop.wnk);
+	public static void verschiebeVonBestandInWarenkorb(int nummer, int anzahl) throws IOException {
+		bst.verschiebeInWarenkorb(nummer, anzahl, getAktuelleSitzung(aktuelleSitzungsNr).getAktuellerWarenkorb());
 	}
 	
-	public static void verschiebeVonWarenkorbinBestand(int nummer, int anzahl) {
-		wnk.verschiebeInBestand(nummer, anzahl, eShop.bst);
+	public static void verschiebeVonWarenkorbinBestand(int nummer, int anzahl) throws IOException {
+		getAktuelleSitzung(aktuelleSitzungsNr).getAktuellerWarenkorb().verschiebeInBestand(nummer, anzahl, bst);
 	}
 	
-	public static void warenkorbLeeren() {
-		wnk.warenkorbLeeren();
+	public static void warenkorbLeeren() throws IOException {
+		getAktuelleSitzung(aktuelleSitzungsNr).getAktuellerWarenkorb().warenkorbLeeren();
 	}
 	
-	public static void aendereAnzahlImBestand(int nummer, int anzahl) {
+	public static void aendereAnzahlImBestand(int nummer, int anzahl) throws IOException {
 		bst.aendereAnzahl(nummer, anzahl);
 	}
 	
-	public static void loescheArtikelImBestand(Artikel a) {
+	public static void loescheArtikelImBestand(Artikel a) throws IOException {
 		neuesLagerungsevent("Auslagerung", a, a.getAnzahl(), getSitzungsNr(), getAktuellerUser());
 		bst.loescheArtikel(a);
 	}
@@ -372,10 +298,41 @@ public class eShop {
 		usr.fuegeUserEin(nummer, name);
 	}
 	
-		public static String fuegeArtikelEin(String name, int nummer, int anzahl, double preis, int packet) throws ArtikelExistiertBereitsException {
+	public static String fuegeArtikelEin(String name, int nummer, int anzahl, double preis, int packet) throws ArtikelExistiertBereitsException, IOException {
 		Artikel artikel = new Massenartikel(name, nummer, anzahl, preis, packet);
 		neuesLagerungsevent("Einlagerung", artikel, anzahl, getSitzungsNr(), getAktuellerUser());
 		return bst.fuegeArtikelEin(name, nummer, anzahl, preis, packet);		
+	}
+	
+	public static String fuegeArtikelEin(Artikel artikel) throws ArtikelExistiertBereitsException, IOException {
+		neuesLagerungsevent("Einlagerung", artikel, artikel.getAnzahl(), getSitzungsNr(), getAktuellerUser());
+		return bst.fuegeArtikelEin(artikel);		
+	}
+		
+	public static String erstelleArtikelImBestand(String name, int nummer, int anzahl, double preis, int packet) throws ArtikelExistiertBereitsException, IOException {
+		Artikel einArtikel = new Massenartikel(name, nummer, anzahl, preis, packet);
+		List<Artikel> suchErgNummer = new Vector<Artikel>();
+		suchErgNummer = DurchsucheBestandNachNummer(einArtikel.getNummer());
+		List<Artikel> suchErgName = new Vector<Artikel>();
+		suchErgName = DurchsucheBestandNachName(einArtikel.getName());
+		
+		if(einArtikel.getNummer() <= 0) {
+			return "Falsche Nummer";
+		}		
+		else if (!suchErgNummer.isEmpty() && suchErgName.isEmpty()) {
+			setAktuellerArtikel(suchErgNummer.get(0));
+			return "Nummer vergeben";
+		}
+		else if(!suchErgName.isEmpty()) {			
+			setAktuellerArtikel(suchErgName.get(0));
+			return "Artikel existiert bereits";
+		}
+		else {
+			// das übernimmt der Vector:
+			fuegeArtikelEin(einArtikel);
+			setAktuellerArtikel(einArtikel);
+			return "Erfolgreich hinzugefügt";
+		}	
 	}
 	
 	public static void fuegeInputeventEin(Inputevent event) throws ArtikelExistiertBereitsException {
@@ -404,16 +361,17 @@ public class eShop {
 		warenkorbLeeren();
 		
 		bst.schreibeArtikel();
-		wnk.schreibeArtikel();
+		getAktuelleSitzung(aktuelleSitzungsNr).getAktuellerWarenkorb().schreibeArtikel();
 		rch.schreibeRechnung();
 		usr.schreibeUser();
 		inp.schreibeInputevents();
 		lag.schreibeLagerungsevents();
+		stz.schreibeSitzungen();
 	}
 	
-	public static List<Artikel> getArtikellisteAusWarenkorb() {
+	public static List<Artikel> getArtikellisteAusWarenkorb() throws IOException {
 		
-		return wnk.gibAlleArtikel();
+		return getAktuelleSitzung(aktuelleSitzungsNr).getAktuellerWarenkorb().gibAlleArtikel();
 	}
 	
 	public static List<Artikel> DurchsucheBestandNachName(String name) {
@@ -436,16 +394,16 @@ public class eShop {
 		return usr.gibUserAnzahl();
 	}
 	
-	public static double getGesamtpreisWarenkorb() {
-		return wnk.gibGesamtpreis();
+	public static double getGesamtpreisWarenkorb() throws IOException {
+		return getAktuelleSitzung(aktuelleSitzungsNr).getAktuellerWarenkorb().gibGesamtpreis();
 	}
 	
 	public static double getGesamtpreisBestand() {
 		return bst.gibGesamtpreis();
 	}
 	
-	public static String getSitzungsNr() {
-		return aktuelleSitzungsNr;
+	public static String getSitzungsNr() throws IOException {
+		return getAktuelleSitzung(aktuelleSitzungsNr).getAktuelleSitzungsNr();
 	}
 	
 	public static List<Rechnung> getRechnungsliste() {
@@ -460,32 +418,32 @@ public class eShop {
 		return lag.getLagerungseventListe();
 	}
 	
-	public static ArtikelVektorListe getWarenkorb() {
-		return wnk;
+	public static ArtikelVektorListe getWarenkorb() throws IOException {
+		return getAktuelleSitzung(aktuelleSitzungsNr).getAktuellerWarenkorb();
 	}
 
-	public static void setAktuellerArtikel(Artikel a) {
-		aktuellerArtikel = a;
+	public static void setAktuellerArtikel(Artikel a) throws IOException {
+		getAktuelleSitzung(aktuelleSitzungsNr).setAktuellerArtikel(a);
 	}
 	
-	public static Artikel getAktuellerArtikel() {
-		return aktuellerArtikel;
+	public static Artikel getAktuellerArtikel() throws IOException {
+		return getAktuelleSitzung(aktuelleSitzungsNr).getAktuellerArtikel();
 	}
 	
-	public static void setAktuellerUser(User u) {
-		aktuellerUser = u;
+	public static void setAktuellerUser(User u) throws IOException {
+		getAktuelleSitzung(aktuelleSitzungsNr).setAktuellerUser(u);
 	}
 	
-	public static User getAktuellerUser() {
-		return aktuellerUser;
+	public static User getAktuellerUser() throws IOException {
+		return getAktuelleSitzung(aktuelleSitzungsNr).getAktuellerUser();
 	}
 	
-	public static void setAktuelleRechnung(Rechnung r) {
-		aktuelleRechnung = r;
+	public static void setAktuelleRechnung(Rechnung r) throws IOException {
+		getAktuelleSitzung(aktuelleSitzungsNr).setAktuelleRechnung(r);
 	}
 	
-	public static Rechnung getAktuelleRechnung() {
-		return aktuelleRechnung;
+	public static Rechnung getAktuelleRechnung() throws IOException {
+		return getAktuelleSitzung(aktuelleSitzungsNr).getAktuelleRechnung();
 	}
 
 	public static boolean getRun() {

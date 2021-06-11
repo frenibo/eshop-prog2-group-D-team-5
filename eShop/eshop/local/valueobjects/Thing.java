@@ -1,6 +1,6 @@
 package eshop.local.valueobjects;
 
-public class Thing implements Valueobject {
+public class Thing implements ValueobjectInterface {
 
 	String name;
 	int nummer;
@@ -22,7 +22,7 @@ public class Thing implements Valueobject {
 	}
 	
 	public boolean copy(Object anderesThing) {
-		if(anderesThing instanceof Valueobject) {
+		if(anderesThing instanceof ValueobjectInterface) {
 			return true;
 		}
 		else return false;

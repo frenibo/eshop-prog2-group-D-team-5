@@ -47,7 +47,7 @@ public class MenueAusgabe {
 			System.out.println("(wl) Warenkorb leeren");
 			System.out.println("(v) Artikelanzahl ändern");
 			System.out.println("(d) Artikel löschen");
-			System.out.println("(e) Artikel einfügen");
+			System.out.println("(e) Artikel erstellen");
 			System.out.println("(f) Artikel suchen");
 			System.out.println("(s) Artikel sichern");
 			System.out.println("(n) Sitzungsnummer anzeigen");

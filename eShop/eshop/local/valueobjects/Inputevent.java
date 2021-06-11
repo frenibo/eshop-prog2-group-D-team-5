@@ -1,5 +1,6 @@
 package eshop.local.valueobjects;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -18,7 +19,7 @@ public class Inputevent {
 	private User user;
 	
 	
-	public Inputevent (String input) {
+	public Inputevent (String input) throws IOException {
 		this.input = input;
 		this.user = eShop.getAktuellerUser();
 		this.sitzungsNr = eShop.getSitzungsNr();

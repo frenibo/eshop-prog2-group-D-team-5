@@ -1,5 +1,6 @@
 package eshop.local.valueobjects;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -14,7 +15,7 @@ import eshop.local.valueobjects.User;
  * im CUI ausgegeben werden.
  */
 
-public class Rechnung implements Valueobject{
+public class Rechnung implements ValueobjectInterface{
 	
 	private User user = new User();
 	private List<Artikel> artikelListe = new Vector<Artikel>();
@@ -32,7 +33,7 @@ public class Rechnung implements Valueobject{
 		
 	}
 	
-	public Rechnung(User user, List<Artikel> artikelListe) {
+	public Rechnung(User user, List<Artikel> artikelListe) throws IOException {
 		
 		this.user = user;
 		this.artikelListe = artikelListe;

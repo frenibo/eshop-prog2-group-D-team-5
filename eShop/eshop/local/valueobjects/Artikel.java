@@ -1,6 +1,6 @@
 package eshop.local.valueobjects;
 
-public class Artikel implements Valueobject{
+public class Artikel implements ValueobjectInterface{
 	
 	// Attribute zur Beschreibung eines Artikels:
 		protected String name;

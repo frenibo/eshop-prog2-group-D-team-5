@@ -2,12 +2,15 @@ package eshop.local.persistence;
 
 import java.util.*;
 
+import eshop.local.domain.ArtikelVektorListe;
+import eshop.local.domain.LagerungseventVektorListe;
 import eshop.local.valueobjects.Artikel;
 import eshop.local.valueobjects.Inputevent;
 import eshop.local.valueobjects.Lagerungsevent;
 import eshop.local.valueobjects.Massenartikel;
 import eshop.local.valueobjects.Rechnung;
 import eshop.local.valueobjects.User;
+import eshop.local.valueobjects.Sitzung;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -187,6 +190,20 @@ public class FilePersistenceManager implements PersistenceManager {
 		// neues Buch-Objekt anlegen und zurückgeben
 		return new Lagerungsevent(lagerung, artikel, anzahl, sitzungsNr, user, datum);
 	}
+	
+	public Sitzung ladeSitzungen() throws IOException {
+		// TODO Auto-generated method stub
+		String sitzungsNr = liesZeile();
+		if (sitzungsNr == null) {
+			// keine Daten mehr vorhanden
+			return null;
+		}
+		
+		User user = ladeUser();
+		
+		return new Sitzung(sitzungsNr, user);
+		
+	}
 
 	/**
 	 * Methode zum Schreiben der Buchdaten in eine externe Datenquelle.
@@ -292,6 +309,15 @@ public class FilePersistenceManager implements PersistenceManager {
 		
 		schreibeZeile(e.getDatum());
 
+		return true;
+	}
+	
+	public boolean speichereSitzungen(Sitzung s) throws IOException {
+		// TODO Auto-generated method stub
+		schreibeZeile(s.getAktuelleSitzungsNr());
+				
+		speichereUser(s.getAktuellerUser());
+				
 		return true;
 	}
 
