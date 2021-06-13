@@ -88,39 +88,7 @@ public class ArtikelVerwaltung {
 		artikelListe.add(einArtikel);
 		return "Erfolgreich hinzugefügt";
 	}
-	/*
-	public String einfuegen(Artikel einArtikel) throws ArtikelExistiertBereitsException {
-		
-		List<Artikel> suchErgNummer = new Vector<Artikel>();
-		suchErgNummer = sucheArtikel(einArtikel.getNummer());
-		List<Artikel> suchErgName = new Vector<Artikel>();
-		suchErgName = sucheArtikel(einArtikel.getName());
-		if(einArtikel.getNummer() <= 0) {
-			System.out.print("\nDie Artikelnummer muss eine positive ganze Zahl sein.\n");
-			System.out.println(einArtikel.getNummer());
-			return "Falsche Nummer";
-		}		
-		else if (!suchErgNummer.isEmpty() && suchErgName.isEmpty()) {
-			System.out.print("\nEin anderer Artikel mit Artikelnummer " + einArtikel.getNummer() + " existiert bereits:\n");
-			System.out.println(suchErgNummer);
-			return "Nummer vergeben";
-			//throw new ArtikelExistiertBereitsException(einArtikel, " - in 'einfuegen()'");
-		}
-		else if(!suchErgName.isEmpty()) {
-			System.err.print("\nEin Artikel mit dem Namen " + einArtikel.getName() + " existiert bereits mit der Artikelnummer " + suchErgName.get(0).getNummer() + ".\n");
-			System.out.println(suchErgName);
-			return "Artikel existiert bereits";
-		}
-		else {
-			// das übernimmt der Vector:
-			artikelListe.add(einArtikel);
-			return "Erfolgreich hinzugefügt";
-		}
-
-		
-	}
-	*/
-
+	
 	/**
 	 * Methode zum Löschen eines Buchs aus dem Bestand. 
 	 * 

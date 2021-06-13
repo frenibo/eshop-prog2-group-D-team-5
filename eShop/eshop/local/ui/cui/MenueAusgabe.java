@@ -1,4 +1,4 @@
-package eshop.local.ui;
+package eshop.local.ui.cui;
 
 public class MenueAusgabe {
 	

@@ -14,6 +14,8 @@ import eshop.local.domain.RechnungVektorListe;
 import eshop.local.domain.SitzungVektorListe;
 import eshop.local.domain.UserVektorListe;
 import eshop.local.domain.exceptions.ArtikelExistiertBereitsException;
+import eshop.local.server.eShopInterface;
+import eshop.local.ui.cui.Eingabeverarbeitung;
 import eshop.local.valueobjects.Artikel;
 import eshop.local.valueobjects.Inputevent;
 import eshop.local.valueobjects.Lagerungsevent;
@@ -47,6 +49,30 @@ public class eShop implements eShopInterface {
 	private static String datei = "";
 	
 	private static boolean run = true;
+	
+public eShop() throws IOException, ArtikelExistiertBereitsException {
+		
+		// die Bst-Verwaltung erledigt die Aufgaben, 
+		// die nichts mit Ein-/Ausgabe zu tun haben
+		bst = new ArtikelVektorListe("BST_B.txt");
+
+		usr = new UserVektorListe("USR_B.txt");
+	
+		rch = new RechnungVektorListe("RCH_B.txt");
+	
+		inp = new InputeventVektorListe("INP_B.txt");
+		
+		lag = new LagerungseventVektorListe("LAG_B.txt");
+		
+		stz = new SitzungVektorListe("STZ_B.txt");
+		
+		neueSitzung();
+			
+		// 
+		ev = new Eingabeverarbeitung();
+	
+		eShop.datei = "BST_B.txt";
+	}
 	
 	public eShop(String dateiArtikel, String dateiUser, String dateiRechnungen, String dateiInputevents, String dateiLagerungsevents, String dateiSitzungen) throws IOException, ArtikelExistiertBereitsException {
 		
@@ -91,17 +117,39 @@ public class eShop implements eShopInterface {
 		ev.setLevel("startmenue");
 
 		do {
-			ev.gibMenueAus();
+			gibMenueAus();
 			try {
 		
 				ev.einlesenUndVerarbeiten();
-				input = ev.getInput();
+				input = getInput();
 		
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} while (run == true);
+	}
+	
+	public String echo(String s) throws Exception {
+		// wenn jetzt ein anderer thread dran kommt, dann schreibt der den Text eines anderen Client!
+		return (" "+s+" "+s);
+	}
+	
+	
+	public static String getInput() {
+		return ev.getInput();
+	}
+	
+	public static void gibMenueAus() {
+		ev.gibMenueAus();
+	}
+	
+	public static void einlesenUndVerarbeiten() throws IOException, ArtikelExistiertBereitsException {
+		ev.einlesenUndVerarbeiten();
+	}
+	
+	public static void einlesenUndVerarbeiten(String input) throws IOException, ArtikelExistiertBereitsException {
+		ev.einlesenUndVerarbeiten(input);
 	}
 	
 	public static Sitzung neueSitzung() throws IOException, ArtikelExistiertBereitsException {

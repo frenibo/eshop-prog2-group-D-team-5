@@ -1,4 +1,4 @@
-package eshop.local.ui;
+package eshop.local.ui.cui;
 
 import eshop.local.valueobjects.Artikel;
 import eshop.local.valueobjects.Inputevent;
@@ -9,6 +9,7 @@ import eshop.local.valueobjects.User;
 import eshop.local.valueobjects.ValueobjectInterface;
 
 import eshop.local.ui.eShop;
+import eshop.local.ui.cui.MenueAusgabe;
 
 import java.util.List;
 import java.util.Vector;
@@ -17,7 +18,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import eshop.local.domain.exceptions.ArtikelExistiertBereitsException;
-import eshop.local.ui.MenueAusgabe;
 
 public class Eingabeverarbeitung {
 
@@ -26,7 +26,12 @@ public class Eingabeverarbeitung {
 	private BufferedReader in;
 	private MenueAusgabe menue;
 	
-	public Eingabeverarbeitung() {
+	private boolean run = true;
+	
+	private static eShop eShop;
+	private Eingabeverarbeitung ev;
+	
+	public Eingabeverarbeitung() throws IOException, ArtikelExistiertBereitsException {
 		
 		setInput("");
 		// Stream-Objekt fuer Texteingabe ueber Konsolenfenster erzeugen
@@ -34,7 +39,7 @@ public class Eingabeverarbeitung {
 		this.menue = new MenueAusgabe();
 	}
 	
-	public Eingabeverarbeitung(String input) {
+	public Eingabeverarbeitung(String input) throws IOException, ArtikelExistiertBereitsException {
 		
 		setInput(input);
 		// Stream-Objekt fuer Texteingabe ueber Konsolenfenster erzeugen
@@ -42,7 +47,7 @@ public class Eingabeverarbeitung {
 		this.menue = new MenueAusgabe();
 	}
 	
-	public Eingabeverarbeitung(String input, String level) {
+	public Eingabeverarbeitung(String input, String level) throws IOException, ArtikelExistiertBereitsException {
 		
 		setInput(input);
 		setLevel(level);
@@ -50,6 +55,10 @@ public class Eingabeverarbeitung {
 		this.in = new BufferedReader(new InputStreamReader(System.in));
 		this.menue = new MenueAusgabe();
 	}
+	
+	
+	
+	
 	
 	public void setLevel(String level) {
 		this.level = level;
@@ -79,9 +88,23 @@ public class Eingabeverarbeitung {
 				
 	}
 	
+	public void einlesenUndVerarbeiten(String input) throws IOException, ArtikelExistiertBereitsException {
+		
+		verarbeitung(liesEingabe(input));
+				
+	}
+	
 	public String liesEingabe() throws IOException, ArtikelExistiertBereitsException {
 		// einlesen von Konsole
 		setInput(in.readLine());
+		newEvent();
+		liesUnterbrechung();
+		return this.input;
+	}
+	
+	public String liesEingabe(String input) throws IOException, ArtikelExistiertBereitsException {
+		// einlesen von Konsole
+		setInput(input);
 		newEvent();
 		liesUnterbrechung();
 		return this.input;
@@ -96,7 +119,7 @@ public class Eingabeverarbeitung {
 		else if(this.input.equals("z")) {
 			System.out.println("> (z) Zurück zum Menü");
 			verarbeitungsLevel("", "startmenue");
-			eShop.run();
+			eShop.run();//
 		}
 	}
 	
@@ -136,21 +159,8 @@ public class Eingabeverarbeitung {
 		int packet = 0;
 		String name = "";
 		double preis = 0.0;
-		boolean bool = false;
 		
 		if(level.equals("startmenue")) {
-			
-			/*cool but not needed
-			try {
-				nummer = Integer.parseInt(input);
-			} catch (Exception e) {}
-			
-			if (nummer > 0) {
-				liste = eShop.bst.sucheNachNr(nummer);
-				eShop.gibArtikellisteUnsortiertAus(liste);
-
-			}
-			*/
 			
 			// Eingabe bearbeiten:
 			switch (input) {
@@ -331,7 +341,7 @@ public class Eingabeverarbeitung {
 			//Neue Sitzung starten
 			case "r":
 				System.out.println("Neue Sitzung startet.\n");
-				eShop.main(null);
+				eShop.main(null);//
 				break;			
 			//Zurück zum Startmenue
 			case "z":
@@ -359,7 +369,7 @@ public class Eingabeverarbeitung {
 				break;
 			case "w":
 				setLevel("startmenue");
-				eShop.run();
+				eShop.run();//
 				break;
 			}
 		}
